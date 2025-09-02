@@ -83,14 +83,21 @@ Route::prefix('admin')->group(function () {
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
 });
 
-// Protected admin routes (requires login)
-Route::middleware('auth:admin')->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.api.dashboard');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('admin.api.logout');
-    
-    // ✅ Protected University create
-    Route::post('/university', [UniversityController::class, 'store'])->name('admin.university.store');
+
+// Public admin login route
+Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
+
+// ✅ Protected admin routes with Sanctum middleware & admin_token guard
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    Route::post('/logout', [AdminController::class, 'logout']);
+
+    // University create route
+    Route::post('/university', [UniversityController::class, 'store']);
 });
+
+
+
 
 
 

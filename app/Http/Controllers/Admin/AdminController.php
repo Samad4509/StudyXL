@@ -14,140 +14,142 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+    // Dashboard (Protected)
     public function dashboard()
     {
         $agents = Agent::all();
-        return view('admin.dashboard', compact('agents'));
+        return response()->json([
+            'status' => true,
+            'data'   => $agents,
+        ]);
     }
-    public function login()
-    {
-        return view('admin.login');
-    }
+
+    // Admin Login (API)
     public function login_submit(Request $request)
     {
-        // return $request;
-        // Validate the request
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         $credentials = $request->only('email', 'password');
 
-        // Attempt login using the 'admin' guard
         if (Auth::guard('admin')->attempt($credentials)) {
             $admin = Auth::guard('admin')->user();
 
-            // Optional: Generate token (requires Laravel Sanctum or Passport)
-            // $token = $admin->createToken('AdminAPIToken')->plainTextToken;
+            // Sanctum Token
+            $token = $admin->createToken('AdminAPIToken')->plainTextToken;
 
             return response()->json([
-                'status' => true,
+                'status'  => true,
                 'message' => 'Login successful.',
-                'admin' => $admin,
-                // 'token' => $token // Uncomment if using token auth
+                'admin'   => $admin,
+                'token'   => $token,
             ], 200);
         }
 
         return response()->json([
-            'status' => false,
-            'message' => 'Invalid email or password.'
+            'status'  => false,
+            'message' => 'Invalid email or password.',
         ], 401);
     }
 
-    public function logout()
+    // Logout (API - Sanctum)
+    public function apiLogout(Request $request)
+    {
+        if ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Logged out successfully (API).',
+        ]);
+    }
+
+    // Logout (Web - Session)
+    public function webLogout()
     {
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login')->with('success', 'Logout Success');
     }
-    public function forget_password()
-    {
-        return view('admin.forget-password');
-    }
+
+    // Forget Password (API)
     public function forget_password_submit(Request $request)
     {
-        // Validate email
         $request->validate([
             'email' => 'required|email',
         ]);
 
-        // Find admin by email
         $admin = Admin::where('email', $request->email)->first();
 
         if (!$admin) {
             return response()->json([
-                'status' => false,
+                'status'  => false,
                 'message' => 'Email not found.'
             ], 404);
         }
 
-        // Generate reset token and store it
         $token = hash('sha256', time());
         $admin->token = $token;
         $admin->save();
 
-        // Create reset link
         $reset_link = url('admin/reset_password/' . $token . '/' . $request->email);
 
-        // Email content
         $subject = "Reset Password";
         $message = '<a href="' . $reset_link . '">Click here to reset your password</a>';
 
-        // Send email
         Mail::to($request->email)->send(new Websitemail($subject, $message));
 
-        // Return JSON response
         return response()->json([
-            'status' => true,
-            'message' => 'Reset password link has been sent to your email.',
-
+            'status'  => true,
+            'message' => 'Reset password link sent to your email.',
         ], 200);
     }
 
-
+    // Reset Password Form (Web)
     public function reset_password($token, $email)
     {
         $admin = Admin::where('email', $email)->where('token', $token)->first();
 
         if (!$admin) {
-            return redirect()->route('login')->with('error', 'Invalid or expired reset link');
+            return redirect()->route('admin.login')->with('error', 'Invalid or expired reset link');
         }
 
-        // Show reset password form
         return view('admin.reset_password', compact('email', 'token'));
     }
 
-
+    // Reset Password (API)
     public function reset_password_submit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'password' => 'required|string|min:6',
+            'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
-            'email' => 'required|email',
-            'token' => 'required'
+            'email'                 => 'required|email',
+            'token'                 => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors()
             ], 422);
         }
 
-        $admin_data = Admin::where('email', $request->email)
+        $admin = Admin::where('email', $request->email)
             ->where('token', $request->token)
             ->first();
 
-        if (!$admin_data) {
+        if (!$admin) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid token or email'
             ], 400);
         }
 
-        $admin_data->password = Hash::make($request->password);
-        $admin_data->token = null; // clear token
-        $admin_data->save();
+        $admin->password = Hash::make($request->password);
+        $admin->token = null;
+        $admin->save();
 
         return response()->json([
             'success' => true,
@@ -155,9 +157,8 @@ class AdminController extends Controller
         ], 200);
     }
 
-
-
-   public function approveAgent($id)
+    // Approve Agent
+    public function approveAgent($id)
     {
         $agent = Agent::findOrFail($id);
         $agent->is_approved = true;
@@ -170,7 +171,8 @@ class AdminController extends Controller
         ], 200);
     }
 
-   public function deactivateAgent($id)
+    // Deactivate Agent
+    public function deactivateAgent($id)
     {
         $agent = Agent::findOrFail($id);
         $agent->status = 'inactive';
@@ -183,7 +185,8 @@ class AdminController extends Controller
         ], 200);
     }
 
-   public function activateAgent($id)
+    // Activate Agent
+    public function activateAgent($id)
     {
         $agent = Agent::findOrFail($id);
         $agent->status = 'active';
@@ -195,5 +198,4 @@ class AdminController extends Controller
             'agent'   => $agent
         ], 200);
     }
-
 }
