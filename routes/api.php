@@ -11,14 +11,17 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Student\StudentProfileController;
+
 
 
 //  Route::post('/university', [UniversityController::class, 'store']);
-
+ 
 // Student  ApI
 Route::middleware('guest')->group(function () {
     // Register
@@ -53,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Update Password
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
+
+
 });
 
 //Agent API
@@ -71,7 +77,6 @@ Route::middleware('guest:agent')->group(function () {
 
 });
 
-
 // Admin API
 // Admin login and public actions
 Route::prefix('admin')->group(function () {
@@ -81,6 +86,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
+
+
 });
 
 
@@ -93,7 +100,16 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::post('/logout', [AdminController::class, 'logout']);
 
     // University create route
-    Route::post('/university', [UniversityController::class, 'store']);
+    Route::get('/university/edit', [UniversityController::class, 'edit']);
+    
+    Route::post('/universities', [UniversityController::class, 'store']);       // create
+    Route::get('/universities/{id}', [UniversityController::class, 'edit']);    // single
+    Route::put('/universities/{id}', [UniversityController::class, 'update']);  // update
+    Route::delete('/universities/{id}', [UniversityController::class, 'destroy']); // delete
+
+
+    Route::post('/university-programs', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+
 });
 
 

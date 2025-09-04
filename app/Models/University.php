@@ -29,8 +29,15 @@ class University extends Model
         'first_year_amount',
         'first_year_desc',
         'application_processing_time',
-        'top_disciplines',
+        'top_disciplines', 
     ];
+
+
+
+    public function programs()
+    {
+        return $this->hasMany(UniversityProgram::class);
+    }
 
     protected $casts = [
         'images' => 'array',
