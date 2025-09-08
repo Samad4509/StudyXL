@@ -11,6 +11,8 @@ class UniversityProgramController extends Controller
 {
     public function store(Request $request)
     {
+
+        // return $request;
         // Validate request
         $validatedData = $request->validate([
             'university_id' => 'required|exists:universities,id',
@@ -22,7 +24,7 @@ class UniversityProgramController extends Controller
         ]);
 
         // Retrieve the university
-       $university = University::find($validatedData['university_id']);
+      $university = University::find($validatedData['university_id']);
 
         // Create the program linked to university
         $program = $university->programs()->create([

@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Student\StudentProfileController;
+use App\Http\Controllers\Filters\AllfiltersItem;
 
 
 
@@ -86,9 +87,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
-
-
 });
+
 
 
 // Public admin login route
@@ -107,9 +107,25 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::put('/universities/{id}', [UniversityController::class, 'update']);  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy']); // delete
 
-
+    
     Route::post('/university-programs', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
 
+    //Filters Items Program Lavel
+    Route::post('/program/level', [AllfiltersItem::class, 'Programlevel']);
+    Route::get('/program/level/{id}', [AllfiltersItem::class, 'Programleveledit']);
+    Route::put('/program/level/{id}', [AllfiltersItem::class, 'Programlevelupdate']);
+    Route::delete('program/level/{id}', [AllfiltersItem::class, 'Programleveldestroy']);
+    Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel']);
+
+    //Filters Items Field Of Study
+
+     Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy']);
+     Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit']);
+     Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate']);
+     Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete']);
+
+     Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy']);
+ 
 });
 
 
