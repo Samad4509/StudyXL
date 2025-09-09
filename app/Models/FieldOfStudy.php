@@ -9,4 +9,10 @@ class FieldOfStudy extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+    
+    public function subjects()
+    {
+        return $this->hasMany(FieldOFSubject::class, 'field_of_study_id');
+    }
+
 }

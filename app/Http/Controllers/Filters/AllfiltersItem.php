@@ -6,6 +6,7 @@ use App\Models\ProgramLevel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\FieldOfStudy;
+use App\Models\FieldOFSubject;
 use Illuminate\Support\Facades\Log;
 
 class AllfiltersItem extends Controller
@@ -127,4 +128,71 @@ class AllfiltersItem extends Controller
     {
          return  $allprogrum = FieldOfStudy::get();
     }
+
+    public function createSubject(Request $request, $fieldId)
+    {
+        // return $request;
+        $request->validate([
+            'subject_name' => 'required|string|max:255',
+        ]);
+
+       $field = FieldOfStudy::findOrFail($fieldId);
+
+        $subject = $field->subjects()->create([
+            'field_of_study_id'=>$field->id,
+            'study_field_name'=>$field->name,
+            'subject_name' => $request->subject_name,
+        ]);
+
+        return response()->json([
+            'message' => 'Subject created successfully.',
+            'data' => $subject,
+        ], 201);
+    }
+    public function getSubjectsByField($fieldId)
+    {
+        $field = FieldOfStudy::findOrFail($fieldId);
+
+        $subjects = $field->subjects()->get();
+
+        return response()->json([
+            'field' => $field->name,
+            'subjects' => $subjects,
+        ]);
+    }
+
+    public function editSubject($id)
+    {
+      return  $subject = FieldOFSubject::findOrFail($id);
+
+        return response()->json($subject);
+    }
+    public function updateSubject(Request $request, $id)
+    {
+        $request->validate([
+            'subject_name' => 'required|string|max:255',
+        ]);
+
+        $subject = FieldOFSubject::findOrFail($id);
+        $subject->update([
+            'subject_name' => $request->subject_name,
+        ]);
+
+        return response()->json([
+            'message' => 'Subject updated successfully.',
+            'data' => $subject,
+        ]);
+    }
+
+    public function deleteSubject($id)
+    {
+        $subject = FieldOFSubject::findOrFail($id);
+        $subject->delete();
+
+        return response()->json([
+            'message' => 'Subject deleted successfully.'
+        ]);
+    }
+
+
 }

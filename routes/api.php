@@ -118,13 +118,26 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel']);
 
     //Filters Items Field Of Study
-
      Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy']);
      Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit']);
      Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate']);
      Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete']);
-
      Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy']);
+     
+
+     //Filters Items Field Of Study Of Subject
+     Route::post('field/of/study/{fieldId}/subject', [AllfiltersItem::class, 'createSubject']);
+     Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField']);
+     Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject']);
+     Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject']);
+     Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject']);
+     //  Intakes Month 
+
+
+
+
+
+
  
 });
 
