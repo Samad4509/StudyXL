@@ -3,21 +3,23 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Agent\AgentController;
-use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Admin\IntakeController;
 
+use App\Http\Controllers\Filters\AllfiltersItem;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Admin\UniversityController;
 use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\IntakeMonthController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Student\StudentProfileController;
-use App\Http\Controllers\Filters\AllfiltersItem;
 
 
 
@@ -131,8 +133,10 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
      Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject']);
      Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject']);
      Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject']);
-     //  Intakes Month 
 
+     //  Intakes Month 
+     Route::resource('intakes', IntakeController::class);
+     Route::resource('intake-months', IntakeMonthController::class);
 
 
 
