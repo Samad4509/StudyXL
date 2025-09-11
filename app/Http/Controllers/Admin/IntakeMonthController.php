@@ -2,79 +2,71 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Intake;
 use App\Models\IntakeMonth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class IntakeMonthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function AllIntakesMonth()
     {
-        //
+          return  $allintakes = Intake::get();
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function CreateIntakeMonth(Request $request, $intakeid)
     {
 
-        // return $request;
-        $request->validate([
-            'intake_id' => 'required|exists:intakes,id',
-            'month' => 'required|string'
+        $validated = $request->validate([
+            'month' => 'required|string',
         ]);
 
-      $month = IntakeMonth::create($request->only('intake_id', 'month'));
+
+        $intake = Intake::findOrFail($intakeid);
+
+
+        $intakeMonth = IntakeMonth::create([
+            'intake_id' => $intake->id,
+            'month' => $validated['month'],
+        ]);
+
 
         return response()->json([
-            'success' => true,
-            'message' => 'Month added successfully.',
-            'data' => $month
+            'message' => 'Intake month created successfully',
+            'data' => $intakeMonth,
         ], 201);
     }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function EditIntakeMonth($id)
     {
-        //
+        $intakeMonth = IntakeMonth::findOrFail($id);
+
+        return response()->json([
+            'data' => $intakeMonth
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function UpdateIntakeMonth(Request $request, $id)
     {
-        //
-    }
+        $validated = $request->validate([
+            'month' => 'required|string',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $intakeMonth = IntakeMonth::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+        $intakeMonth->update($validated);
+
+        return response()->json([
+            'message' => 'Intake month updated successfully',
+            'data' => $intakeMonth,
+        ]);
+    }
+    public function DeleteIntakeMonth($id)
     {
-        //
+        $intakeMonth = IntakeMonth::findOrFail($id);
+
+        $intakeMonth->delete();
+
+        return response()->json([
+            'message' => 'Intake month deleted successfully'
+        ]);
     }
 }

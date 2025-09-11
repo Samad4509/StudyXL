@@ -7,10 +7,12 @@ use App\Http\Controllers\Admin\IntakeController;
 
 use App\Http\Controllers\Filters\AllfiltersItem;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Admin\ProgramTagController;
 use App\Http\Controllers\Admin\UniversityController;
-use App\Http\Controllers\Auth\NewPasswordController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -98,45 +100,60 @@ Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('adm
 
 // ✅ Protected admin routes with Sanctum middleware & admin_token guard
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard']);
-    Route::post('/logout', [AdminController::class, 'logout']);
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
     // University create route
-    Route::get('/university/edit', [UniversityController::class, 'edit']);
+    // Route::get('/university/edit', [UniversityController::class, 'edit']);
     
-    Route::post('/universities', [UniversityController::class, 'store']);       // create
-    Route::get('/universities/{id}', [UniversityController::class, 'edit']);    // single
-    Route::put('/universities/{id}', [UniversityController::class, 'update']);  // update
-    Route::delete('/universities/{id}', [UniversityController::class, 'destroy']); // delete
+    Route::post('/universities', [UniversityController::class, 'store'])->name('university.store');       // create
+    Route::get('/universities/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
+    Route::put('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
+    Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+
+    // Destination
+    Route::resource('destinations', DestinationController::class);
 
     
     Route::post('/university-programs', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
 
     //Filters Items Program Lavel
-    Route::post('/program/level', [AllfiltersItem::class, 'Programlevel']);
-    Route::get('/program/level/{id}', [AllfiltersItem::class, 'Programleveledit']);
-    Route::put('/program/level/{id}', [AllfiltersItem::class, 'Programlevelupdate']);
-    Route::delete('program/level/{id}', [AllfiltersItem::class, 'Programleveldestroy']);
-    Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel']);
+    Route::post('/program/level', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
+    Route::get('/program/level/{id}', [AllfiltersItem::class, 'Programleveledit'])->name('programlavel.edit');
+    Route::put('/program/level/{id}', [AllfiltersItem::class, 'Programlevelupdate'])->name('programlavel.update');
+    Route::delete('program/level/{id}', [AllfiltersItem::class, 'Programleveldestroy'])->name('programlavel.destroy');
+    Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel'])->name('allprogram.lavel');
 
     //Filters Items Field Of Study
-     Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy']);
-     Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit']);
-     Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate']);
-     Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete']);
-     Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy']);
+     Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy'])->name('field.study');
+     Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit'])->name('field.edit');
+     Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate'])->name('field.update');
+     Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete'])->name('field.delete');
+     Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy'])->name('field.all');
      
 
      //Filters Items Field Of Study Of Subject
-     Route::post('field/of/study/{fieldId}/subject', [AllfiltersItem::class, 'createSubject']);
-     Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField']);
-     Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject']);
-     Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject']);
-     Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject']);
+     Route::post('field/of/study/{fieldId}/subject', [AllfiltersItem::class, 'createSubject'])->name('create.subject');
+     Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField'])->name('subject.byfield');
+     Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject'])->name('edit.subject');
+     Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject'])->name('update.subject');
+     Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject'])->name('delete.subject');
 
      //  Intakes Month 
      Route::resource('intakes', IntakeController::class);
-     Route::resource('intake-months', IntakeMonthController::class);
+     Route::get('intake/all/month/', [IntakeMonthController::class, 'AllIntakesMonth'])->name('intake.all.month');
+     Route::post('intake/month/create/{intakeid}', [IntakeMonthController::class, 'CreateIntakeMonth'])->name('intakemonth.create');
+     Route::get('intake/month/{id}', [IntakeMonthController::class, 'EditIntakeMonth'])->name('intakeedit.month');
+     Route::put('intake/month/{id}', [IntakeMonthController::class, 'UpdateIntakeMonth'])->name('intakeupdate.month');
+     Route::delete('intake/month/{id}', [IntakeMonthController::class, 'DeleteIntakeMonth'])->name('intakedelete.month');
+
+     //  Program tag
+     Route::resource('programtag', ProgramTagController::class);
+
+     
+
+
+
 
 
 
