@@ -108,7 +108,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     
     Route::post('/universities', [UniversityController::class, 'store'])->name('university.store');       // create
     Route::get('/universities/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
-    Route::put('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
+    Route::post('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
 
     // Destination

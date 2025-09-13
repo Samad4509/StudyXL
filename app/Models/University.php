@@ -8,36 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class University extends Model
 {
     use HasFactory;
-     protected $fillable = [
-        'name',
+    protected $fillable = [
+        'university_name',
         'address',
         'location',
         'phone_number',
         'images',
         'founded',
         'school_id',
-        'dli_number',
         'institution_type',
-        'amount',
-        'amount_desc',
-        'one_year',
-        'one_year_desc',
-        'course_years',
-        'course_years_desc',
-        'amount_years',
-        'amount_years_desc',
-        'first_year_amount',
-        'first_year_desc',
-        'application_processing_time',
-        'top_disciplines', 
+        'dli_number',
+        'top_disciplines',
+        
+        'application_fee',
+        'application_short_desc',
+        'average_graduate_program',
+        'average_graduate_program_short_desc',
+        'average_undergraduate_program',
+        'average_undergraduate_program_short_desc',
+        'cost_of_living',
+        'cost_of_living_short_desc',
+        'average_gross_tuition',
+        'average_gross_tuition_short_desc',
     ];
-
-
-
-    public function programs()
-    {
-        return $this->hasMany(UniversityProgram::class);
-    }
 
     protected $casts = [
         'images' => 'array',

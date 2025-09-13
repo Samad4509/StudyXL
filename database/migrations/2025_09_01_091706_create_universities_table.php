@@ -7,35 +7,31 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('universities', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('university_name');
             $table->string('address')->nullable();
             $table->string('location')->nullable();
             $table->string('phone_number')->nullable();
-            
-            $table->json('images')->nullable(); // store multiple images as JSON
-            
-            // Institution Details
+            $table->json('images')->nullable();
             $table->integer('founded')->nullable();
             $table->string('school_id')->nullable();
-            $table->string('dli_number')->nullable();
             $table->string('institution_type')->nullable();
-            
-            // Cost and Duration
-            $table->decimal('amount', 15, 2)->nullable();
-            $table->text('amount_desc')->nullable();
-            $table->decimal('one_year', 15, 2)->nullable();
-            $table->text('one_year_desc')->nullable();
-            $table->integer('course_years')->nullable();
-            $table->text('course_years_desc')->nullable();
-            $table->decimal('amount_years', 15, 2)->nullable();
-            $table->text('amount_years_desc')->nullable();
-            $table->decimal('first_year_amount', 15, 2)->nullable();
-            $table->text('first_year_desc')->nullable();
-            $table->string('application_processing_time')->nullable();
-            
-            // Top Disciplines
-            $table->json('top_disciplines')->nullable(); // store subjects + percentage
-            
+            $table->string('dli_number')->nullable();
+            $table->json('top_disciplines')->nullable();
+             // New detailed fields
+            $table->string('application_fee')->nullable();
+            $table->string('application_short_desc')->nullable();
+
+            $table->string('average_graduate_program')->nullable();
+            $table->string('average_graduate_program_short_desc')->nullable();
+
+            $table->string('average_undergraduate_program')->nullable();
+            $table->string('average_undergraduate_program_short_desc')->nullable();
+
+            $table->string('cost_of_living')->nullable();
+            $table->string('cost_of_living_short_desc')->nullable();
+
+            $table->string('average_gross_tuition')->nullable();
+            $table->string('average_gross_tuition_short_desc')->nullable();
             $table->timestamps();
         });
     }
