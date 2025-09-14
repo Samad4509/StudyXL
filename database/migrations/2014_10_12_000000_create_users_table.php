@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('nationality');
             $table->string('elp')->nullable();
             $table->string('passport')->nullable();
+            $table->dropColumn('remember_token');
             $table->timestamps();
         });
     }
