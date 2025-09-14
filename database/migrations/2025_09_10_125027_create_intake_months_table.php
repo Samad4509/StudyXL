@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('intake_id')->constrained()->onDelete('cascade');
             $table->string('month'); // e.g. "September 2025"
+            $table->date('open_date')->nullable();
+            $table->date('submission_deadline')->nullable();
             $table->timestamps();
         });
     }

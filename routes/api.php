@@ -24,7 +24,6 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 
 
-
 //  Route::post('/university', [UniversityController::class, 'store']);
  
 // Student  ApI

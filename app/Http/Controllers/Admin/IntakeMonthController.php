@@ -11,13 +11,15 @@ class IntakeMonthController extends Controller
 {
     public function AllIntakesMonth()
     {
-          return  $allintakes = Intake::get();
+          return  $allintakes = IntakeMonth::get();
     }
     public function CreateIntakeMonth(Request $request, $intakeid)
     {
 
         $validated = $request->validate([
             'month' => 'required|string',
+            'open_date' => 'required|string',
+            'submission_deadline' => 'required|string',
         ]);
 
 
@@ -27,6 +29,8 @@ class IntakeMonthController extends Controller
         $intakeMonth = IntakeMonth::create([
             'intake_id' => $intake->id,
             'month' => $validated['month'],
+            'open_date' => $validated['open_date'],
+            'submission_deadline' => $validated['submission_deadline'],
         ]);
 
 
@@ -48,6 +52,8 @@ class IntakeMonthController extends Controller
     {
         $validated = $request->validate([
             'month' => 'required|string',
+            'open_date' => 'required|string',
+            'submission_deadline' => 'required|string',
         ]);
 
         $intakeMonth = IntakeMonth::findOrFail($id);

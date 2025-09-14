@@ -11,7 +11,9 @@ class IntakeMonth extends Model
 
       protected $fillable = [
         'intake_id',
-        'month'
+        'month',
+        'open_date',
+        'submission_deadline',
     ];
     
     public function intake()
