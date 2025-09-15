@@ -10,18 +10,20 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Admin\ProgramTagController;
 use App\Http\Controllers\Admin\UniversityController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\NewPasswordController;
+// use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
+// use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
 
 
 //  Route::post('/university', [UniversityController::class, 'store']);
@@ -34,11 +36,16 @@ Route::middleware('guest')->group(function () {
     // Login
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    // Forgot Password
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
+    // // Forgot Password
+    // Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
 
+    // // Reset Password
+    // Route::post('reset-password', [NewPasswordController::class, 'store']);
+
+    // Forgot Password
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
     // Reset Password
-    Route::post('reset-password', [NewPasswordController::class, 'store']);
+    Route::post('/reset-password', [NewPasswordController::class, 'store']);
 });
 
 
