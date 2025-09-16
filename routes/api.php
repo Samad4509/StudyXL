@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Agent\AgentController;
+
+
 use App\Http\Controllers\Admin\IntakeController;
 
 use App\Http\Controllers\Filters\AllfiltersItem;
@@ -78,7 +80,7 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
     Route::get('logout', [AgentController::class,'logout'])->name('agent.logout');
 });
 Route::middleware('guest:agent')->group(function () {
-    Route::post('agent/register', [AgentController::class, 'store']);
+    Route::post('/agents/register', [AgentController::class, 'store']);
     Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
     Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
