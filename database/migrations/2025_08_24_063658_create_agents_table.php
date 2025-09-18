@@ -15,7 +15,7 @@ class CreateAgentsTable extends Migration
         $table->string('last_name');
         $table->string('company_name');
         $table->string('job_title');
-        $table->string('country_dialing_code', 10)->nullable(); // ছোট রাখা হলো
+        $table->string('country_dialing_code', 10)->nullable();
         $table->string('phone_number');
         $table->string('email')->unique();
         $table->string('finance_email');
@@ -26,7 +26,7 @@ class CreateAgentsTable extends Migration
         $table->string('state')->nullable();
         $table->string('postal_code')->nullable();
         $table->string('country');
-        $table->json('destinations')->nullable(); // একাধিক দেশ array আকারে সেভ হবে
+        $table->json('destinations')->nullable(); 
         $table->enum('litigation_status', ['yes','no'])->nullable();
         $table->text('litigation_details')->nullable();
         $table->enum('australia_recruitment', ['yes','no'])->nullable();
@@ -75,7 +75,8 @@ class CreateAgentsTable extends Migration
         $table->string('ref1_country_dialing_code',10)->nullable();
         $table->string('ref1_phone_number')->nullable();
         $table->string('ref1_website')->nullable();
-
+        $table->string("is_approved")->default("false");   
+        $table->string('status')->default('inactive');    
         $table->timestamps();
     });
 }

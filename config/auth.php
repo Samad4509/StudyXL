@@ -7,28 +7,31 @@ return [
         'passwords' => 'users',
     ],
 
+  
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
-        'admin' => [ // for admin web session login (optional)
+        'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
         ],
 
-        'admin_token' => [ // API token guard for admin
+        'admin_token' => [
             'driver' => 'sanctum',
             'provider' => 'admins',
         ],
 
+       
         'agent' => [
             'driver' => 'session',
             'provider' => 'agents',
         ],
     ],
 
+    
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
@@ -40,6 +43,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
+        
         'agents' => [
             'driver' => 'eloquent',
             'model' => App\Models\Agent::class,
@@ -56,5 +60,5 @@ return [
     ],
 
     'password_timeout' => 10800,
-
 ];
+
