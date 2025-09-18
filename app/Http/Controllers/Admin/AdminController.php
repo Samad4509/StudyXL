@@ -198,4 +198,9 @@ class AdminController extends Controller
             'agent'   => $agent
         ], 200);
     }
+
+    public function alluser()
+    {
+        return $agent = Agent::All();
+    }
 }

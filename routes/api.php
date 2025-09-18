@@ -99,6 +99,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
+    Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
 });
 
 
