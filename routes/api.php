@@ -48,6 +48,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
     // Reset Password
     Route::post('/reset-password', [NewPasswordController::class, 'store']);
+
+    
 });
 
 
@@ -86,8 +88,6 @@ Route::middleware('guest:agent')->group(function () {
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
 
-     
-
 });
 
 // Admin API
@@ -100,6 +100,7 @@ Route::prefix('admin')->group(function () {
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
+    Route::get('all/students', [AdminController::class, 'index']);
 });
 
 

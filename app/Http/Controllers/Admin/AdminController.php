@@ -7,6 +7,7 @@ use App\Models\Agent;
 use App\Mail\Websitemail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -202,5 +203,11 @@ class AdminController extends Controller
     public function alluser()
     {
         return $agent = Agent::All();
+    }
+
+     public function index()
+    {
+       return $user = User::all();
+
     }
 }

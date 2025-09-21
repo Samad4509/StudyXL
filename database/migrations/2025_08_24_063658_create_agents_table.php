@@ -9,76 +9,69 @@ class CreateAgentsTable extends Migration
     public function up(): void
 {
     Schema::create('agents', function (Blueprint $table) {
-        $table->id();
-        $table->string('prefix')->nullable();
-        $table->string('first_name');
-        $table->string('last_name');
-        $table->string('company_name');
-        $table->string('job_title');
-        $table->string('country_dialing_code', 10)->nullable();
-        $table->string('phone_number');
-        $table->string('email')->unique();
-        $table->string('finance_email');
-        $table->string('password');
-        $table->string('street_address');
-        $table->string('street_address_line2')->nullable();
-        $table->string('city');
-        $table->string('state')->nullable();
-        $table->string('postal_code')->nullable();
-        $table->string('country');
-        $table->json('destinations')->nullable(); 
-        $table->enum('litigation_status', ['yes','no'])->nullable();
-        $table->text('litigation_details')->nullable();
-        $table->enum('australia_recruitment', ['yes','no'])->nullable();
-        $table->text('australia_recruitment_details')->nullable();
-        $table->text('other_institutions')->nullable();
+            $table->id();
+            $table->string('prefix')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('job_title')->nullable();
+            $table->string('country_dialing_code')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('email')->unique();
+            $table->string('finance_email')->nullable();
+            $table->string('password')->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('street_address_line2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
 
-        // Company details
-        $table->string('trading_name')->nullable();
-        $table->string('website')->nullable();
+            $table->string('director_prefix')->nullable();
+            $table->string('director_first_name')->nullable();
+            $table->string('director_last_name')->nullable();
+            $table->string('director_job_title')->nullable();
+            $table->string('director_dialing_code')->nullable();
+            $table->string('director_phone_number')->nullable();
+            $table->string('director_email')->nullable();
 
-        // Director details
-        $table->string('director_prefix')->nullable();
-        $table->string('director_first_name')->nullable();
-        $table->string('director_last_name')->nullable();
-        $table->string('director_job_title')->nullable();
-        $table->string('director_country_dialing_code',10)->nullable();
-        $table->string('director_phone_number')->nullable();
-        $table->string('director_email')->nullable();
+            $table->string('trading_name')->nullable();
+            $table->string('website')->nullable();
+            $table->text('students_per_year')->nullable();
+            $table->json('destinations')->nullable();
+            $table->string('other_destination')->nullable();
+            $table->string('litigation')->nullable();
+            $table->text('litigation_details')->nullable();
+            $table->string('australia_recruitment')->nullable();
+            $table->text('australia_recruitment_details')->nullable();
+            $table->string('institutions')->nullable();
+            $table->string('college')->nullable(); 
+            $table->string('creative_course')->nullable();
+            $table->text('university_preparation');
+            $table->text('adult_english');
+            $table->text('junior_english');
+            $table->text('direct_entry');
+            $table->text('year_established');
+            $table->text('branch_offices');
+            $table->text('counsellors');
+            $table->string('icef_id');
+            $table->string('hear_about');
+            $table->text('why_oxford')->nullable();
 
-        // Company overview
-        $table->string('students_per_year')->nullable();
+            $table->string('referee_prefix')->nullable();
+            $table->string('referee_first_name')->nullable();
+            $table->string('referee_last_name')->nullable();
+            $table->string('referee_company')->nullable();
+            $table->string('referee_email')->nullable();
+            $table->string('referee_dialing_code')->nullable();
+            $table->string('referee_phone')->nullable();
+            $table->string('referee_website')->nullable();
 
-        // Courses
-        $table->string('college')->nullable();
-        $table->string('creative_course')->nullable();
-        $table->string('university_prep')->nullable();
-        $table->string('adult_english')->nullable();
-        $table->string('junior_english')->nullable();
-        $table->string('direct_university')->nullable();
-
-        // Operations
-        $table->string('established_year')->nullable();
-        $table->string('branch_offices')->nullable();
-        $table->string('counsellors')->nullable();
-        $table->string('icef_registered')->nullable();
-        $table->string('ias_id_number')->nullable();
-        $table->string('hear_about')->nullable();
-        $table->text('why_work_with_us')->nullable();
-
-        // References
-        $table->string('ref1_prefix')->nullable();
-        $table->string('ref1_first_name')->nullable();
-        $table->string('ref1_last_name')->nullable();
-        $table->string('ref1_company')->nullable();
-        $table->string('ref1_email')->nullable();
-        $table->string('ref1_country_dialing_code',10)->nullable();
-        $table->string('ref1_phone_number')->nullable();
-        $table->string('ref1_website')->nullable();
-        $table->string("is_approved")->default("false");   
-        $table->string('status')->default('inactive');    
-        $table->timestamps();
-    });
+            $table->text('is_approved')->default(false);
+            $table->string('status')->default('inactive');
+            $table->string('token')->nullable(); 
+            $table->timestamps(); // created_at & updated_at
+        });
 }
 
     public function down()
