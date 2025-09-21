@@ -12,6 +12,7 @@ class UniversityController extends Controller
 
     public function store(Request $request)
     {
+        // return $request;
         $validator = Validator::make($request->all(), [
             'university_name' => 'required|string|max:255',
             'address' => 'nullable|string',

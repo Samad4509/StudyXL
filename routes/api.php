@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Update Password
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
+    
 
 
 });
@@ -76,7 +77,7 @@ Route::middleware('guest:agent')->group(function () {
     Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
-
+    
      
 
 });
@@ -87,6 +88,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminController::class, 'login_submit'])->name('admin.login');
     Route::post('/forget_password', [AdminController::class, 'forget_password_submit'])->name('admin.forget_password');
     Route::post('/reset_password_submit',[AdminController::class,'reset_password_submit'])->name('admin.reset_password_submit');
+    Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
@@ -113,8 +115,16 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // Destination
     Route::resource('destinations', DestinationController::class);
 
-    
-    Route::post('/university-programs', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    //University Program 
+    Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
+    Route::post('/university-programs/{university_id}', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    // In routes/api.php
+    Route::get('/university-programs/{program_id}/edit', [UniversityProgramController::class, 'edit']);
+    Route::put('/universities/{university}/programs/{program}', [UniversityProgramController::class, 'update']);
+    Route::delete('/universities/{university_id}/programs/{program_id}', [UniversityProgramController::class, 'destroy']);
+
+
+
 
     //Filters Items Program Lavel
     Route::post('/program/level', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
@@ -148,6 +158,9 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
      //  Program tag
      Route::resource('programtag', ProgramTagController::class);
+
+     //All Student
+     Route::get('all/students', [AdminController::class, 'index']);
 
      
 

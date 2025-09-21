@@ -36,4 +36,23 @@ class University extends Model
         'images' => 'array',
         'top_disciplines' => 'array',
     ];
+
+     protected static function booted()
+    {
+        static::updated(function ($university) {
+            // Update all related university programs
+            $university->programs()->update([
+                'university_name' => $university->university_name,
+                'address' => $university->address,
+                'location' => $university->location,
+                'phone_number' => $university->phone_number,
+                'images' => json_encode($university->images),
+            ]);
+        });
+    }
+
+    public function programs()
+    {
+        return $this->hasMany(UniversityProgram::class);
+    }
 }

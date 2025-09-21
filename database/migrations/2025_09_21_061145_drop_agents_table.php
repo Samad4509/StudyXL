@@ -4,9 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAgentsTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
@@ -37,7 +40,7 @@ class CreateAgentsTable extends Migration
 
             $table->string('trading_name')->nullable();
             $table->string('website')->nullable();
-            $table->integer('students_per_year')->nullable();
+            $table->text('students_per_year')->nullable();
             $table->json('destinations')->nullable();
             $table->string('other_destination')->nullable();
             $table->string('litigation')->nullable();
@@ -45,17 +48,17 @@ class CreateAgentsTable extends Migration
             $table->string('australia_recruitment')->nullable();
             $table->text('australia_recruitment_details')->nullable();
             $table->string('institutions')->nullable();
-            $table->text('college')->nullable();
-            $table->text('creative_course')->nullable();
-            $table->text('university_preparation')->nullable();
-            $table->text('adult_english')->nullable();
-            $table->text('junior_english')->nullable();
-            $table->text('direct_entry')->nullable();
-            $table->integer('year_established')->nullable();
-            $table->integer('branch_offices')->nullable();
-            $table->integer('counsellors')->nullable();
-            $table->string('icef_id')->nullable();
-            $table->string('hear_about')->nullable();
+            $table->string('college')->nullable(); 
+            $table->string('creative_course')->nullable();
+            $table->text('university_preparation');
+            $table->text('adult_english');
+            $table->text('junior_english');
+            $table->text('direct_entry');
+            $table->text('year_established');
+            $table->text('branch_offices');
+            $table->text('counsellors');
+            $table->string('icef_id');
+            $table->string('hear_about');
             $table->text('why_oxford')->nullable();
 
             $table->string('referee_prefix')->nullable();
@@ -67,16 +70,19 @@ class CreateAgentsTable extends Migration
             $table->string('referee_phone')->nullable();
             $table->string('referee_website')->nullable();
 
-            $table->boolean('is_approved')->default(false);
+            $table->text('is_approved')->default(false);
             $table->string('status')->default('inactive');
-            $table->string('token')->nullable()->after('status');
-
+            $table->string('token')->nullable(); 
             $table->timestamps(); // created_at & updated_at
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('agents');
+       
     }
-}
+};

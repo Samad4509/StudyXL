@@ -11,6 +11,11 @@ class UniversityProgram extends Model
 
     
     protected $fillable = [
+        'university_name',
+        'address',
+        'location',
+        'phone_number',
+        'images',
         'university_id',
         'program_name',
         'program_description',
