@@ -2,44 +2,24 @@
 
 namespace App\Http\Controllers\Agent;
 
-use App\Models\Agent;
-use App\Mail\Websitemail;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\Websitemail;
+use App\Models\Agent;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password; // ✅ Correct namespace
+use App\Notifications\AgentResetPassword;
 
 class AgentController extends Controller
 {
-    public function create()
-    {
-        return view('agent.auth.register');
-    }
-    
 
-   public function dashboard()
-    {
-        return view('agent.auth.dashboard');
-    }
-     public function logout()
-    {
-        // return "ok";
-         Auth::guard('agent')->logout();
-         return redirect()->route('agent.login')->with('success','Logout Success');
-    }
-    public function forget_password()
-    {
-        return view('agent.auth.forget-password');
-    }
     public function store(Request $request)
     {
+
+
+        // return $request;
         // 🔁 Manually decode JSON content
-         $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
         // 🛑 Check if email already exists
         if (Agent::where('email', $data['email'])->exists()) {
@@ -49,58 +29,65 @@ class AgentController extends Controller
             ], 409); // Conflict
         }
 
-      
+
 
         // ✅ Create agent with all the fields
         $agent = Agent::create([
-            'prefix' => $data['prefix'],
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'company_name' => $data['company_name'],
-            'job_title' => $data['job_title'],
-            'country_dialing_code' => $data['country_dialing_code'],
-            'phone_number' => $data['phone_number'],
-            'email' => $data['email'],
-            'finance_email' => $data['finance_email'],
-            'password' => Hash::make($data['password']),
-            'street_address' => $data['street_address'],
-            'street_address_line_2' => $data['street_address_line_2'] ?? null,
-            'city' => $data['city'],
-            'state_province' => $data['state_province'],
-            'postal_zip_code' => $data['postal_zip_code'],
-            'country' => $data['country'],
-            'director_title' => $data['director_title'],
-            'director_first_name' => $data['director_first_name'],
-            'director_last_name' => $data['director_last_name'],
-            'director_job_title' => $data['director_job_title'],
-            'director_phone_code' => $data['director_phone_code'],
-            'director_phone_number' => $data['director_phone_number'],
-            'director_email' => $data['director_email'],
-            'students_per_year' => $data['students_per_year'],
-            'destinations' => json_encode($data['destinations']),
-            'litigation_status' => $data['litigation_status'],
-            'australia_recruitment' => $data['australia_recruitment'],
-            'other_institutions' => $data['other_institutions'],
-            'college_name' => $data['college_name'],
-            'creative_course' => $data['creative_course'],
-            'university_preparation' => $data['university_preparation'],
-            'adult_english_language' => $data['adult_english_language'],
-            'junior_english_language' => $data['junior_english_language'],
-            'direct_entry_to_university' => $data['direct_entry_to_university'],
-            'company_established_year' => $data['company_established_year'],
-            'branch_offices' => $data['branch_offices'],
-            'counsellors_employed' => $data['counsellors_employed'],
-            'icef_registered' => $data['icef_registered'],
-            'source_of_information' => $data['source_of_information'],
-            'reason_to_work_with_oxford' => $data['reason_to_work_with_oxford'],
-            'first_referee_title' => $data['first_referee_title'],
-            'first_referee_first_name' => $data['first_referee_first_name'],
-            'first_referee_last_name' => $data['first_referee_last_name'],
-            'first_referee_company_name' => $data['first_referee_company_name'],
-            'first_referee_email' => $data['first_referee_email'],
-            'first_referee_phone_country_code' => $data['first_referee_phone_country_code'],
-            'first_referee_phone_number' => $data['first_referee_phone_number'],
-            'first_referee_website' => $data['first_referee_website'],
+            'prefix' => $data['prefix'] ?? null,
+            'first_name' => $data['first_name'] ?? null,
+            'last_name' => $data['last_name'] ?? null,
+            'company_name' => $data['company_name'] ?? null,
+            'job_title' => $data['job_title'] ?? null,
+            'country_dialing_code' => $data['country_dialing_code'] ?? null,
+            'phone_number' => $data['phone_number'] ?? null,
+            'email' => $data['email'] ?? null,
+            'finance_email' => $data['finance_email'] ?? null,
+            'password' => isset($data['password']) ? bcrypt($data['password']) : null,
+            'street_address' => $data['street_address'] ?? null,
+            'street_address_line2' => $data['street_address_line2'] ?? null,
+            'city' => $data['city'] ?? null,
+            'state' => $data['state'] ?? null,
+            'postal_code' => $data['postal_code'] ?? null,
+            'country' => $data['country'] ?? null,
+            'director_prefix' => $data['director_prefix'] ?? null,
+            'director_first_name' => $data['director_first_name'] ?? null,
+            'director_last_name' => $data['director_last_name'] ?? null,
+            'director_job_title' => $data['director_job_title'] ?? null,
+            'director_dialing_code' => $data['director_dialing_code'] ?? null,
+            'director_phone_number' => $data['director_phone_number'] ?? null,
+            'director_email' => $data['director_email'] ?? null,
+            'trading_name' => $data['trading_name'] ?? null,
+            'website' => $data['website'] ?? null,
+            'students_per_year' => $data['students_per_year'] ?? null,
+            'destinations' => isset($data['destinations']) ? json_encode($data['destinations']) : null,
+            'other_destination' => $data['other_destination'] ?? null,
+            'litigation' => $data['litigation'] ?? null,
+            'litigation_details' => $data['litigation_details'] ?? null,
+            'australia_recruitment' => $data['australia_recruitment'] ?? null,
+            'australia_recruitment_details' => $data['australia_recruitment_details'] ?? null,
+            'institutions' => $data['institutions'] ?? null,
+            'college' => $data['college'] ?? false,
+            'creative_course' => $data['creative_course'] ?? false,
+            'university_preparation' => $data['university_preparation'] ?? false,
+            'adult_english' => $data['adult_english'] ?? false,
+            'junior_english' => $data['junior_english'] ?? false,
+            'direct_entry' => $data['direct_entry'] ?? false,
+            'year_established' => $data['year_established'] ?? null,
+            'branch_offices' => $data['branch_offices'] ?? null,
+            'counsellors' => $data['counsellors'] ?? null,
+            'icef_id' => $data['icef_id'] ?? null,
+            'hear_about' => $data['hear_about'] ?? null,
+            'why_oxford' => $data['why_oxford'] ?? null,
+            'referee_prefix' => $data['referee_prefix'] ?? null,
+            'referee_first_name' => $data['referee_first_name'] ?? null,
+            'referee_last_name' => $data['referee_last_name'] ?? null,
+            'referee_company' => $data['referee_company'] ?? null,
+            'referee_email' => $data['referee_email'] ?? null,
+            'referee_dialing_code' => $data['referee_dialing_code'] ?? null,
+            'referee_phone' => $data['referee_phone'] ?? null,
+            'referee_website' => $data['referee_website'] ?? null,
+            'is_approved' => $data['is_approved'] ?? false,
+            'status' => $data['status'] ?? 'inactive'
         ]);
 
         // ✅ Success response
@@ -110,92 +97,52 @@ class AgentController extends Controller
             'agent' => $agent
         ], 201); // 201 Created
     }
+
+
     public function forget_password_submit(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        // Check if the agent exists
         $agent = Agent::where('email', $request->email)->first();
-
         if (!$agent) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Email not found.'
-            ], 404);
+            return response()->json(['status' => false, 'message' => 'Email not found.'], 404);
         }
 
-        // Generate a secure token
-        $token = hash('sha256', time());
-
-        // Save the token to the agent record (make sure 'token' column exists)
+        // Generate secure token
+        $token = hash('sha256', time() . $agent->email);
         $agent->token = $token;
         $agent->save();
 
-        // Build the reset link
-        $reset_link = url('agent/reset_password/' . $token . '/' . $request->email);
+        // Send notification
+        $agent->notify(new AgentResetPassword($token));
 
-        // Email content
-        $subject = "Reset Password";
-        $message = '<a href="' . $reset_link . '">Click here to reset your password</a>';
-
-        // Send email
-        Mail::to($request->email)->send(new Websitemail($subject, $message));
-
-        // Return JSON response
         return response()->json([
             'status' => true,
-            'message' => 'Please check your email for the password reset link.',
-            'reset_link' => $reset_link // (optional: useful for debugging in Postman)
-        ], 200);
+            'message' => 'Please check your email for the password reset link.'
+        ]);
     }
 
-
-
-    public function reset_password($token, $email)
-    {
-        $agent = Agent::where('email', $email)->where('token', $token)->first();
-
-        if (!$agent) {
-            return redirect()->route('login')->with('error', 'Invalid or expired reset link');
-        }
-
-        // Show reset password form
-        return view('agent.auth.reset-password', compact('email', 'token'));
-    }
     public function reset_password_submit(Request $request)
     {
-        // Validate input
         $request->validate([
             'email' => 'required|email',
             'token' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
 
-        // Find agent by email + token
         $agent = Agent::where('email', $request->email)
-                    ->where('token', $request->token)
-                    ->first();
+            ->where('token', $request->token)
+            ->first();
 
         if (!$agent) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid token or email.'
-            ], 400); // 400 Bad Request
+            return response()->json(['status' => false, 'message' => 'Invalid token or email.'], 400);
         }
 
-        // Update password
+        // Update password and clear token
         $agent->password = Hash::make($request->password);
-        $agent->token = null; // clear reset token
+        $agent->token = null;
         $agent->save();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Password reset successfully.'
-        ], 200);
+        return response()->json(['status' => true, 'message' => 'Password reset successfully.']);
     }
-
-
 }

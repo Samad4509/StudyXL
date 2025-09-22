@@ -3,32 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
 {
-    /**
-     * Display the password reset link request view.
-     */
-    public function create(): View
+    public function store(Request $request)
     {
-        return view('auth.forgot-password');
-    }
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
 
-    /**
-     * Handle an incoming password reset link request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $request->validate([
-    //         'email' => ['required', 'email'],
-    //     ]);
+        $status = Password::sendResetLink($request->only('email'));
 
+<<<<<<< HEAD
     //     // We will send the password reset link to this user. Once we have attempted
     //     // to send the link, we will examine the response then see the message we
     //     // need to show to the user. Finally, we'll send out a proper response.
@@ -47,20 +35,18 @@ class PasswordResetLinkController extends Controller
             // Validate the email
             $request->validate([
                 'email' => ['required', 'email'],
+=======
+        if ($status == Password::RESET_LINK_SENT) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Check your inbox! Password reset link sent.'
+>>>>>>> 6a5111ef1a4c5c7e023e98f4cd3e88ac1df46aa3
             ]);
-
-            // Attempt to send the password reset link
-            $status = Password::sendResetLink(
-                $request->only('email')
-            );
-
-            // Success response
-            if ($status == Password::RESET_LINK_SENT) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Check your inbox! A password reset link has been sent.'
-                ]);
-            }
-
         }
+
+        return response()->json([
+            'success' => false,
+            'message' => __($status)
+        ], 422);
+    }
 }

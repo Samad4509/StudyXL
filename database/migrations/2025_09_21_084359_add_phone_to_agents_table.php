@@ -6,21 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('agents', function (Blueprint $table) {
-            
-            if (Schema::hasColumn('agents', 'active')) {
-                $table->dropColumn('active');
-            }
+            $table->string('token')->nullable(); 
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('agents', function (Blueprint $table) {
-            
-            $table->boolean('active')->default(false);
+            //
         });
     }
 };
