@@ -98,17 +98,27 @@ Route::middleware('guest:agent')->group(function () {
 
 // Admin API
 // Admin login and public actions
+// Route::prefix('admin')->group(function () {
+//     Route::post('/login', [AdminController::class, 'login_submit'])->name('admin.login');
+//     Route::post('/forget_password', [AdminController::class, 'forget_password_submit'])->name('admin.forget_password');
+//     Route::post('/reset_password_submit',[AdminController::class,'reset_password_submit'])->name('admin.reset_password_submit');
+//     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
+//     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
+//     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
+//     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
+// });
+
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminController::class, 'login_submit'])->name('admin.login');
     Route::post('/forget_password', [AdminController::class, 'forget_password_submit'])->name('admin.forget_password');
     Route::post('/reset_password_submit',[AdminController::class,'reset_password_submit'])->name('admin.reset_password_submit');
-    Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
+    Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
+    Route::get('all/students', [AdminController::class, 'index']);
+    // check
 });
-
-
 
 // Public admin login route
 Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
