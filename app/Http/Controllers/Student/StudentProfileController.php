@@ -11,10 +11,10 @@ class StudentProfileController extends Controller
 {
     public function update(Request $request)
         {
-            $user = Auth::user();
+           $user = Auth::user();
 
             // Decode JSON data from request
-            $data = json_decode($request->getContent(), true); // decode as associative array
+           $data = json_decode($request->getContent(), true); // decode as associative array
 
             // Profile fields
             $profileData = [

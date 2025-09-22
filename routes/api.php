@@ -184,7 +184,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
      Route::resource('programtag', ProgramTagController::class);
 
      //All Student
-     Route::get('all/students', [AdminController::class, 'index']);
+    //  Route::get('all/students', [AdminController::class, 'index']);
 
      
 
