@@ -71,9 +71,15 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
     Route::get('dashboard', [AgentController::class,'dashboard'])->name('agent.dashboard');
     Route::get('logout', [AgentController::class,'logout'])->name('agent.logout');
 });
+
+        
+Route::prefix('agents')->group(function () {
+    Route::post('/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+    Route::post('/register', [AgentController::class, 'store']);
+});
+
 Route::middleware('guest:agent')->group(function () {
-    Route::post('agent/register', [AgentController::class, 'store']);
-    Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+  
     Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');

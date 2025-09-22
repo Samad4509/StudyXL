@@ -87,7 +87,7 @@ class AgentController extends Controller
             'australia_recruitment' => $data['australia_recruitment'] ?? null,
             'australia_recruitment_details' => $data['australia_recruitment_details'] ?? null,
             'institutions' => $data['institutions'] ?? null,
-            'college' => $request->college_id, 
+            'college' => $request->college, 
             'creative_course' => $data['creative_course'] ?? false,
             'university_preparation' => $data['university_preparation'] ?? false,
             'adult_english' => $data['adult_english'] ?? false,
