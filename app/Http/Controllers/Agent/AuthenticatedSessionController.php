@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        // return $request;
         // Validate input
         $request->validate([
             'email' => 'required|email',

@@ -73,20 +73,28 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
 });
 
         
-Route::prefix('agents')->group(function () {
-    Route::post('/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
-    Route::post('/register', [AgentController::class, 'store']);
-});
+// Route::prefix('agents')->group(function () {
+//     Route::post('/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+//     Route::post('/register', [AgentController::class, 'store']);
+// });
 
-Route::middleware('guest:agent')->group(function () {
+// Route::middleware('guest:agent')->group(function () {
   
-    Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
-    Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
-    Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
+//     Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
+//     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
+//     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
     
      
 
+// });
+Route::middleware('guest:agent')->group(function () {
+    Route::post('/agents/register', [AgentController::class, 'store']);
+    Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+    Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
+    Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
+    Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
 });
+
 
 // Admin API
 // Admin login and public actions
