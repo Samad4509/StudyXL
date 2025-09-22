@@ -93,6 +93,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('all/students', [AdminController::class, 'index']);
+    // check
 });
 
 
