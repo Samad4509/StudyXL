@@ -11,13 +11,12 @@ use App\Http\Controllers\Filters\AllfiltersItem;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Admin\ProgramTagController;
 use App\Http\Controllers\Admin\UniversityController;
-// use App\Http\Controllers\Agent\AuthenticatedSessionController;
-// use App\Http\Controllers\Auth\NewPasswordController;
+
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-// use App\Http\Controllers\Auth\PasswordResetLinkController;
+
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
@@ -28,7 +27,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 
 
-//  Route::post('/university', [UniversityController::class, 'store']);
+
  
 // Student  ApI
 Route::middleware('guest')->group(function () {
@@ -37,12 +36,6 @@ Route::middleware('guest')->group(function () {
 
     // Login
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
-    // // Forgot Password
-    // Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
-
-    // // Reset Password
-    // Route::post('reset-password', [NewPasswordController::class, 'store']);
 
     // Forgot Password
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
@@ -84,10 +77,9 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
 Route::middleware('guest:agent')->group(function () {
     Route::post('/agents/register', [AgentController::class, 'store']);
     Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
-    Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
-    Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
-
+    Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
+    Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
 });
 
 // Admin API
@@ -114,7 +106,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
     // University create route
-    // Route::get('/university/edit', [UniversityController::class, 'edit']);
+  
     
     Route::post('/universities', [UniversityController::class, 'store'])->name('university.store');       // create
     Route::get('/universities/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
@@ -160,16 +152,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
      //  Program tag
      Route::resource('programtag', ProgramTagController::class);
 
-     
 
-
-
-
-
-
-
-
- 
 });
 
 

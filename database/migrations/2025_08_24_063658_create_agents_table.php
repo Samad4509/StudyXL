@@ -70,7 +70,7 @@ class CreateAgentsTable extends Migration
             $table->text('is_approved')->default(false);
             $table->string('status')->default('inactive');
             $table->string('token')->nullable(); 
-            $table->timestamps(); // created_at & updated_at
+            $table->timestamps(); 
         });
 }
 

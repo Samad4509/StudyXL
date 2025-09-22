@@ -8,16 +8,18 @@ use App\Models\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\AgentResetPassword;
+
 class AgentController extends Controller
 {
-   
+
     public function store(Request $request)
     {
-        
-      
+
+
         // return $request;
         // 🔁 Manually decode JSON content
-         $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
         // 🛑 Check if email already exists
         if (Agent::where('email', $data['email'])->exists()) {
@@ -27,10 +29,10 @@ class AgentController extends Controller
             ], 409); // Conflict
         }
 
-      
+
 
         // ✅ Create agent with all the fields
-         $agent = Agent::create([
+        $agent = Agent::create([
             'prefix' => $data['prefix'] ?? null,
             'first_name' => $data['first_name'] ?? null,
             'last_name' => $data['last_name'] ?? null,
@@ -96,92 +98,51 @@ class AgentController extends Controller
         ], 201); // 201 Created
     }
 
+
     public function forget_password_submit(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        // Check if the agent exists
         $agent = Agent::where('email', $request->email)->first();
-
         if (!$agent) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Email not found.'
-            ], 404);
+            return response()->json(['status' => false, 'message' => 'Email not found.'], 404);
         }
 
-        // Generate a secure token
-        $token = hash('sha256', time());
-
-        // Save the token to the agent record (make sure 'token' column exists)
+        // Generate secure token
+        $token = hash('sha256', time() . $agent->email);
         $agent->token = $token;
         $agent->save();
 
-        // Build the reset link
-        $reset_link = url('agent/reset_password/' . $token . '/' . $request->email);
+        // Send notification
+        $agent->notify(new AgentResetPassword($token));
 
-        // Email content
-        $subject = "Reset Password";
-        $message = '<a href="' . $reset_link . '">Click here to reset your password</a>';
-
-        // Send email
-        Mail::to($request->email)->send(new Websitemail($subject, $message));
-
-        // Return JSON response
         return response()->json([
             'status' => true,
-            'message' => 'Please check your email for the password reset link.',
-            'reset_link' => $reset_link // (optional: useful for debugging in Postman)
-        ], 200);
+            'message' => 'Please check your email for the password reset link.'
+        ]);
     }
 
-
-
-    public function reset_password($token, $email)
-    {
-        $agent = Agent::where('email', $email)->where('token', $token)->first();
-
-        if (!$agent) {
-            return redirect()->route('login')->with('error', 'Invalid or expired reset link');
-        }
-
-        // Show reset password form
-        return view('agent.auth.reset-password', compact('email', 'token'));
-    }
     public function reset_password_submit(Request $request)
     {
-        // Validate input
         $request->validate([
             'email' => 'required|email',
             'token' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
 
-        // Find agent by email + token
         $agent = Agent::where('email', $request->email)
-                    ->where('token', $request->token)
-                    ->first();
+            ->where('token', $request->token)
+            ->first();
 
         if (!$agent) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid token or email.'
-            ], 400); // 400 Bad Request
+            return response()->json(['status' => false, 'message' => 'Invalid token or email.'], 400);
         }
 
-        // Update password
+        // Update password and clear token
         $agent->password = Hash::make($request->password);
-        $agent->token = null; // clear reset token
+        $agent->token = null;
         $agent->save();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Password reset successfully.'
-        ], 200);
+        return response()->json(['status' => true, 'message' => 'Password reset successfully.']);
     }
-
-
 }

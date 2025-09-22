@@ -7,7 +7,7 @@ return [
         'passwords' => 'users',
     ],
 
-  
+
     'guards' => [
         'web' => [
             'driver' => 'session',
@@ -24,14 +24,14 @@ return [
             'provider' => 'admins',
         ],
 
-       
+
         'agent' => [
             'driver' => 'session',
             'provider' => 'agents',
         ],
     ],
 
-    
+
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
@@ -43,7 +43,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        
+
         'agents' => [
             'driver' => 'eloquent',
             'model' => App\Models\Agent::class,
@@ -57,8 +57,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        
     ],
 
     'password_timeout' => 10800,
 ];
-
