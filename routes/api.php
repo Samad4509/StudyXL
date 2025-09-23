@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Update Password
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
     
 
@@ -183,8 +184,6 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
      //  Program tag
      Route::resource('programtag', ProgramTagController::class);
 
-     //All Student
-    //  Route::get('all/students', [AdminController::class, 'index']);
 
      
 
