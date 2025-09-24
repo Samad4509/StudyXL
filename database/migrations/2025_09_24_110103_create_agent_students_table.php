@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('student_profiles', function (Blueprint $table) {
+        Schema::create('agent_students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
-            // Personal Info
+            $table->string('agent_id')->nullable();
+            $table->string('company_name')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('destination')->nullable();
@@ -49,9 +49,6 @@ return new class extends Migration
             $table->string('english_test')->nullable();
             $table->string('photo')->nullable();
             $table->timestamps();
-
-            // Foreign key
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -60,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-          Schema::dropIfExists('student_profiles');
+        Schema::dropIfExists('agent_students');
     }
 };

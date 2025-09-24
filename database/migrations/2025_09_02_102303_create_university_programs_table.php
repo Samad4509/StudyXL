@@ -13,11 +13,11 @@ return new class extends Migration
     {
        Schema::create('university_programs', function (Blueprint $table) {
             $table->id();
-            $table->string('university_name')->after('id');
-            $table->string('address')->nullable()->after('university_name');
-            $table->string('location')->nullable()->after('address');
-            $table->string('phone_number')->nullable()->after('location');
-            $table->json('images')->nullable()->after('phone_number');
+            $table->string('university_name');
+            $table->string('address')->nullable();
+            $table->string('location')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->json('images')->nullable();
             $table->unsignedBigInteger('university_id');
             $table->string('program_name');
             $table->text('program_description');

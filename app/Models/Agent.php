@@ -41,6 +41,22 @@ class Agent extends Authenticatable implements MustVerifyEmail
         'icef_registered' => 'boolean',
     ];
 
+   protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($agent) {
+            if (!$agent->id) {
+                // Locking is optional for small apps
+                $lastAgent = self::orderBy('id', 'desc')->first();
+                $nextId = $lastAgent ? $lastAgent->id + 1 : 100000;
+                if ($nextId > 999999) {
+                    throw new \Exception("Maximum agents reached (6-digit limit).");
+                }
+                $agent->id = $nextId;
+            }
+        });
+    }
     // 🔹 Custom helper methods
     public function isApproved()
     {

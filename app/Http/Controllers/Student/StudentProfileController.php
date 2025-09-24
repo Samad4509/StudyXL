@@ -14,8 +14,6 @@ class StudentProfileController extends Controller
   public function update(Request $request)
     {
         $user = Auth::user();
-
-        
         // ✅ Step 2: Format dates to Y-m-d
         $dob = $request->filled('dob')
             ? Carbon::createFromFormat('m-d-Y', $request->dob)->format('Y-m-d')

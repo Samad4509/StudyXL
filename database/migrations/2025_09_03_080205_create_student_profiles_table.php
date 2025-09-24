@@ -10,6 +10,7 @@ return new class extends Migration
         Schema::create('student_profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
+            // Personal Info
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('destination')->nullable();
@@ -23,27 +24,29 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('gender')->nullable();
             $table->date('passport_expiry')->nullable();
-            $table->string('country_of_residence', 100)->nullable();
+            $table->string('country_of_residence')->nullable();
             $table->string('program')->nullable();
             $table->string('intake')->nullable();
             $table->string('specialization')->nullable();
 
-            // JSON fields
-           $table->json('academic_qualifications')->nullable();
+            // Multi-entry fields as JSON
+            $table->json('academic_qualifications')->nullable();
             $table->json('test_scores')->nullable();
             $table->json('work_experiences')->nullable();
             $table->json('references')->nullable();
 
-            // SOP, achievements, attachments
+            // Other fields
             $table->longText('sop')->nullable();
             $table->text('achievements')->nullable();
-            $table->string('resume')->nullable();
+            
+             $table->string('resume')->nullable();
             $table->string('passport_copy')->nullable();
             $table->string('transcripts')->nullable();
             $table->string('english_test')->nullable();
             $table->string('photo')->nullable();
-
             $table->timestamps();
+
+            // Foreign key
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

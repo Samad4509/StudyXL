@@ -22,7 +22,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-
+use App\Http\Controllers\Agent\AgentStudentController;
 
 //  Route::post('/university', [UniversityController::class, 'store']);
  
@@ -39,6 +39,7 @@ Route::middleware('guest')->group(function () {
 
     // Reset Password
     Route::post('reset-password', [NewPasswordController::class, 'store']);
+    
 });
 
 
@@ -71,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function () {
     Route::get('dashboard', [AgentController::class,'dashboard'])->name('agent.dashboard');
     Route::get('logout', [AgentController::class,'logout'])->name('agent.logout');
+
 });
 
         
@@ -94,6 +96,15 @@ Route::middleware('guest:agent')->group(function () {
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
     Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
+
+
+    Route::get('all/agent-student', [AgentStudentController::class,'index'])->name('agent.student.all');
+    Route::post('agent-student/register', [AgentStudentController::class,'store'])->name('agent.student.create');
+    Route::get('agent-student/{id}', [AgentStudentController::class,'edit'])->name('agent.student.edit');
+    Route::post('agent-student/{id}', [AgentStudentController::class,'update'])->name('agent.student.update');
+    Route::delete('agent-student/{id}', [AgentStudentController::class,'destroy'])->name('agent.student.delete');
+
+
 });
 
 
@@ -184,6 +195,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
      //  Program tag
      Route::resource('programtag', ProgramTagController::class);
 
+     Route::get('all/student/profile/', [AdminController::class, 'allstudent']);
 
      
 
