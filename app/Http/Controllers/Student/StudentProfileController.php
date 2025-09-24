@@ -1,31 +1,68 @@
 <?php
-
 namespace App\Http\Controllers\Student;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\StudentProfile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\StudentProfile;
 
 class StudentProfileController extends Controller
 {
+    // Update profile
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        // Merge user info + request data
-        $updateData = array_merge(
-            ['user_id' => $user->id],
-            $request->only([
-                'full_name', 'dob', 'gender', 'phone', 'email', 'address',
-                'passport_number', 'passport_expiry', 'nationality', 'country_of_residence',
-                'desired_program', 'preferred_intake', 'study_level', 'specialization',
-                'qualification', 'institution', 'year', 'cgpa',
-                'sop', 'extracurricular'
-            ])
-        );
+        // ✅ Step 1: Parse dates once (Y-m-d format)
+        $dob = $request->filled('dob')
+            ? Carbon::parse($request->dob)->format('Y-m-d')
+            : null;
 
-        // 🔹 File fields and target directories
+        $passportExpiry = $request->filled('passport_expiry')
+            ? Carbon::parse($request->passport_expiry)->format('Y-m-d')
+            : null;
+
+        // ✅ Step 2: Decode JSON fields once
+        $jsonFields = ['academic_qualifications', 'test_scores', 'work_experiences', 'references'];
+        $jsonData = [];
+        foreach ($jsonFields as $field) {
+            $value = $request->input($field);
+            if ($value && is_string($value)) {
+                $decoded = json_decode($value, true);
+                $jsonData[$field] = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+            } else {
+                $jsonData[$field] = null;
+            }
+        }
+
+        // ✅ Step 3: Prepare profile data
+        $profileData = [
+            'name'                   => $request->input('name', $user->name),
+            'email'                  => $request->input('email', $user->email),
+            'destination'            => $request->input('destination', $user->destination),
+            'study_level'            => $request->input('study_level', $user->study_level),
+            'subject'                => $request->input('subject', $user->subject),
+            'nationality'            => $request->input('nationality', $user->nationality),
+            'passport'               => $request->input('passport', $user->passport),
+            'elp'                    => $request->input('elp', $user->elp),
+            'dob'                    => $dob,
+            'address'                => $request->input('address'),
+            'phone'                  => $request->input('phone'),
+            'gender'                 => $request->input('gender'),
+            'passport_expiry'        => $passportExpiry,
+            'country_of_residence'   => $request->input('country_of_residence'),
+            'program'                => $request->input('program'),
+            'intake'                 => $request->input('intake'),
+            'specialization'         => $request->input('specialization'),
+            'sop'                    => $request->input('sop'),
+            'achievements'           => $request->input('achievements'),
+        ];
+
+        // ✅ Step 4: Merge JSON fields
+        $profileData = array_merge($profileData, $jsonData);
+
+        // ✅ Step 5: Handle file uploads
         $fileFields = [
             'resume'        => 'uploads/resumes/',
             'passport_copy' => 'uploads/passports/',
@@ -34,37 +71,43 @@ class StudentProfileController extends Controller
             'photo'         => 'uploads/photos/',
         ];
 
-        // 🔹 Handle all file uploads in a loop
         foreach ($fileFields as $field => $directory) {
             if ($request->hasFile($field)) {
                 $file = $request->file($field);
-
-                // Create unique file name
                 $fileName = time() . '_' . $file->getClientOriginalName();
 
-                // Ensure directory exists
                 if (!file_exists(public_path($directory))) {
                     mkdir(public_path($directory), 0777, true);
                 }
 
-                // Move file to public/uploads/{type}/
                 $file->move(public_path($directory), $fileName);
-
-                // Save relative path in DB
-                $updateData[$field] = $directory . $fileName;
+                $profileData[$field] = $directory . $fileName;
             }
         }
 
-        // Save into DB (update if exists, create if not)
+        // ✅ Step 6: Update or create student profile
         $profile = StudentProfile::updateOrCreate(
             ['user_id' => $user->id],
-            $updateData
+            $profileData
         );
 
         return response()->json([
-            'status'  => 'ok',
-            'message' => 'Profile updated successfully',
+            'success' => true,
+            'message' => 'Profile updated successfully.',
             'profile' => $profile
         ]);
+    }
+
+    // Edit profile
+    public function edit()
+    {
+        $user = Auth::user();
+        $profile = StudentProfile::where('user_id', $user->id)->first();
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'profile' => $profile
+        ], 200);
     }
 }

@@ -41,6 +41,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
     // Reset Password
     Route::post('/reset-password', [NewPasswordController::class, 'store']);
+    
+    
 
     
 });
@@ -65,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Update Password
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
+    Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
 
 
 });

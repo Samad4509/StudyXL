@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 return [
 
@@ -48,6 +48,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Agent::class,
         ],
+        
     ],
 
     'passwords' => [
@@ -61,4 +62,4 @@ return [
     ],
 
     'password_timeout' => 10800,
-];
+]; 
