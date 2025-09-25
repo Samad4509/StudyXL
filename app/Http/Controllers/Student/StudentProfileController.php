@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Student;
 
 use Carbon\Carbon;
@@ -110,4 +111,7 @@ class StudentProfileController extends Controller
             'profile' => $profile
         ], 200);
     }
+
+
+    
 }

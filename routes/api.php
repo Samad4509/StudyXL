@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
     Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
+   
 
 
 });
@@ -96,6 +97,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('all/students', [AdminController::class, 'index']);
+    Route::get('students/detail/{id}', [AdminController::class, 'detail']);
 });
 
 

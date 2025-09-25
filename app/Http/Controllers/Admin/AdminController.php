@@ -7,6 +7,7 @@ use App\Models\Agent;
 use App\Mail\Websitemail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -205,9 +206,32 @@ class AdminController extends Controller
         return $agent = Agent::All();
     }
 
-     public function index()
+    public function index()
     {
-       return $user = User::all();
-
+        return $user = User::all();
     }
+
+
+
+    
+
+
+    public function detail($id)
+    {
+        $student = StudentProfile::with('user')->where('user_id', $id)->first();
+
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found',
+            ], 404); 
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $student,
+        ], 200);
+    }
+    
+    
 }
