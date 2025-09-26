@@ -14,7 +14,7 @@ class AgentStudent extends Model
         'passport','elp','dob','address','phone','gender','passport_expiry',
         'country_of_residence','program','intake','specialization',
         'academic_qualifications','test_scores','work_experiences','references',
-        'sop','achievements','resume','passport_copy','transcripts','english_test','photo','agent_id','company_name'
+        'sop','achievements','resume','passport_copy','transcripts','english_test','photo','agent_id','company_name','id'
     ];
 
     protected $casts = [
@@ -25,4 +25,21 @@ class AgentStudent extends Model
         'dob' => 'date:Y-m-d',
         'passport_expiry' => 'date:Y-m-d',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($profile) {
+            if (!$profile->id) {
+                // Locking is optional for small apps
+                $lastProfile = self::orderBy('id', 'desc')->first();
+                $nextId = $lastProfile? $lastProfile->id + 1 : 1000;
+                if ($nextId > 999999) {
+                    throw new \Exception("Maximum agents reached (4-digit limit).");
+                }
+                $profile->id = $nextId;
+            }
+        });
+    }
 }

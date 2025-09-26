@@ -97,6 +97,7 @@ Route::middleware('guest:agent')->group(function () {
     Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
     Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
 
+    Route::get('/agent/profile', [AgentController::class, 'profile'])->name('agent.profile');
 
     Route::get('all/agent-student', [AgentStudentController::class,'index'])->name('agent.student.all');
     Route::post('agent-student/register', [AgentStudentController::class,'store'])->name('agent.student.create');
@@ -129,6 +130,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('all/students', [AdminController::class, 'index']);
+    Route::get('students/detail/{id}', [AdminController::class, 'detail']);
+    // Route::get('/universities/destination', [UniversityController::class, 'destination'])->name('university.destinations'); 
     // check
 });
 
@@ -142,12 +145,17 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     // University create route
     // Route::get('/university/edit', [UniversityController::class, 'edit']);
-    
-    Route::post('/universities', [UniversityController::class, 'store'])->name('university.store');       // create
-    Route::get('/universities/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
-    Route::post('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
+    Route::get('/university-destination ', [UniversityController::class, 'universitydestination'])->name('university.destination'); 
+    Route::get('/alluniversities ', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities'); 
+    Route::post('/universities/create/{destination_id}', [UniversityController::class, 'store'])->name('university.store');       // create
+    Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
+    Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+   
 
+   // single
+ 
+  // single
     // Destination
     Route::resource('destinations', DestinationController::class);
 

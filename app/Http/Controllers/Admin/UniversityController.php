@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\University;
+use App\Models\Destination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -10,41 +11,59 @@ use Illuminate\Support\Facades\Validator;
 class UniversityController extends Controller
 {
 
-    public function store(Request $request)
+    public function universitydestination()
     {
-        // return $request;
+        $alldestination = Destination::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $alldestination
+        ]);
+    }
+
+    public function alluniversitie()
+    {
+        $alluniversities = University::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $alluniversities
+        ]);
+    }
+
+    public function store(Request $request, $destination_id)
+    {
+        $destination = Destination::find($destination_id);
+
+        if (!$destination) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Destination not found',
+            ], 404);
+        }
+
         $validator = Validator::make($request->all(), [
-            'university_name' => 'required|string|max:255',
+            'university_name' => 'required|unique:universities,university_name',
             'address' => 'nullable|string',
             'location' => 'nullable|string',
             'phone_number' => 'nullable|string',
-
             'images' => 'nullable|array',
             'images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
-
             'founded' => 'nullable|integer',
             'school_id' => 'nullable|string',
             'institution_type' => 'nullable|string',
             'dli_number' => 'nullable|string',
-
             'top_disciplines' => 'nullable|string',
-
-            // Cost and Duration
-            'application_fee'=>'nullable|string',
-            'application_short_desc'=>'nullable|string',
-
-            'average_graduate_program'=>'nullable|string',
-            'average_graduate_program_short_desc'=>'nullable|string',
-
-            'average_undergraduate_program'=>'nullable|string',
-            'average_undergraduate_program_short_desc'=>'nullable|string',
-
-            'cost_of_living'=>'nullable|string',
-            'cost_of_living_short_desc'=>'nullable|string',
-
-            'average_gross_tuition'=>'nullable|string',
-            'average_gross_tuition_short_desc'=>'nullable|string',
-
+            'application_fee' => 'nullable|string',
+            'application_short_desc' => 'nullable|string',
+            'average_graduate_program' => 'nullable|string',
+            'average_graduate_program_short_desc' => 'nullable|string',
+            'average_undergraduate_program' => 'nullable|string',
+            'average_undergraduate_program_short_desc' => 'nullable|string',
+            'cost_of_living' => 'nullable|string',
+            'cost_of_living_short_desc' => 'nullable|string',
+            'average_gross_tuition' => 'nullable|string',
+            'average_gross_tuition_short_desc' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -54,8 +73,13 @@ class UniversityController extends Controller
             ], 422);
         }
 
+        // Remove unwanted fields
         $data = $request->except('images', 'top_disciplines');
 
+        // ✅ Set destination column (so it's not null)
+        $data['destinations'] = $destination->destinations_name;
+
+        // Handle images
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -66,7 +90,7 @@ class UniversityController extends Controller
         }
         $data['images'] = $imagePaths;
 
-
+        // Handle top_disciplines JSON
         if ($request->filled('top_disciplines')) {
             $decoded = json_decode($request->top_disciplines, true);
             if (json_last_error() === JSON_ERROR_NONE) {
@@ -78,17 +102,25 @@ class UniversityController extends Controller
                 ], 422);
             }
         }
+
+        // ✅ Create University
         $university = University::create($data);
 
         return response()->json([
             'status' => true,
             'message' => 'University created successfully',
-            'data' => $university
+            'data' => $university,
+            'destinations' => $destination->destinations_name,
         ]);
     }
+
+
+
     public function edit($id)
     {
+
         $university = University::find($id);
+        
 
         if (!$university) {
             return response()->json([
@@ -103,10 +135,21 @@ class UniversityController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id,$destination_id)
     {
-        // return $request;
+        // return $destination_id;
         $university = University::find($id);
+        
+
+        $destination = Destination::find($destination_id);
+
+        if (!$destination) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Destination not found',
+            ], 404);
+        }
+        
 
         if (!$university) {
             return response()->json([
@@ -156,6 +199,8 @@ class UniversityController extends Controller
         }
 
         $data = $request->except('images', 'top_disciplines');
+        $data['destinations'] = $destination->destinations_name;
+
 
         if ($request->hasFile('images')) {
 
@@ -195,7 +240,8 @@ class UniversityController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'University updated successfully',
-            'data' => $university
+            'data' => $university,
+            'destinations' => $destination->destinations_name,
         ]);
     }
 

@@ -21,6 +21,24 @@ class AdminController extends Controller
        return $user = User::all();
 
     }
+
+   public function detail($id)
+    {
+        $student = StudentProfile::with('user')->where('user_id', $id)->first();
+
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found',
+            ], 404); 
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $student,
+        ], 200);
+    }
+
     // Dashboard (Protected)
     public function dashboard()
     {

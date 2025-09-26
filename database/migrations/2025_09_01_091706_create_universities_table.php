@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->string('university_name');
             $table->string('address')->nullable();
             $table->string('location')->nullable();
+            $table->text('destinations')->nullable(); 
             $table->string('phone_number')->nullable();
             $table->json('images')->nullable();
             $table->integer('founded')->nullable();
