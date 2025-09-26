@@ -19,6 +19,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\UniversityProgramController;
+use App\Http\Controllers\Agent\AgentStudentController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -84,6 +85,12 @@ Route::middleware('guest:agent')->group(function () {
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
     Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
+
+    Route::get('all/agent-student', [AgentStudentController::class,'index'])->name('agent.student.all');
+    Route::post('agent-student/register', [AgentStudentController::class,'store'])->name('agent.student.create');
+    Route::get('agent-student/{id}', [AgentStudentController::class,'edit'])->name('agent.student.edit');
+    Route::post('agent-student/{id}', [AgentStudentController::class,'update'])->name('agent.student.update');
+    Route::delete('agent-student/{id}', [AgentStudentController::class,'destroy'])->name('agent.student.delete');
 });
 
 // Admin API

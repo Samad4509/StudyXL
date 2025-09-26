@@ -29,6 +29,10 @@ return [
             'driver' => 'session',
             'provider' => 'agents',
         ],
+        'token' => [ // ✅ for API requests
+            'driver' => 'sanctum',
+            'provider' => 'agents',
+        ],
     ],
 
 
