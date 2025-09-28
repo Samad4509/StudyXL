@@ -30,10 +30,30 @@ class University extends Model
         'cost_of_living_short_desc',
         'average_gross_tuition',
         'average_gross_tuition_short_desc',
+        'destinations'
     ];
 
     protected $casts = [
         'images' => 'array',
         'top_disciplines' => 'array',
     ];
+
+     protected static function booted()
+    {
+        static::updated(function ($university) {
+            // Update all related university programs
+            $university->programs()->update([
+                'university_name' => $university->university_name,
+                'address' => $university->address,
+                'location' => $university->location,
+                'phone_number' => $university->phone_number,
+                'images' => json_encode($university->images),
+            ]);
+        });
+    }
+
+    public function programs()
+    {
+        return $this->hasMany(UniversityProgram::class);
+    }
 }
