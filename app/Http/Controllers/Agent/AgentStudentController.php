@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class AgentStudentController extends Controller
 {
 
-   public function index()
+    public function index()
     {
         $agentstudent = AgentStudent::all();
         return response()->json([
@@ -21,6 +21,7 @@ class AgentStudentController extends Controller
             'data' => $agentstudent
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -105,8 +106,7 @@ class AgentStudentController extends Controller
         ], 201);
     }
 
-
-   public function edit($id)
+    public function edit($id)
     {
         $profile = AgentStudent::findOrFail($id);
 
@@ -149,9 +149,24 @@ class AgentStudentController extends Controller
 
         // Update normal fields if provided
         $fields = [
-            'company_name','name','email','destination','study_level','subject','nationality',
-            'passport','elp','address','phone','gender','country_of_residence','program','intake',
-            'specialization','sop','achievements'
+            'company_name',
+            'name',
+            'email',
+            'destination',
+            'study_level',
+            'subject',
+            'nationality',
+            'passport',
+            'elp',
+            'address',
+            'phone',
+            'gender',
+            'country_of_residence',
+            'program',
+            'intake',
+            'specialization',
+            'sop',
+            'achievements'
         ];
 
         foreach ($fields as $field) {
@@ -200,7 +215,7 @@ class AgentStudentController extends Controller
         $profile = AgentStudent::where('agent_id', $agent->id)->findOrFail($id);
 
         // List of file fields to delete
-        $fileFields = ['resume','passport_copy','transcripts','english_test','photo'];
+        $fileFields = ['resume', 'passport_copy', 'transcripts', 'english_test', 'photo'];
 
         foreach ($fileFields as $field) {
             if (!empty($profile->$field) && file_exists(public_path($profile->$field))) {
@@ -216,7 +231,4 @@ class AgentStudentController extends Controller
             'message' => 'Student profile and related files deleted successfully.'
         ]);
     }
-
-
-
 }

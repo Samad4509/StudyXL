@@ -9,6 +9,7 @@ class University extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'destination_id',
         'university_name',
         'address',
         'location',

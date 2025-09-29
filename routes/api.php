@@ -101,9 +101,9 @@ Route::middleware('guest:agent')->group(function () {
 
     Route::get('all/agent-student', [AgentStudentController::class,'index'])->name('agent.student.all');
     Route::post('agent-student/register', [AgentStudentController::class,'store'])->name('agent.student.create');
-    Route::get('agent-student/{id}', [AgentStudentController::class,'edit'])->name('agent.student.edit');
-    Route::post('agent-student/{id}', [AgentStudentController::class,'update'])->name('agent.student.update');
-    Route::delete('agent-student/{id}', [AgentStudentController::class,'destroy'])->name('agent.student.delete');
+    Route::get('agent-student/edit/{id}', [AgentStudentController::class,'edit'])->name('agent.student.edit');
+    Route::post('agent-student/update/{id}', [AgentStudentController::class,'update'])->name('agent.student.update');
+    Route::delete('agent-student/delete/{id}', [AgentStudentController::class,'destroy'])->name('agent.student.delete');
 
 
 });
@@ -131,6 +131,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('all/students', [AdminController::class, 'index']);
     Route::get('students/detail/{id}', [AdminController::class, 'detail']);
+    Route::get('/alluniversities', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities');
     // Route::get('/universities/destination', [UniversityController::class, 'destination'])->name('university.destinations'); 
     // check
 });
@@ -151,7 +152,11 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
     Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
-   
+//    Route::get('/university-destination', [UniversityController::class, 'universitydestination'])->name('university.destination');
+//     Route::post('/universities/create', [UniversityController::class, 'store'])->name('university.store');
+//     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');
+//     Route::post('/universities/update/{id}', [UniversityController::class, 'update'])->name('university.update');
+//     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy');
 
    // single
  
@@ -171,26 +176,29 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
 
     //Filters Items Program Lavel
-    Route::post('/program/level', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
-    Route::get('/program/level/{id}', [AllfiltersItem::class, 'Programleveledit'])->name('programlavel.edit');
-    Route::put('/program/level/{id}', [AllfiltersItem::class, 'Programlevelupdate'])->name('programlavel.update');
-    Route::delete('program/level/{id}', [AllfiltersItem::class, 'Programleveldestroy'])->name('programlavel.destroy');
+    Route::post('/program/level/store', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
+    Route::get('/program/level/{id}/edit', [AllfiltersItem::class, 'Programleveledit'])->name('programlavel.edit');
+    Route::put('/program/level/{id}/update', [AllfiltersItem::class, 'Programlevelupdate'])->name('programlavel.update');
+    Route::delete('program/level/{id}/delete', [AllfiltersItem::class, 'Programleveldestroy'])->name('programlavel.destroy');
     Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel'])->name('allprogram.lavel');
 
     //Filters Items Field Of Study
-     Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy'])->name('field.study');
-     Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit'])->name('field.edit');
-     Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate'])->name('field.update');
-     Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete'])->name('field.delete');
+     Route::post('field/of/study/store', [AllfiltersItem::class, 'FieldOfstudy'])->name('field.study');
+     Route::get('field/of/study/{id}/edit', [AllfiltersItem::class, 'FieldOfstudyedit'])->name('field.edit');
+     Route::put('field/of/study/{id}/update', [AllfiltersItem::class, 'FieldOfstudyupdate'])->name('field.update');
+     Route::delete('field/of/study/{id}/delete', [AllfiltersItem::class, 'FieldOfstudydelete'])->name('field.delete');
      Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy'])->name('field.all');
      
 
      //Filters Items Field Of Study Of Subject
-     Route::post('field/of/study/{fieldId}/subject', [AllfiltersItem::class, 'createSubject'])->name('create.subject');
-     Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField'])->name('subject.byfield');
-     Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject'])->name('edit.subject');
-     Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject'])->name('update.subject');
+     Route::post('field/of/study/{fieldId}/subject/create', [AllfiltersItem::class, 'createSubject'])->name('create.subject');
+     Route::get('subject/{id}/edit', [AllfiltersItem::class, 'editSubject'])->name('edit.subject');
+     Route::put('subject/{id}/update', [AllfiltersItem::class, 'updateSubject'])->name('update.subject');
      Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject'])->name('delete.subject');
+
+     //Filter
+    Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField'])->name('subject.byfield');
+    Route::get('allsubjects', [AllfiltersItem::class, 'allsubjects'])->name('subject.allsubjects');
 
      //  Intakes Month 
      Route::resource('intakes', IntakeController::class);

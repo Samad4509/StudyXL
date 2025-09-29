@@ -194,5 +194,12 @@ class AllfiltersItem extends Controller
         ]);
     }
 
+    public function allsubjects()
+    {
+        $allsubjects = FieldOFSubject::all();
+
+        return response()->json($allsubjects);
+    }
+
 
 }

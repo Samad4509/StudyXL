@@ -7,6 +7,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('universities', function (Blueprint $table) {
             $table->id();
+            $table->string('destination_id');
             $table->string('university_name');
             $table->string('address')->nullable();
             $table->string('location')->nullable();
