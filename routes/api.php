@@ -111,6 +111,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
     Route::get('all/students', [AdminController::class, 'index']);
     Route::get('students/detail/{id}', [AdminController::class, 'detail']);
+    Route::get('/alluniversities', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities');
 });
 
 
@@ -131,12 +132,18 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // Route::post('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
     // Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
 
-    Route::get('/university-destination ', [UniversityController::class, 'universitydestination'])->name('university.destination'); 
-    Route::get('/alluniversities ', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities'); 
-    Route::post('/universities/create/{destination_id}', [UniversityController::class, 'store'])->name('university.store');       // create
-    Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
-    Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
-    Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+    // Route::get('/university-destination ', [UniversityController::class, 'universitydestination'])->name('university.destination'); 
+    // Route::get('/alluniversities ', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities'); 
+    // Route::post('/universities/create/{destination_id}', [UniversityController::class, 'store'])->name('university.store');       // create
+    // Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
+    // Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
+    // Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+
+    Route::get('/university-destination', [UniversityController::class, 'universitydestination'])->name('university.destination');
+    Route::post('/universities/create', [UniversityController::class, 'store'])->name('university.store');
+    Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');
+    Route::post('/universities/update/{id}', [UniversityController::class, 'update'])->name('university.update');
+    Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy');
 
     // Destination
     Route::resource('destinations', DestinationController::class);

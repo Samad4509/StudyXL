@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Destination extends Model
 {
     use HasFactory;
-    protected $fillable =['description_name'];
+    protected $fillable =['destinations_name'];
 }
