@@ -9,4 +9,9 @@ class Destination extends Model
 {
     use HasFactory;
     protected $fillable =['destinations_name'];
+
+    public function universities()
+    {
+        return $this->hasMany(University::class);
+    }
 }

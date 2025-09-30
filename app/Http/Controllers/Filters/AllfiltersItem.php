@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Filters;
 use App\Models\ProgramLevel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Destination;
 use App\Models\FieldOfStudy;
 use App\Models\FieldOFSubject;
+use App\Models\University;
 use Illuminate\Support\Facades\Log;
 
 class AllfiltersItem extends Controller
@@ -199,6 +201,31 @@ class AllfiltersItem extends Controller
         $allsubjects = FieldOFSubject::all();
 
         return response()->json($allsubjects);
+    }
+
+    public function alldestinationfilter()
+    {
+        $destinations = Destination::with('universities')->get();
+
+         return response()->json($destinations);
+    }
+    public function destinationfilter($destination_id)
+    {
+        $destination = Destination::with('universities')->findOrFail($destination_id);
+
+        return response()->json($destination);
+        
+    }
+    public function alluniversityfilter()
+    {
+      return  $alluniversity = University::with('programs')->get();
+    }
+
+    public function programsfilter($university_id)
+    {
+        $university = University::with('programs')->findOrFail($university_id);
+
+        return response()->json($university);
     }
 
 

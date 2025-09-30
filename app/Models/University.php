@@ -57,4 +57,11 @@ class University extends Model
     {
         return $this->hasMany(UniversityProgram::class);
     }
+
+    public function destination()
+    {
+        return $this->belongsTo(Destination::class);
+    }
+
+    
 }
