@@ -143,6 +143,11 @@ Route::get('/destinations/{destination_id}/universities', [AllfiltersItem::class
 //University Filter Section
 Route::get('/all/university/filter', [AllfiltersItem::class, 'alluniversityfilter'])->name('alluniversityfilter');
 Route::get('/university/{university_id}/programs', [AllfiltersItem::class, 'programsfilter'])->name('programs.universities');
+
+//Program Lavel Filter
+Route::get('/all/program/level/filter', [AllfiltersItem::class, 'allprogramlevelfilter'])->name('allprogramlevelfilter');
+Route::get('program/level/{program_level_id}/filter', [AllfiltersItem::class, 'programlevelfilter'])->name('programlevelfilter');
+
 // Public admin login route
 // Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
 
@@ -173,11 +178,11 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     //University Program 
     Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
-    Route::post('/university-programs/{university_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    Route::post('/university-programs/{university_id}/{program_level_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
     // In routes/api.php
-    Route::get('/university-programs/{program_id}/edit', [UniversityProgramController::class, 'edit']);
-    Route::put('/universities/{university}/programs/{program}', [UniversityProgramController::class, 'update']);
-    Route::delete('/universities/{university_id}/programs/{program_id}', [UniversityProgramController::class, 'destroy']);
+    Route::get('/university-programs/{id}/edit', [UniversityProgramController::class, 'edit']);
+    Route::put('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'update']);
+    Route::delete('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'destroy']);
 
 
 

@@ -17,6 +17,7 @@ class UniversityProgram extends Model
         'phone_number',
         'images',
         'university_id',
+        'program_level_id',
         'program_name',
         'program_description',
         'program_level',
@@ -63,5 +64,10 @@ class UniversityProgram extends Model
     public function university()
     {
         return $this->belongsTo(University::class);
+    }
+
+    public function programLevel()
+    {
+        return $this->belongsTo(ProgramLevel::class);
     }
 }

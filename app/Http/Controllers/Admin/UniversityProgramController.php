@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FieldOfStudy;
+use App\Models\ProgramLevel;
 use Illuminate\Http\Request;
 use App\Models\UniversityProgram;
 use App\Models\University;
@@ -15,10 +17,14 @@ class UniversityProgramController extends Controller
     }
    
 
-    public function store(Request $request, $university_id)
+    public function store(Request $request, $university_id,$program_level_id)
     {
+        // return $request;
         // Find the university
-        $university = University::findOrFail($university_id); // ensures 404 if not found
+        $program_level      = ProgramLevel::findOrFail($program_level_id);
+       
+        // $field_of_studies   = FieldOfStudy::findOrFail($field_of_studies_id);
+        $university         = University::findOrFail($university_id); // ensures 404 if not found
 
         // Optional: validate your request fields
         $validated = $request->validate([
@@ -84,11 +90,10 @@ class UniversityProgramController extends Controller
             'phone_number' => $university->phone_number,
             'images' => json_encode($university->images),
             'university_id' => $university->id,
-
-            // Program info
+            'program_level_id' => $program_level->id,
             'program_name' => $request->program_name,
             'program_description' => $request->program_description,
-            'program_level' => $request->program_level ?? null,
+            'program_level' => $program_level->name ?? null,
             'program_intakes' => $request->intake ?? null,
             'open_date' => $request->open_date,
             'submission_deadline' => $request->submission_deadline,
@@ -138,19 +143,20 @@ class UniversityProgramController extends Controller
         ], 201);
     }
 
-    public function edit($program_id)
+
+    public function edit($id)
     {
-        $program = UniversityProgram::findOrFail($program_id);
+        $program = UniversityProgram::findOrFail($id);
         return response()->json([
             'program' => $program
         ]);
     } 
 
-    public function update(Request $request, $university_id, $program_id)
+    public function update(Request $request, $university_id, $id)
     {
         // Find the university and program
         $university = University::findOrFail($university_id);
-        $program = UniversityProgram::findOrFail($program_id);
+        $program = UniversityProgram::findOrFail($id);
 
         // Validate the request
         $validated = $request->validate([
@@ -217,7 +223,6 @@ class UniversityProgramController extends Controller
             'phone_number' => $university->phone_number,
             'images' => json_encode($university->images),
             'university_id' => $university->id,
-
             // Program info
             'program_name' => $request->program_name,
             'program_description' => $request->program_description,
@@ -272,14 +277,14 @@ class UniversityProgramController extends Controller
     }
 
     
-    public function destroy($university_id, $program_id)
+    public function destroy($university_id, $id)
     {
         // Optional: validate university exists
         $university = University::findOrFail($university_id);
 
         // Find the program
         $program = UniversityProgram::where('university_id', $university_id)
-            ->where('id', $program_id)
+            ->where('id', $id)
             ->firstOrFail();
 
         // Delete the program

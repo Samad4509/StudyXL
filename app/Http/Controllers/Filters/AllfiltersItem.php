@@ -228,5 +228,18 @@ class AllfiltersItem extends Controller
         return response()->json($university);
     }
 
+    public function allprogramlevelfilter()
+    {
+        $allprogramlavel = ProgramLevel::with('programs')->get();
+         return response()->json($allprogramlavel);
+    }
+
+    public function programlevelfilter($program_level_id)
+    {
+         $university = ProgramLevel::with('programs')->findOrFail($program_level_id);
+
+        return response()->json($university);
+    }
+
 
 }
