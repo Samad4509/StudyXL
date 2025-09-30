@@ -12,7 +12,12 @@ class FieldOfStudy extends Model
     
     public function subjects()
     {
-        return $this->hasMany(FieldOFSubject::class, 'field_of_study_id');
+        return $this->hasMany(FieldOFSubject::class);
+    }
+
+    public function universityPrograms()
+    {
+        return $this->hasMany(UniversityProgram::class);
     }
 
 }

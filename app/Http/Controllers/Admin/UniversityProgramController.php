@@ -13,14 +13,15 @@ class UniversityProgramController extends Controller
 {
     public function index()
     {
-         return  $university = University::all();
+         return  $university = UniversityProgram::all();
     }
    
 
-    public function store(Request $request, $university_id,$program_level_id)
+    public function store(Request $request, $university_id,$program_level_id,$field_of_studies_id)
     {
-        // return $request;
+      
         // Find the university
+        $field_of_studies = FieldOfStudy::findOrFail($field_of_studies_id);
         $program_level      = ProgramLevel::findOrFail($program_level_id);
        
         // $field_of_studies   = FieldOfStudy::findOrFail($field_of_studies_id);
@@ -97,6 +98,10 @@ class UniversityProgramController extends Controller
             'program_intakes' => $request->intake ?? null,
             'open_date' => $request->open_date,
             'submission_deadline' => $request->submission_deadline,
+
+            //Field Of Study
+            'field_of_study_name' =>$field_of_studies->name,
+            'field_of_study_id'   =>$field_of_studies->id,
 
             // Requirements
             'study_permit_or_visa' => $request->students_requirements['study_permit_or_visa'] ?? null,

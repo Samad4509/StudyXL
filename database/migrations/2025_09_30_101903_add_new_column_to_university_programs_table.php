@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('university_programs', function (Blueprint $table) {
 
-            $table->string('field_of_studies_name');
-            $table->string('field_of_studies_id');
+            $table->string('field_of_study_name');
+            $table->string('field_of_study_id');
         });
     }
 

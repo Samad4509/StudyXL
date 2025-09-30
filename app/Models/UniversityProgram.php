@@ -19,6 +19,8 @@ class UniversityProgram extends Model
         'university_id',
         'program_level_id',
         'program_name',
+        'field_of_study_name',    
+        'field_of_study_id',
         'program_description',
         'program_level',
         'program_intakes',
@@ -69,5 +71,10 @@ class UniversityProgram extends Model
     public function programLevel()
     {
         return $this->belongsTo(ProgramLevel::class);
+    }
+
+    public function fieldOfStudy()
+    {
+        return $this->belongsTo(FieldOfStudy::class);
     }
 }

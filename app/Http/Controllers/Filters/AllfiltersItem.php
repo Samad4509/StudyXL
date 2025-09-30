@@ -9,6 +9,7 @@ use App\Models\Destination;
 use App\Models\FieldOfStudy;
 use App\Models\FieldOFSubject;
 use App\Models\University;
+use App\Models\UniversityProgram;
 use Illuminate\Support\Facades\Log;
 
 class AllfiltersItem extends Controller
@@ -238,7 +239,17 @@ class AllfiltersItem extends Controller
     {
          $university = ProgramLevel::with('programs')->findOrFail($program_level_id);
 
-        return response()->json($university);
+         return response()->json($university);
+    }
+
+    public function allstudyfieldfilter()
+    {
+        
+         $allstudyfields = FieldOfStudy::with('universityPrograms')->get();
+
+        return response()->json($allstudyfields);
+
+        
     }
 
 
