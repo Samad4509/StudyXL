@@ -21,9 +21,10 @@ class UniversityProgram extends Model
         'program_name',
         'field_of_study_name',    
         'field_of_study_id',
+        'intake_name',
+        'intake_id',
         'program_description',
         'program_level',
-        'program_intakes',
         'open_date',
         'submission_deadline',
         'study_permit_or_visa',
@@ -76,5 +77,10 @@ class UniversityProgram extends Model
     public function fieldOfStudy()
     {
         return $this->belongsTo(FieldOfStudy::class);
+    }
+
+    public function intakes()
+    {
+        return $this->belongsTo(Intake::class);
     }
 }

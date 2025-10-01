@@ -150,7 +150,11 @@ Route::get('program/level/{program_level_id}/filter', [AllfiltersItem::class, 'p
 
 //Study Field Filter
 Route::get('/all/study/field/filter', [AllfiltersItem::class, 'allstudyfieldfilter'])->name('allstudyfieldfilter');
+Route::get('study/field/{field_of_study_id}/filter', [AllfiltersItem::class, 'studyfieldfilter'])->name('studyfieldfilter');
 
+// All Intakes Filter
+Route::get('/all/intakes/filter', [AllfiltersItem::class, 'allintakesfilter'])->name('all.intakes.filter');
+Route::get('intakes/{intake_id}/filter', [AllfiltersItem::class, 'intakesfilter'])->name('intakes.filter');
 
 // Public admin login route
 // Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
@@ -182,7 +186,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     //University Program 
     Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
-    Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
     // In routes/api.php
     Route::get('/university-programs/{id}/edit', [UniversityProgramController::class, 'edit']);
     Route::put('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'update']);

@@ -18,4 +18,10 @@ class Intake extends Model
         return $this->hasMany(IntakeMonth::class);
     }
 
+     public function universityPrograms()
+    {
+        return $this->hasMany(UniversityProgram::class);
+    }
+
+
 }

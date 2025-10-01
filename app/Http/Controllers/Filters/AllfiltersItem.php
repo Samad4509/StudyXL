@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Destination;
 use App\Models\FieldOfStudy;
 use App\Models\FieldOFSubject;
+use App\Models\Intake;
 use App\Models\University;
 use App\Models\UniversityProgram;
 use Illuminate\Support\Facades\Log;
@@ -250,6 +251,27 @@ class AllfiltersItem extends Controller
         return response()->json($allstudyfields);
 
         
+    }
+
+    public function studyfieldfilter ($field_of_study_id)
+    {
+       $studyfield = FieldOfStudy::with('universityPrograms')->findOrFail($field_of_study_id);
+        return response()->json($studyfield );
+    }
+
+    public function allintakesfilter()
+    {
+
+        $allintakes = Intake::with('universityPrograms')->get();
+      
+        return response()->json($allintakes);
+    }
+
+
+    public function intakesfilter($intake_id)
+    {
+         $allintake = Intake::with('universityPrograms')->findOrFail($intake_id);
+        return response()->json($allintake );
     }
 
 

@@ -22,11 +22,16 @@ return new class extends Migration
             $table->unsignedBigInteger('university_id');
             $table->string('program_name');
             $table->text('program_description');
-            $table->string('program_level')->nullable();
-            $table->string('program_intakes')->nullable();
+            $table->string('program_level')->nullable();  
             $table->date('open_date')->nullable();
             $table->dateTime('submission_deadline')->nullable();
 
+            // Intake
+            $table->string('intake_name');
+            $table->string('intake_id');
+            //study of field
+            $table->string('field_of_study_name');
+            $table->string('field_of_study_id');
             // Student Requirements
             $table->string('study_permit_or_visa')->nullable();
             $table->string('nationality')->nullable();

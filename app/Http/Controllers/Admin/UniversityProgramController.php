@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FieldOfStudy;
+use App\Models\Intake;
 use App\Models\ProgramLevel;
 use Illuminate\Http\Request;
 use App\Models\UniversityProgram;
@@ -17,10 +18,12 @@ class UniversityProgramController extends Controller
     }
    
 
-    public function store(Request $request, $university_id,$program_level_id,$field_of_studies_id)
+    public function store(Request $request, $university_id,$program_level_id,$field_of_studies_id,$intake_id)
     {
       
+        // return $intake_id;
         // Find the university
+        $intake = Intake::findOrFail($intake_id);
         $field_of_studies = FieldOfStudy::findOrFail($field_of_studies_id);
         $program_level      = ProgramLevel::findOrFail($program_level_id);
        
@@ -95,9 +98,12 @@ class UniversityProgramController extends Controller
             'program_name' => $request->program_name,
             'program_description' => $request->program_description,
             'program_level' => $program_level->name ?? null,
-            'program_intakes' => $request->intake ?? null,
             'open_date' => $request->open_date,
             'submission_deadline' => $request->submission_deadline,
+
+            //Intake 
+            'intake_name' => $intake->name,
+            'intake_id' => $intake->id,
 
             //Field Of Study
             'field_of_study_name' =>$field_of_studies->name,
@@ -232,7 +238,6 @@ class UniversityProgramController extends Controller
             'program_name' => $request->program_name,
             'program_description' => $request->program_description,
             'program_level' => $request->program_level ?? null,
-            'program_intakes' => $request->intake ?? null,
             'open_date' => $request->open_date,
             'submission_deadline' => $request->submission_deadline,
 
