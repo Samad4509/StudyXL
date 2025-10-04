@@ -87,7 +87,7 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
 //     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
 //     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
     
-//LAST UPDATE
+//LAST UPDATE 2025
      
 
 // });
