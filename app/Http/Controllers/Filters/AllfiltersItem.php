@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Filters;
 
-use App\Models\ProgramLevel;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Destination;
-use App\Models\FieldOfStudy;
-use App\Models\FieldOFSubject;
 use App\Models\Intake;
 use App\Models\University;
+use App\Models\Destination;
+use App\Models\IntakeMonth;
+use App\Models\FieldOfStudy;
+use App\Models\ProgramLevel;
+use Illuminate\Http\Request;
+use App\Models\FieldOFSubject;
 use App\Models\UniversityProgram;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class AllfiltersItem extends Controller
 {
@@ -267,12 +268,23 @@ class AllfiltersItem extends Controller
         return response()->json($allintakes);
     }
 
-
     public function intakesfilter($intake_id)
     {
          $allintake = Intake::with('universityPrograms')->findOrFail($intake_id);
-        return response()->json($allintake );
+         return response()->json($allintake );
     }
 
+    public function allintakemonthfilter()
+    {
+        $allintakes = IntakeMonth::get();
+
+        return response()->json($allintakes);
+    }
+
+    public function intakemonthfilter($month_id)
+    {
+       return  $intakemonth = IntakeMonth::with('universityPrograms')->findOrFail($month_id);
+        return $month_id;
+    }
 
 }

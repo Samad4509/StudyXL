@@ -23,6 +23,7 @@ class UniversityProgram extends Model
         'field_of_study_id',
         'intake_name',
         'intake_id',
+        'intake_months',
         'program_description',
         'program_level',
         'open_date',
@@ -62,6 +63,7 @@ class UniversityProgram extends Model
         'pte_required' => 'boolean',
         'open_date' => 'date',
         'submission_deadline' => 'datetime',
+        'intake_months' => 'array',
     ];
 
     public function university()

@@ -155,6 +155,8 @@ Route::get('study/field/{field_of_study_id}/filter', [AllfiltersItem::class, 'st
 // All Intakes Filter
 Route::get('/all/intakes/filter', [AllfiltersItem::class, 'allintakesfilter'])->name('all.intakes.filter');
 Route::get('intakes/{intake_id}/filter', [AllfiltersItem::class, 'intakesfilter'])->name('intakes.filter');
+Route::get('/all/intake/month/filter', [AllfiltersItem::class, 'allintakemonthfilter'])->name('all.intake.month.filter');
+Route::get('intake/{month_id}/filter', [AllfiltersItem::class, 'intakemonthfilter'])->name('intake.month.filter');
 
 // Public admin login route
 // Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
