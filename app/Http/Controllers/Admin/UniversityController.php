@@ -64,6 +64,7 @@ class UniversityController extends Controller
             'cost_of_living_short_desc' => 'nullable|string',
             'average_gross_tuition' => 'nullable|string',
             'average_gross_tuition_short_desc' => 'nullable|string',
+            'university_desc' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -275,6 +276,24 @@ class UniversityController extends Controller
             'message' => 'University deleted successfully',
         ]);
     }
+   public function universitydetails($id)
+    {
+        $university = University::find($id);
+
+        if (!$university) {
+            return response()->json([
+                'status' => false,
+                'message' => 'University not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $university,
+        ]);
+    }
+
+
 }
 
 

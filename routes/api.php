@@ -87,6 +87,7 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
 //     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
 //     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
     
+//LAST UPDATE
      
 
 // });
@@ -184,6 +185,9 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
     Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+    Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
+
+
 //    Route::get('/university-destination', [UniversityController::class, 'universitydestination'])->name('university.destination');
 //     Route::post('/universities/create', [UniversityController::class, 'store'])->name('university.store');
 //     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');
@@ -191,7 +195,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 //     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy');
 
    // single
- 
+   // Get single university by ID
+
   // single
     // Destination
     Route::resource('destinations', DestinationController::class);

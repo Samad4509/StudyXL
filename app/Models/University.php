@@ -31,7 +31,8 @@ class University extends Model
         'cost_of_living_short_desc',
         'average_gross_tuition',
         'average_gross_tuition_short_desc',
-        'destinations'
+        'destinations',
+        'university_desc'
     ];
 
     protected $casts = [
