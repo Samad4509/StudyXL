@@ -29,10 +29,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // Validate input
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:6'  // added password length check
+            'password' => 'required|string|min:6'
         ]);
 
         // Get credentials from the request
@@ -41,25 +42,33 @@ class AuthenticatedSessionController extends Controller
         if (Auth::guard('agent')->attempt($credentials)) {
             $agent = Auth::guard('agent')->user();
 
+            // Log agent login attempt for debugging
+            Log::info('Agent login attempt', ['agent_id' => $agent->id, 'email' => $agent->email]);
+
+            // Check if the agent is approved and active
             if (!$agent->is_approved || $agent->status !== 'active') {
-                Auth::guard('agent')->logout();
+                // Log out the agent if not approved or inactive
+                Auth::guard('agent')->logout(); 
 
                 return response()->json([
                     'status' => false,
                     'message' => 'Your account is pending approval or has been deactivated. Please contact admin support.'
-                ], 403);
+                ], 403); // 403 Forbidden
             }
 
+            // Successful login, return agent info
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
                 'agent' => $agent
-            ], 200);
+            ], 200);  // 200 OK
         }
 
+        // Invalid credentials, return error response
         return response()->json([
             'status' => false,
             'message' => 'Invalid email or password'
-        ], 401);
+        ], 401);  // 401 Unauthorized
     }
+
 }

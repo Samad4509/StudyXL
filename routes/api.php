@@ -12,11 +12,13 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Admin\ProgramTagController;
 use App\Http\Controllers\Admin\UniversityController;
 
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
