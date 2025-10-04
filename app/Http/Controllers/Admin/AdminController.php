@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\Agent;
 use App\Mail\Websitemail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -15,6 +15,29 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+     public function index()
+    {
+       return $user = User::all();
+
+    }
+
+   public function detail($id)
+    {
+        $student = StudentProfile::with('user')->where('user_id', $id)->first();
+
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found',
+            ], 404); 
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $student,
+        ], 200);
+    }
+
     // Dashboard (Protected)
     public function dashboard()
     {
@@ -78,6 +101,7 @@ class AdminController extends Controller
     // Forget Password (API)
     public function forget_password_submit(Request $request)
     {
+        // return $request;
         $request->validate([
             'email' => 'required|email',
         ]);
@@ -161,6 +185,7 @@ class AdminController extends Controller
     // Approve Agent
     public function approveAgent($id)
     {
+        // return $id;
         $agent = Agent::findOrFail($id);
         $agent->is_approved = true;
         $agent->save();
@@ -198,16 +223,5 @@ class AdminController extends Controller
             'message' => 'Agent activated successfully!',
             'agent'   => $agent
         ], 200);
-    }
-
-    public function alluser()
-    {
-        return $agent = Agent::All();
-    }
-
-     public function index()
-    {
-       return $user = User::all();
-
     }
 }

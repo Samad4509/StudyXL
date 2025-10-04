@@ -13,7 +13,7 @@ class DestinationController extends Controller
      */
     public function index()
     {
-        //
+       return $destination = Destination::all();
     }
 
     /**
@@ -30,11 +30,11 @@ class DestinationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'description_name' => 'required|string|max:255',
+            'destinations_name' => 'required|string|max:255',
         ]);
 
         $destination = Destination::create([
-            'description_name' => $validated['description_name'],
+            'destinations_name' => $validated['destinations_name'],
         ]);
 
         return response()->json([
@@ -69,12 +69,12 @@ class DestinationController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-        'description_name' => 'required|string|max:255',
+        'destinations_name' => 'required|string|max:255',
         ]);
 
         $destination = Destination::findOrFail($id);
         $destination->update([
-            'description_name' => $validated['description_name'],
+            'destinations_name' => $validated['destinations_name'],
         ]);
 
         return response()->json([

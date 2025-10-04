@@ -24,6 +24,7 @@ class User extends Authenticatable
         'nationality',
         'elp',
         'passport',
+        'token'
     ];
 
     // Hide sensitive fields in JSON responses

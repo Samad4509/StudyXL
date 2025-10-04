@@ -11,11 +11,23 @@ class UniversityProgram extends Model
 
     
     protected $fillable = [
+        'university_name',
+        'address',
+        'location',
+        'phone_number',
+        'images',
         'university_id',
+        'program_level_id',
         'program_name',
+        'field_of_study_name',    
+        'field_of_study_id',
+        'intake_name',
+        'intake_id',
+        'intake_months',
+        'program_tag_name',
+        'program_tag_id',
         'program_description',
         'program_level',
-        'program_intakes',
         'open_date',
         'submission_deadline',
         'study_permit_or_visa',
@@ -53,10 +65,26 @@ class UniversityProgram extends Model
         'pte_required' => 'boolean',
         'open_date' => 'date',
         'submission_deadline' => 'datetime',
+        'intake_months' => 'array',
     ];
 
     public function university()
     {
         return $this->belongsTo(University::class);
+    }
+
+    public function programLevel()
+    {
+        return $this->belongsTo(ProgramLevel::class);
+    }
+
+    public function fieldOfStudy()
+    {
+        return $this->belongsTo(FieldOfStudy::class);
+    }
+
+    public function intakes()
+    {
+        return $this->belongsTo(Intake::class);
     }
 }

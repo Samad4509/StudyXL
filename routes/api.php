@@ -23,9 +23,6 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\NewPasswordController;
-
 
 
  
@@ -40,9 +37,7 @@ Route::middleware('guest')->group(function () {
     // Forgot Password
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
     // Reset Password
-    Route::post('/reset-password', [NewPasswordController::class, 'store']);
-
-    
+    Route::post('reset-password', [NewPasswordController::class, 'store']);
 });
 
 
@@ -64,7 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Update Password
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
+    
 
 
 });
@@ -73,17 +70,48 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function () {
     Route::get('dashboard', [AgentController::class,'dashboard'])->name('agent.dashboard');
     Route::get('logout', [AgentController::class,'logout'])->name('agent.logout');
+
 });
+
+        
+// Route::prefix('agents')->group(function () {
+//     Route::post('/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+//     Route::post('/register', [AgentController::class, 'store']);
+// });
+
+// Route::middleware('guest:agent')->group(function () {
+  
+//     Route::post('/agent/forget_password_submit',[AgentController::class,'forget_password_submit'])->name('agent.forget_password_submit');
+//     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
+//     Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
+    
+//LAST UPDATE 2025
+     
+
+// });
 Route::middleware('guest:agent')->group(function () {
     Route::post('/agents/register', [AgentController::class, 'store']);
     Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
-    Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
-    Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
+    Route::post('/agent/reset_password_submit',[AgentController::class,'reset_password_submit'])->name('agent.reset_password_submit');
+
+     
+
 });
+
 
 // Admin API
 // Admin login and public actions
+// Route::prefix('admin')->group(function () {
+//     Route::post('/login', [AdminController::class, 'login_submit'])->name('admin.login');
+//     Route::post('/forget_password', [AdminController::class, 'forget_password_submit'])->name('admin.forget_password');
+//     Route::post('/reset_password_submit',[AdminController::class,'reset_password_submit'])->name('admin.reset_password_submit');
+//     Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
+//     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
+//     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
+//     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
+// });
+
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminController::class, 'login_submit'])->name('admin.login');
     Route::post('/forget_password', [AdminController::class, 'forget_password_submit'])->name('admin.forget_password');
@@ -91,15 +119,12 @@ Route::prefix('admin')->group(function () {
     Route::get('/approve-agent/{id}', [AdminController::class, 'approveAgent'])->name('admin.approve.agent');
     Route::get('activate-agent/{id}', [AdminController::class, 'activateAgent'])->name('admin.activate.agent');
     Route::get('/deactivate-agent/{id}', [AdminController::class, 'deactivateAgent'])->name('admin.deactivate.agent');
-    Route::get('/all-user',[AdminController::class,'alluser'])->name('admin.all.user');
-    Route::get('all/students', [AdminController::class, 'index']);
-    // check
 });
 
 
 
 // Public admin login route
-Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
+// Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
 
 // ✅ Protected admin routes with Sanctum middleware & admin_token guard
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
@@ -107,40 +132,64 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
     // University create route
-  
+    // Route::get('/university/edit', [UniversityController::class, 'edit']);
     
     Route::post('/universities', [UniversityController::class, 'store'])->name('university.store');       // create
     Route::get('/universities/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
     Route::post('/universities/{id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
+    Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
 
+
+//    Route::get('/university-destination', [UniversityController::class, 'universitydestination'])->name('university.destination');
+//     Route::post('/universities/create', [UniversityController::class, 'store'])->name('university.store');
+//     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');
+//     Route::post('/universities/update/{id}', [UniversityController::class, 'update'])->name('university.update');
+//     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy');
+
+   // single
+   // Get single university by ID
+
+  // single
     // Destination
     Route::resource('destinations', DestinationController::class);
 
-    
-    Route::post('/university-programs', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    //University Program 
+    Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
+    Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/{intake_month_id}/{program_tag_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    // In routes/api.php
+    Route::get('/university-programs/{id}/edit', [UniversityProgramController::class, 'edit']);
+    Route::put('/universities/{id}/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/{intake_month_id}/{program_tag_id}/update',[UniversityProgramController::class, 'update']);
+    // Route::put('/universities/{university_id}/programs/{id}/update', [UniversityProgramController::class, 'update']);
+    Route::delete('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'destroy']);
+
+
+
 
     //Filters Items Program Lavel
-    Route::post('/program/level', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
-    Route::get('/program/level/{id}', [AllfiltersItem::class, 'Programleveledit'])->name('programlavel.edit');
-    Route::put('/program/level/{id}', [AllfiltersItem::class, 'Programlevelupdate'])->name('programlavel.update');
-    Route::delete('program/level/{id}', [AllfiltersItem::class, 'Programleveldestroy'])->name('programlavel.destroy');
+    Route::post('/program/level/store', [AllfiltersItem::class, 'Programlevel'])->name('program.lavel');
+    Route::get('/program/level/{id}/edit', [AllfiltersItem::class, 'Programleveledit'])->name('programlavel.edit');
+    Route::put('/program/level/{id}/update', [AllfiltersItem::class, 'Programlevelupdate'])->name('programlavel.update');
+    Route::delete('program/level/{id}/delete', [AllfiltersItem::class, 'Programleveldestroy'])->name('programlavel.destroy');
     Route::get('all/program/level', [AllfiltersItem::class, 'AllProgramlevel'])->name('allprogram.lavel');
 
     //Filters Items Field Of Study
-     Route::post('field/of/study', [AllfiltersItem::class, 'FieldOfstudy'])->name('field.study');
-     Route::get('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyedit'])->name('field.edit');
-     Route::put('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudyupdate'])->name('field.update');
-     Route::delete('field/of/study/{id}', [AllfiltersItem::class, 'FieldOfstudydelete'])->name('field.delete');
+     Route::post('field/of/study/store', [AllfiltersItem::class, 'FieldOfstudy'])->name('field.study');
+     Route::get('field/of/study/{id}/edit', [AllfiltersItem::class, 'FieldOfstudyedit'])->name('field.edit');
+     Route::put('field/of/study/{id}/update', [AllfiltersItem::class, 'FieldOfstudyupdate'])->name('field.update');
+     Route::delete('field/of/study/{id}/delete', [AllfiltersItem::class, 'FieldOfstudydelete'])->name('field.delete');
      Route::get('all/field/of/study/', [AllfiltersItem::class, 'AllFieldOfstudy'])->name('field.all');
      
 
      //Filters Items Field Of Study Of Subject
-     Route::post('field/of/study/{fieldId}/subject', [AllfiltersItem::class, 'createSubject'])->name('create.subject');
-     Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField'])->name('subject.byfield');
-     Route::get('subject/{id}', [AllfiltersItem::class, 'editSubject'])->name('edit.subject');
-     Route::put('subject/{id}', [AllfiltersItem::class, 'updateSubject'])->name('update.subject');
+     Route::post('field/of/study/{fieldId}/subject/create', [AllfiltersItem::class, 'createSubject'])->name('create.subject');
+     Route::get('subject/{id}/edit', [AllfiltersItem::class, 'editSubject'])->name('edit.subject');
+     Route::put('subject/{id}/update', [AllfiltersItem::class, 'updateSubject'])->name('update.subject');
      Route::delete('subject/{id}', [AllfiltersItem::class, 'deleteSubject'])->name('delete.subject');
+
+     //Filter
+    Route::get('field/of/study/{fieldId}/subjects', [AllfiltersItem::class, 'getSubjectsByField'])->name('subject.byfield');
+    Route::get('allsubjects', [AllfiltersItem::class, 'allsubjects'])->name('subject.allsubjects');
 
      //  Intakes Month 
      Route::resource('intakes', IntakeController::class);
@@ -152,6 +201,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
      //  Program tag
      Route::resource('programtag', ProgramTagController::class);
+
+     Route::get('all/student/profile/', [AdminController::class, 'allstudent']);
 
 
 });

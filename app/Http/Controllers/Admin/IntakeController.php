@@ -13,7 +13,9 @@ class IntakeController extends Controller
      */
     public function index()
     {
-        //
+        $intakes = Intake::all();
+
+        return response()->json($intakes);
     }
 
     /**

@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAgentsTable extends Migration
 {
-    public function up(): void
-{
-    Schema::create('agents', function (Blueprint $table) {
+    public function up()
+    {
+        Schema::create('agents', function (Blueprint $table) {
             $table->id();
-            $table->string('prefix')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('company_name')->nullable();
-            $table->string('job_title')->nullable();
-            $table->string('country_dialing_code')->nullable();
-            $table->string('phone_number')->nullable();
+            $table->string('prefix');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('company_name');
+            $table->string('job_title');
+            $table->string('country_dialing_code');
+            $table->string('phone_number');
             $table->string('email')->unique();
             $table->string('finance_email')->nullable();
             $table->string('password')->nullable();
@@ -37,40 +37,47 @@ class CreateAgentsTable extends Migration
 
             $table->string('trading_name')->nullable();
             $table->string('website')->nullable();
-            $table->text('students_per_year')->nullable();
-            $table->json('destinations')->nullable();
-            $table->string('other_destination')->nullable();
-            $table->string('litigation')->nullable();
-            $table->text('litigation_details')->nullable();
-            $table->string('australia_recruitment')->nullable();
-            $table->text('australia_recruitment_details')->nullable();
-            $table->string('institutions')->nullable();
-            $table->string('college')->nullable(); 
-            $table->string('creative_course')->nullable();
-            $table->text('university_preparation');
-            $table->text('adult_english');
-            $table->text('junior_english');
-            $table->text('direct_entry');
-            $table->text('year_established');
-            $table->text('branch_offices');
-            $table->text('counsellors');
-            $table->string('icef_id');
-            $table->string('hear_about');
-            $table->text('why_oxford')->nullable();
-
-            $table->string('referee_prefix')->nullable();
-            $table->string('referee_first_name')->nullable();
-            $table->string('referee_last_name')->nullable();
-            $table->string('referee_company')->nullable();
-            $table->string('referee_email')->nullable();
-            $table->string('referee_dialing_code')->nullable();
-            $table->string('referee_phone')->nullable();
-            $table->string('referee_website')->nullable();
-
-            $table->text('is_approved')->default(false);
-            $table->string('status')->default('inactive');
-            $table->string('token')->nullable(); 
-            $table->timestamps(); 
+            $table->string('street_address');
+            $table->string('street_address_line_2')->nullable();
+            $table->string('city');
+            $table->string('state_province');
+            $table->string('postal_zip_code');
+            $table->string('country');
+            $table->string('director_title');
+            $table->string('director_first_name');
+            $table->string('director_last_name');
+            $table->string('director_job_title');
+            $table->string('director_phone_code');
+            $table->string('director_phone_number');
+            $table->string('director_email');
+            $table->string('students_per_year');
+            $table->json('destinations');
+            $table->string('litigation_status');
+            $table->string('australia_recruitment');
+            $table->string('other_institutions');
+            $table->string('college_name');
+            $table->string('creative_course');
+            $table->string('university_preparation');
+            $table->string('adult_english_language');
+            $table->string('junior_english_language');
+            $table->string('direct_entry_to_university');
+            $table->integer('company_established_year');
+            $table->string('branch_offices');
+            $table->integer('counsellors_employed');
+            $table->boolean('icef_registered');
+            $table->string('source_of_information');
+            $table->string('reason_to_work_with_oxford');
+            $table->string('first_referee_title');
+            $table->string('first_referee_first_name');
+            $table->string('first_referee_last_name');
+            $table->string('first_referee_company_name');
+            $table->string('first_referee_email');
+            $table->string('first_referee_phone_country_code');
+            $table->string('first_referee_phone_number');
+            $table->string('first_referee_website');
+            $table->string('token')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->timestamps();
         });
 }
 

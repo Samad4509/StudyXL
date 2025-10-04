@@ -13,14 +13,25 @@ return new class extends Migration
     {
        Schema::create('university_programs', function (Blueprint $table) {
             $table->id();
+            $table->string('program_level_id');
+            $table->string('university_name');
+            $table->string('address')->nullable();
+            $table->string('location')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->json('images')->nullable();
             $table->unsignedBigInteger('university_id');
             $table->string('program_name');
             $table->text('program_description');
-            $table->string('program_level')->nullable();
-            $table->string('program_intakes')->nullable();
+            $table->string('program_level')->nullable();  
             $table->date('open_date')->nullable();
             $table->dateTime('submission_deadline')->nullable();
 
+            // Intake
+            $table->string('intake_name');
+            $table->string('intake_id');
+            //study of field
+            $table->string('field_of_study_name');
+            $table->string('field_of_study_id');
             // Student Requirements
             $table->string('study_permit_or_visa')->nullable();
             $table->string('nationality')->nullable();
@@ -56,6 +67,9 @@ return new class extends Migration
             $table->integer('pte_speaking')->nullable();
             $table->integer('pte_overall')->nullable();
 
+            $table->json('intake_months')->nullable();
+            $table->string('program_tag_id')->nullable();
+            $table->string('program_tag_name')->nullable();
             // No Exam
             $table->string('no_exam_status')->nullable();
 

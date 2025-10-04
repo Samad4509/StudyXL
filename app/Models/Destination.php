@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Destination extends Model
 {
     use HasFactory;
-    protected $fillable =['description_name'];
+    protected $fillable =['destinations_name'];
+
+    public function universities()
+    {
+        return $this->hasMany(University::class);
+    }
 }
