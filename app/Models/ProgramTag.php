@@ -9,4 +9,9 @@ class ProgramTag extends Model
 {
     use HasFactory;
     protected $fillable = ['program_tag'];
+
+     public function universityPrograms()
+    {
+        return $this->hasMany(UniversityProgram::class);
+    }
 }

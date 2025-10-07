@@ -13,6 +13,7 @@ use App\Models\FieldOFSubject;
 use App\Models\UniversityProgram;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\ProgramTag;
 
 class AllfiltersItem extends Controller
 {
@@ -281,10 +282,50 @@ class AllfiltersItem extends Controller
         return response()->json($allintakes);
     }
 
-    public function intakemonthfilter($month_id)
+  public function intakemonthfilter($month_id)
     {
-       return  $intakemonth = IntakeMonth::with('universityPrograms')->findOrFail($month_id);
-        return $month_id;
+        // Get all programs
+        $programs = UniversityProgram::all();
+
+        // Filter programs that have this intake_month id
+        $filteredPrograms = $programs->filter(function ($program) use ($month_id) {
+            $intakeMonths = is_string($program->intake_months)
+                ? json_decode($program->intake_months, true)
+                : $program->intake_months;
+
+            return collect($intakeMonths)->contains('id', $month_id);
+        });
+
+        // Add only the matching intake month to each program
+        $result = $filteredPrograms->map(function ($program) use ($month_id) {
+            $intakeMonths = is_string($program->intake_months)
+                ? json_decode($program->intake_months, true)
+                : $program->intake_months;
+
+            $matchingMonth = collect($intakeMonths)->firstWhere('id', $month_id);
+
+            // Include full program data + matching intake_month
+            $programData = $program->toArray();
+            $programData['intake_month'] = $matchingMonth;
+
+            return $programData;
+        })->values();
+
+        return response()->json($result);
     }
+
+    public function allprogramtagfilter()
+    {
+         $allprogramtag = ProgramTag::get();
+
+        return response()->json($allprogramtag);
+    }
+    public function programtagfilter($program_tag_id)
+    {
+          $allintake = ProgramTag::with('universityPrograms')->findOrFail($program_tag_id);
+         return response()->json($allintake );
+    }
+
+    
 
 }

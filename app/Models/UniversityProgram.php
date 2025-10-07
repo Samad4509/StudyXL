@@ -24,6 +24,8 @@ class UniversityProgram extends Model
         'intake_name',
         'intake_id',
         'intake_months',
+        'program_tag_name',
+        'program_tag_id',
         'program_description',
         'program_level',
         'open_date',

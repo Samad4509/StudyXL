@@ -158,6 +158,11 @@ Route::get('intakes/{intake_id}/filter', [AllfiltersItem::class, 'intakesfilter'
 Route::get('/all/intake/month/filter', [AllfiltersItem::class, 'allintakemonthfilter'])->name('all.intake.month.filter');
 Route::get('intake/{month_id}/filter', [AllfiltersItem::class, 'intakemonthfilter'])->name('intake.month.filter');
 
+//Program Tag Filter
+Route::get('/all/program/tag/filter', [AllfiltersItem::class, 'allprogramtagfilter'])->name('all.program.tag.filter');
+Route::get('program/{program_tag_id}/filter', [AllfiltersItem::class, 'programtagfilter'])->name('program.tag.filter');
+
+
 // Public admin login route
 // Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
 
@@ -188,10 +193,11 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     //University Program 
     Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
-    Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
+    Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/{intake_month_id}/{program_tag_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
     // In routes/api.php
     Route::get('/university-programs/{id}/edit', [UniversityProgramController::class, 'edit']);
-    Route::put('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'update']);
+    Route::put('/universities/{id}/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/{intake_month_id}/{program_tag_id}/update',[UniversityProgramController::class, 'update']);
+    // Route::put('/universities/{university_id}/programs/{id}/update', [UniversityProgramController::class, 'update']);
     Route::delete('/universities/{university_id}/programs/{id}', [UniversityProgramController::class, 'destroy']);
 
 

@@ -20,8 +20,12 @@ class IntakeMonth extends Model
     {
         return $this->belongsTo(Intake::class);
     }
+    // public function universityPrograms()
+    // {
+    //     return $this->hasMany(UniversityProgram::class);
+    // }
     public function universityPrograms()
     {
-        return $this->hasMany(UniversityProgram::class);
+        return $this->hasMany(UniversityProgram::class,'id');
     }
 }

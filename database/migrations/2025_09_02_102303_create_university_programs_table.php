@@ -67,6 +67,9 @@ return new class extends Migration
             $table->integer('pte_speaking')->nullable();
             $table->integer('pte_overall')->nullable();
 
+            $table->json('intake_months')->nullable();
+            $table->string('program_tag_id')->nullable();
+            $table->string('program_tag_name')->nullable();
             // No Exam
             $table->string('no_exam_status')->nullable();
 
