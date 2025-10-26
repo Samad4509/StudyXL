@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('month'); // e.g. "September 2025"
             $table->date('open_date')->nullable();
             $table->date('submission_deadline')->nullable();
-            $table->string('status')->default('likely_open')->after('submission_deadline');
+            $table->string('status')->default('likely_open');
             $table->timestamps();
         });
     }

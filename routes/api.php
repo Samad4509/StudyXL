@@ -160,7 +160,12 @@ Route::get('intake/{month_id}/filter', [AllfiltersItem::class, 'intakemonthfilte
 
 //Program Tag Filter
 Route::get('/all/program/tag/filter', [AllfiltersItem::class, 'allprogramtagfilter'])->name('all.program.tag.filter');
-Route::get('program/{program_tag_id}/filter', [AllfiltersItem::class, 'programtagfilter'])->name('program.tag.filter');
+Route::get('/program/{program_tag_id}/filter', [AllfiltersItem::class, 'programtagfilter'])->name('program.tag.filter');
+
+//agent student profile filter
+// routes/api.php
+Route::post('/agent-student/matched-programs', [AllfiltersItem::class, 'matchPrograms']);
+
 
 
 // Public admin login route

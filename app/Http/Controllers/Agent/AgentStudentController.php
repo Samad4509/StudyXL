@@ -12,19 +12,32 @@ use Illuminate\Support\Facades\Auth;
 class AgentStudentController extends Controller
 {
 
-    public function index()
-    {
-        $agentstudent = AgentStudent::all();
-        return response()->json([
-            'success' => true,
-            'message' => 'Agent students retrieved successfully',
-            'data' => $agentstudent
-        ]);
-    }
+   public function index()
+{
+    $agentstudents = AgentStudent::all();
+
+    // Manual JSON decode
+    $agentstudents->transform(function ($student) {
+        $student->academic_qualifications = json_decode($student->academic_qualifications, true);
+        $student->test_scores = json_decode($student->test_scores, true);
+        $student->work_experiences = json_decode($student->work_experiences, true);
+        $student->references = json_decode($student->references, true);
+        return $student;
+    });
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Agent students retrieved successfully',
+        'data' => $agentstudents
+    ]);
+}
+
 
 
     public function store(Request $request)
     {
+
+        // return "OK";
         $agent = Auth::guard('token')->user();
 
         if (!$agent) {

@@ -294,133 +294,134 @@ class UniversityProgramController extends Controller
     // }
 
     public function update(Request $request, $id, $university_id, $program_level_id, $field_of_studies_id, $intake_id, $intake_month_id, $program_tag_id)
-{
-    $program = UniversityProgram::findOrFail($id);
+    {
+        // return $university_id;
+        $program = UniversityProgram::findOrFail($id);
 
-    $program_tag = ProgramTag::findOrFail($program_tag_id);
-    $intake_month = IntakeMonth::findOrFail($intake_month_id);
-    $intake = Intake::with('months')->findOrFail($intake_id);
-    $field_of_studies = FieldOfStudy::findOrFail($field_of_studies_id);
-    $program_level = ProgramLevel::findOrFail($program_level_id);
-    $university = University::findOrFail($university_id);
+        $program_tag = ProgramTag::findOrFail($program_tag_id);
+        $intake_month = IntakeMonth::findOrFail($intake_month_id);
+        $intake = Intake::with('months')->findOrFail($intake_id);
+        $field_of_studies = FieldOfStudy::findOrFail($field_of_studies_id);
+        $program_level = ProgramLevel::findOrFail($program_level_id);
+        $university = University::findOrFail($university_id);
 
-    // Validate input
-    $validated = $request->validate([
-        'program_name' => 'required|string|max:255',
-        'program_description' => 'required|string',
-        'open_date' => 'nullable|date',
-        'submission_deadline' => 'nullable|date',
+        // Validate input
+        $validated = $request->validate([
+            'program_name' => 'required|string|max:255',
+            'program_description' => 'required|string',
+            'open_date' => 'nullable|date',
+            'submission_deadline' => 'nullable|date',
 
-        // Nested requirements
-        'students_requirements.study_permit_or_visa' => 'nullable|string',
-        'students_requirements.nationality' => 'nullable|string',
-        'students_requirements.education_country' => 'nullable|string',
-        'students_requirements.last_level_of_study' => 'nullable|string',
-        'students_requirements.grading_scheme' => 'nullable|string',
+            // Nested requirements
+            'students_requirements.study_permit_or_visa' => 'nullable|string',
+            'students_requirements.nationality' => 'nullable|string',
+            'students_requirements.education_country' => 'nullable|string',
+            'students_requirements.last_level_of_study' => 'nullable|string',
+            'students_requirements.grading_scheme' => 'nullable|string',
 
-        'students_requirements.english_exam_status.ielts.required' => 'boolean',
-        'students_requirements.english_exam_status.ielts.reading' => 'nullable|numeric',
-        'students_requirements.english_exam_status.ielts.writing' => 'nullable|numeric',
-        'students_requirements.english_exam_status.ielts.listening' => 'nullable|numeric',
-        'students_requirements.english_exam_status.ielts.speaking' => 'nullable|numeric',
-        'students_requirements.english_exam_status.ielts.overall' => 'nullable|numeric',
+            'students_requirements.english_exam_status.ielts.required' => 'boolean',
+            'students_requirements.english_exam_status.ielts.reading' => 'nullable|numeric',
+            'students_requirements.english_exam_status.ielts.writing' => 'nullable|numeric',
+            'students_requirements.english_exam_status.ielts.listening' => 'nullable|numeric',
+            'students_requirements.english_exam_status.ielts.speaking' => 'nullable|numeric',
+            'students_requirements.english_exam_status.ielts.overall' => 'nullable|numeric',
 
-        'students_requirements.english_exam_status.toefl.required' => 'boolean',
-        'students_requirements.english_exam_status.toefl.reading' => 'nullable|integer',
-        'students_requirements.english_exam_status.toefl.writing' => 'nullable|integer',
-        'students_requirements.english_exam_status.toefl.listening' => 'nullable|integer',
-        'students_requirements.english_exam_status.toefl.speaking' => 'nullable|integer',
-        'students_requirements.english_exam_status.toefl.overall' => 'nullable|integer',
+            'students_requirements.english_exam_status.toefl.required' => 'boolean',
+            'students_requirements.english_exam_status.toefl.reading' => 'nullable|integer',
+            'students_requirements.english_exam_status.toefl.writing' => 'nullable|integer',
+            'students_requirements.english_exam_status.toefl.listening' => 'nullable|integer',
+            'students_requirements.english_exam_status.toefl.speaking' => 'nullable|integer',
+            'students_requirements.english_exam_status.toefl.overall' => 'nullable|integer',
 
-        'students_requirements.english_exam_status.duolingo.required' => 'boolean',
-        'students_requirements.english_exam_status.duolingo.total' => 'nullable|integer',
+            'students_requirements.english_exam_status.duolingo.required' => 'boolean',
+            'students_requirements.english_exam_status.duolingo.total' => 'nullable|integer',
 
-        'students_requirements.english_exam_status.pte.required' => 'boolean',
-        'students_requirements.english_exam_status.pte.reading' => 'nullable|integer',
-        'students_requirements.english_exam_status.pte.writing' => 'nullable|integer',
-        'students_requirements.english_exam_status.pte.listening' => 'nullable|integer',
-        'students_requirements.english_exam_status.pte.speaking' => 'nullable|integer',
-        'students_requirements.english_exam_status.pte.overall' => 'nullable|integer',
+            'students_requirements.english_exam_status.pte.required' => 'boolean',
+            'students_requirements.english_exam_status.pte.reading' => 'nullable|integer',
+            'students_requirements.english_exam_status.pte.writing' => 'nullable|integer',
+            'students_requirements.english_exam_status.pte.listening' => 'nullable|integer',
+            'students_requirements.english_exam_status.pte.speaking' => 'nullable|integer',
+            'students_requirements.english_exam_status.pte.overall' => 'nullable|integer',
 
-        'students_requirements.english_exam_status.no_exam.status' => 'nullable|string',
-    ]);
+            'students_requirements.english_exam_status.no_exam.status' => 'nullable|string',
+        ]);
 
-    $req = $request->students_requirements['english_exam_status'] ?? [];
+        $req = $request->students_requirements['english_exam_status'] ?? [];
 
-    $program->update([
-        // University
-        'university_name' => $university->university_name,
-        'address' => $university->address,
-        'location' => $university->location,
-        'phone_number' => $university->phone_number,
-        'images' => json_encode($university->images),
-        'university_id' => $university->id,
+        $program->update([
+            // University
+            'university_name' => $university->university_name,
+            'address' => $university->address,
+            'location' => $university->location,
+            'phone_number' => $university->phone_number,
+            'images' => json_encode($university->images),
+            'university_id' => $university->id,
 
-        // Program info
-        'program_level_id' => $program_level->id,
-        'program_name' => $request->program_name,
-        'program_description' => $request->program_description,
-        'program_level' => $program_level->name ?? null,
-        'open_date' => $request->open_date,
-        'submission_deadline' => $request->submission_deadline,
+            // Program info
+            'program_level_id' => $program_level->id,
+            'program_name' => $request->program_name,
+            'program_description' => $request->program_description,
+            'program_level' => $program_level->name ?? null,
+            'open_date' => $request->open_date,
+            'submission_deadline' => $request->submission_deadline,
 
-        // Intake
-        'intake_months' => [$intake_month],
-        'intake_name' => $intake->name,
-        'intake_id' => $intake->id,
+            // Intake
+            'intake_months' => [$intake_month],
+            'intake_name' => $intake->name,
+            'intake_id' => $intake->id,
 
-        // Program Tag
-        'program_tag_id' => $program_tag->id,
-        'program_tag_name' => $program_tag->program_tag,
+            // Program Tag
+            'program_tag_id' => $program_tag->id,
+            'program_tag_name' => $program_tag->program_tag,
 
-        // Field of Study
-        'field_of_study_name' => $field_of_studies->name,
-        'field_of_study_id' => $field_of_studies->id,
+            // Field of Study
+            'field_of_study_name' => $field_of_studies->name,
+            'field_of_study_id' => $field_of_studies->id,
 
-        // Requirements
-        'study_permit_or_visa' => $request->students_requirements['study_permit_or_visa'] ?? null,
-        'nationality' => $request->students_requirements['nationality'] ?? null,
-        'education_country' => $request->students_requirements['education_country'] ?? null,
-        'last_level_of_study' => $request->students_requirements['last_level_of_study'] ?? null,
-        'grading_scheme' => $request->students_requirements['grading_scheme'] ?? null,
+            // Requirements
+            'study_permit_or_visa' => $request->students_requirements['study_permit_or_visa'] ?? null,
+            'nationality' => $request->students_requirements['nationality'] ?? null,
+            'education_country' => $request->students_requirements['education_country'] ?? null,
+            'last_level_of_study' => $request->students_requirements['last_level_of_study'] ?? null,
+            'grading_scheme' => $request->students_requirements['grading_scheme'] ?? null,
 
-        // IELTS
-        'ielts_required' => $req['ielts']['required'] ?? false,
-        'ielts_reading' => $req['ielts']['reading'] ?? null,
-        'ielts_writing' => $req['ielts']['writing'] ?? null,
-        'ielts_listening' => $req['ielts']['listening'] ?? null,
-        'ielts_speaking' => $req['ielts']['speaking'] ?? null,
-        'ielts_overall' => $req['ielts']['overall'] ?? null,
+            // IELTS
+            'ielts_required' => $req['ielts']['required'] ?? false,
+            'ielts_reading' => $req['ielts']['reading'] ?? null,
+            'ielts_writing' => $req['ielts']['writing'] ?? null,
+            'ielts_listening' => $req['ielts']['listening'] ?? null,
+            'ielts_speaking' => $req['ielts']['speaking'] ?? null,
+            'ielts_overall' => $req['ielts']['overall'] ?? null,
 
-        // TOEFL
-        'toefl_required' => $req['toefl']['required'] ?? false,
-        'toefl_reading' => $req['toefl']['reading'] ?? null,
-        'toefl_writing' => $req['toefl']['writing'] ?? null,
-        'toefl_listening' => $req['toefl']['listening'] ?? null,
-        'toefl_speaking' => $req['toefl']['speaking'] ?? null,
-        'toefl_overall' => $req['toefl']['overall'] ?? null,
+            // TOEFL
+            'toefl_required' => $req['toefl']['required'] ?? false,
+            'toefl_reading' => $req['toefl']['reading'] ?? null,
+            'toefl_writing' => $req['toefl']['writing'] ?? null,
+            'toefl_listening' => $req['toefl']['listening'] ?? null,
+            'toefl_speaking' => $req['toefl']['speaking'] ?? null,
+            'toefl_overall' => $req['toefl']['overall'] ?? null,
 
-        // Duolingo
-        'duolingo_required' => $req['duolingo']['required'] ?? false,
-        'duolingo_total' => $req['duolingo']['total'] ?? null,
+            // Duolingo
+            'duolingo_required' => $req['duolingo']['required'] ?? false,
+            'duolingo_total' => $req['duolingo']['total'] ?? null,
 
-        // PTE
-        'pte_required' => $req['pte']['required'] ?? false,
-        'pte_reading' => $req['pte']['reading'] ?? null,
-        'pte_writing' => $req['pte']['writing'] ?? null,
-        'pte_listening' => $req['pte']['listening'] ?? null,
-        'pte_speaking' => $req['pte']['speaking'] ?? null,
-        'pte_overall' => $req['pte']['overall'] ?? null,
+            // PTE
+            'pte_required' => $req['pte']['required'] ?? false,
+            'pte_reading' => $req['pte']['reading'] ?? null,
+            'pte_writing' => $req['pte']['writing'] ?? null,
+            'pte_listening' => $req['pte']['listening'] ?? null,
+            'pte_speaking' => $req['pte']['speaking'] ?? null,
+            'pte_overall' => $req['pte']['overall'] ?? null,
 
-        // No Exam
-        'no_exam_status' => $req['no_exam']['status'] ?? null,
-    ]);
+            // No Exam
+            'no_exam_status' => $req['no_exam']['status'] ?? null,
+        ]);
 
-    return response()->json([
-        'message' => 'University program updated successfully.',
-        'program' => $program,
-    ], 200);
-}
+        return response()->json([
+            'message' => 'University program updated successfully.',
+            'program' => $program,
+        ], 200);
+    }
     
     public function destroy($university_id, $id)
     {

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Filters;
 
 use App\Models\Intake;
+use App\Models\ProgramTag;
 use App\Models\University;
 use App\Models\Destination;
 use App\Models\IntakeMonth;
+use App\Models\AgentStudent;
 use App\Models\FieldOfStudy;
 use App\Models\ProgramLevel;
 use Illuminate\Http\Request;
@@ -13,7 +15,6 @@ use App\Models\FieldOFSubject;
 use App\Models\UniversityProgram;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\ProgramTag;
 
 class AllfiltersItem extends Controller
 {
@@ -325,7 +326,188 @@ class AllfiltersItem extends Controller
           $allintake = ProgramTag::with('universityPrograms')->findOrFail($program_tag_id);
          return response()->json($allintake );
     }
+    public function matchPrograms(Request $request)
+    {
+        $query = UniversityProgram::query();
 
-    
+        // Filter by program_name
+        if ($request->filled('program_name')) {
+            $query->where('program_name', $request->program_name);
+        }
+
+        if ($request->filled('program_level')) {
+            $query->where('program_level', $request->program_level);
+        }
+
+        if ($request->filled('study_permit_or_visa')) {
+            $query->where('study_permit_or_visa', $request->study_permit_or_visa);
+        }
+
+        if ($request->filled('nationality')) {
+            $query->where('nationality', $request->nationality);
+        }
+
+        if ($request->filled('education_country')) {
+            $query->where('education_country', $request->education_country);
+        }
+
+        if ($request->filled('last_level_of_study')) {
+            $query->where('last_level_of_study', $request->last_level_of_study);
+        }
+
+        if ($request->filled('grading_scheme')) {
+            $query->where('grading_scheme', $request->grading_scheme);
+        }
+
+        if ($request->filled('ielts_overall')) {
+            $ieltsValue = (float) $request->ielts_overall;
+            // Match programs that require <= the applicant's IELTS
+            $query->where('ielts_overall', '<=', $ieltsValue);
+        }
+
+        $programs = $query->get();
+
+        if ($programs->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No programs found.',
+                'count' => 0,
+                'data' => []
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Programs found.',
+            'count' => $programs->count(),
+            'data' => $programs
+        ]);
+    }
+// public function matchPrograms(Request $request)
+// {
+//     $query = UniversityProgram::query();
+
+//     if ($request->filled('program_name')) {
+//         $query->where('program_name', 'LIKE', '%' . $request->program_name . '%');
+//     }
+
+//     if ($request->filled('program_level')) {
+//         $query->where('program_level', 'LIKE', '%' . $request->program_level . '%');
+//     }
+
+//     if ($request->filled('study_permit_or_visa')) {
+//         $query->where('study_permit_or_visa', 'LIKE', '%' . $request->study_permit_or_visa . '%');
+//     }
+
+//     if ($request->filled('nationality')) {
+//         $query->where('nationality', 'LIKE', '%' . $request->nationality . '%');
+//     }
+
+//     if ($request->filled('education_country')) {
+//         $query->where('education_country', 'LIKE', '%' . $request->education_country . '%');
+//     }
+
+//     if ($request->filled('last_level_of_study')) {
+//         $query->where('last_level_of_study', 'LIKE', '%' . $request->last_level_of_study . '%');
+//     }
+
+//     if ($request->filled('grading_scheme')) {
+//         $query->where('grading_scheme', 'LIKE', '%' . $request->grading_scheme . '%');
+//     }
+
+//     if ($request->filled('ielts_overall')) {
+//         $query->where('ielts_overall', '>=', $request->ielts_overall);
+//     }
+
+//     if ($request->filled('ielts_reading')) {
+//         $query->where('ielts_reading', '>=', $request->ielts_reading);
+//     }
+
+//     if ($request->filled('ielts_writing')) {
+//         $query->where('ielts_writing', '>=', $request->ielts_writing);
+//     }
+
+//     if ($request->filled('ielts_listening')) {
+//         $query->where('ielts_listening', '>=', $request->ielts_listening);
+//     }
+
+//     if ($request->filled('ielts_speaking')) {
+//         $query->where('ielts_speaking', '>=', $request->ielts_speaking);
+//     }
+
+//     if ($request->filled('toefl_overall')) {
+//         $query->where('toefl_overall', '>=', $request->toefl_overall);
+//     }
+
+//     if ($request->filled('toefl_reading')) {
+//         $query->where('toefl_reading', '>=', $request->toefl_reading);
+//     }
+
+//     if ($request->filled('toefl_writing')) {
+//         $query->where('toefl_writing', '>=', $request->toefl_writing);
+//     }
+
+//     if ($request->filled('toefl_listening')) {
+//         $query->where('toefl_listening', '>=', $request->toefl_listening);
+//     }
+
+//     if ($request->filled('toefl_speaking')) {
+//         $query->where('toefl_speaking', '>=', $request->toefl_speaking);
+//     }
+
+//     if ($request->filled('pte_overall')) {
+//         $query->where('pte_overall', '>=', $request->pte_overall);
+//     }
+
+//     if ($request->filled('pte_reading')) {
+//         $query->where('pte_reading', '>=', $request->pte_reading);
+//     }
+
+//     if ($request->filled('pte_writing')) {
+//         $query->where('pte_writing', '>=', $request->pte_writing);
+//     }
+
+//     if ($request->filled('pte_listening')) {
+//         $query->where('pte_listening', '>=', $request->pte_listening);
+//     }
+
+//     if ($request->filled('pte_speaking')) {
+//         $query->where('pte_speaking', '>=', $request->pte_speaking);
+//     }
+
+//     if ($request->filled('duolingo_total')) {
+//         $query->where('duolingo_total', '>=', $request->duolingo_total);
+//     }
+
+//     if ($request->filled('field_of_study_name')) {
+//         $query->where('field_of_study_name', 'LIKE', '%' . $request->field_of_study_name . '%');
+//     }
+
+//     if ($request->filled('program_tag_name')) {
+//         $query->where('program_tag_name', 'LIKE', '%' . $request->program_tag_name . '%');
+//     }
+
+//     if ($request->filled('university_name')) {
+//         $query->where('university_name', 'LIKE', '%' . $request->university_name . '%');
+//     }
+
+//     $programs = $query->get();
+
+//     if ($programs->isEmpty()) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'No programs found.',
+//             'count' => 0,
+//             'data' => []
+//         ]);
+//     }
+
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Programs found.',
+//         'count' => $programs->count(),
+//         'data' => $programs
+//     ]);
+// }
 
 }
