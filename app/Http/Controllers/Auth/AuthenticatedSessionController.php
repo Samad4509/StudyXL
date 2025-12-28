@@ -63,8 +63,8 @@ class AuthenticatedSessionController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Save token in users table
-        $user->token = $token;
-        $user->save();
+        // $user->token = $token;
+        // $user->save();
 
         // Return response
         return response()->json([
