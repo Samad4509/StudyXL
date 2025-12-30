@@ -439,7 +439,7 @@ class UniversityProgramController extends Controller
     //         'program' => $program,
     //     ], 200);
     // }
-//Program Update
+//University Program Update
     public function update(Request $request, $university_id, $program_level_id, $field_of_studies_id, $intake_id, $intake_month_id, $program_tag_id, $program_id)
 
     {
