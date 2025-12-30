@@ -76,6 +76,24 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
+            $table->string('application_fee')->nullable();
+            $table->string('application_short_desc')->nullable();
+
+            $table->string('average_graduate_program')->nullable();
+            $table->string('average_graduate_program_short_desc')->nullable();
+
+            $table->string('average_undergraduate_program')->nullable();
+            $table->string('average_undergraduate_program_short_desc')->nullable();
+
+            $table->string('cost_of_living')->nullable();
+            $table->string('cost_of_living_short_desc')->nullable();
+
+            $table->string('average_gross_tuition')->nullable();
+            $table->string('average_gross_tuition_short_desc')->nullable();
+            $table->string('campus_city')->nullable();
+            $table->string('duration')->nullable();
+            $table->longText('success_chance')->nullable();
+            $table->string('program_summary')->nullable();
         });
 
     }

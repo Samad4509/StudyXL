@@ -171,6 +171,9 @@ Route::post('/agent-student/matched-programs', [AllfiltersItem::class, 'matchPro
 
 // Public admin login route
 // Route::post('/admin/login', [AdminController::class, 'login_submit'])->name('admin.api.login');
+//University Program get 
+    Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
+    Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
 
 // ✅ Protected admin routes with Sanctum middleware & admin_token guard
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
@@ -185,7 +188,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])->name('university.edit');    // single
     Route::post('/universities/update/{id}/{destination_id}', [UniversityController::class, 'update'])->name('university.update');  // update
     Route::delete('/universities/{id}', [UniversityController::class, 'destroy'])->name('university.destroy'); // delete
-    Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
+   
 
 
 //    Route::get('/university-destination', [UniversityController::class, 'universitydestination'])->name('university.destination');
@@ -201,8 +204,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // Destination
     Route::resource('destinations', DestinationController::class);
 
-    //University Program 
-    Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
+    
     Route::post('/university-programs/{university_id}/{program_level_id}/{field_of_studies_id}/{intake_id}/{intake_month_id}/{program_tag_id}/store', [UniversityProgramController::class, 'store'])->name('admin.university-programs.store');
     // In routes/api.php
     Route::get('/university-programs/{id}/edit', [UniversityProgramController::class, 'edit']);
