@@ -593,4 +593,9 @@ class UniversityProgramController extends Controller
             'message' => 'University program deleted successfully.'
         ], 200);
     }
+
+    public function programdetails($id)
+    {
+       return $programdetails = UniversityProgram::find($id);
+    }
 }

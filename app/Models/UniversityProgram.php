@@ -173,4 +173,5 @@ class UniversityProgram extends Model
     {
         return $this->belongsTo(Intake::class);
     }
+   
 }

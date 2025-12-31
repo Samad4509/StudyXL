@@ -14,4 +14,5 @@ class Destination extends Model
     {
         return $this->hasMany(University::class);
     }
+
 }

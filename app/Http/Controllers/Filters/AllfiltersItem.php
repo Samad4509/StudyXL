@@ -18,7 +18,7 @@ use App\Http\Controllers\Controller;
 
 class AllfiltersItem extends Controller
 {
-   public function Programlevel(Request $request)
+    public function Programlevel(Request $request)
     {
 
         $validated = $request->validate([
@@ -39,7 +39,7 @@ class AllfiltersItem extends Controller
         return $programLevel = ProgramLevel::find($id);
     }
 
-   
+
     public function Programlevelupdate(Request $request, $id)
     {
         Log::info('Incoming update request:', $request->all());  // Debug
@@ -75,7 +75,7 @@ class AllfiltersItem extends Controller
 
     public function AllProgramlevel()
     {
-      return  $allprogrum = ProgramLevel::get();
+        return  $allprogrum = ProgramLevel::get();
     }
 
     public function FieldOfstudy(Request $request)
@@ -94,14 +94,15 @@ class AllfiltersItem extends Controller
         ], 201);
     }
 
-    public function FieldOfstudyedit($id){
-         return $programLevel = FieldOfStudy::find($id);
+    public function FieldOfstudyedit($id)
+    {
+        return $programLevel = FieldOfStudy::find($id);
     }
 
     public function FieldOfstudyupdate(Request $request, $id)
     {
-     
-         Log::info('Incoming update request:', $request->all());  // Debug
+
+        Log::info('Incoming update request:', $request->all());  // Debug
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -121,19 +122,19 @@ class AllfiltersItem extends Controller
 
     public function FieldOfstudydelete($id)
     {
-         $FieldOfstudy = FieldOfStudy::find($id);
+        $FieldOfstudy = FieldOfStudy::find($id);
 
-         if (!$FieldOfstudy) {
+        if (!$FieldOfstudy) {
             return response()->json(['error' => 'Field Of Study not found.'], 404);
         }
 
-         $FieldOfstudy->delete();
+        $FieldOfstudy->delete();
         return response()->json(['message' => 'Field Of Study  deleted successfully.'], 200);
     }
 
     public function AllFieldOfstudy()
     {
-         return  $allprogrum = FieldOfStudy::get();
+        return  $allprogrum = FieldOfStudy::get();
     }
 
     public function createSubject(Request $request, $fieldId)
@@ -143,11 +144,11 @@ class AllfiltersItem extends Controller
             'subject_name' => 'required|string|max:255',
         ]);
 
-       $field = FieldOfStudy::findOrFail($fieldId);
+        $field = FieldOfStudy::findOrFail($fieldId);
 
         $subject = $field->subjects()->create([
-            'field_of_study_id'=>$field->id,
-            'study_field_name'=>$field->name,
+            'field_of_study_id' => $field->id,
+            'study_field_name' => $field->name,
             'subject_name' => $request->subject_name,
         ]);
 
@@ -170,7 +171,7 @@ class AllfiltersItem extends Controller
 
     public function editSubject($id)
     {
-      return  $subject = FieldOFSubject::findOrFail($id);
+        return  $subject = FieldOFSubject::findOrFail($id);
 
         return response()->json($subject);
     }
@@ -212,18 +213,20 @@ class AllfiltersItem extends Controller
     {
         $destinations = Destination::with('universities')->get();
 
-         return response()->json($destinations);
+        return response()->json($destinations);
     }
     public function destinationfilter($destination_id)
     {
-        $destination = Destination::with('universities')->findOrFail($destination_id);
+        $destination = Destination::with('universities.programs')
+            ->findOrFail($destination_id);
 
-        return response()->json($destination);
-        
+        return response()->json([
+            'data' => $destination
+        ]);
     }
     public function alluniversityfilter()
     {
-      return  $alluniversity = University::with('programs')->get();
+        return  $alluniversity = University::with('programs')->get();
     }
 
     public function programsfilter($university_id)
@@ -236,44 +239,42 @@ class AllfiltersItem extends Controller
     public function allprogramlevelfilter()
     {
         $allprogramlavel = ProgramLevel::with('programs')->get();
-         return response()->json($allprogramlavel);
+        return response()->json($allprogramlavel);
     }
 
     public function programlevelfilter($program_level_id)
     {
-         $university = ProgramLevel::with('programs')->findOrFail($program_level_id);
+        $university = ProgramLevel::with('programs')->findOrFail($program_level_id);
 
-         return response()->json($university);
+        return response()->json($university);
     }
 
     public function allstudyfieldfilter()
     {
-        
-         $allstudyfields = FieldOfStudy::with('universityPrograms')->get();
+
+        $allstudyfields = FieldOfStudy::with('universityPrograms')->get();
 
         return response()->json($allstudyfields);
-
-        
     }
 
-    public function studyfieldfilter ($field_of_study_id)
+    public function studyfieldfilter($field_of_study_id)
     {
-       $studyfield = FieldOfStudy::with('universityPrograms')->findOrFail($field_of_study_id);
-        return response()->json($studyfield );
+        $studyfield = FieldOfStudy::with('universityPrograms')->findOrFail($field_of_study_id);
+        return response()->json($studyfield);
     }
 
     public function allintakesfilter()
     {
 
         $allintakes = Intake::with('universityPrograms')->get();
-      
+
         return response()->json($allintakes);
     }
 
     public function intakesfilter($intake_id)
     {
-         $allintake = Intake::with('universityPrograms')->findOrFail($intake_id);
-         return response()->json($allintake );
+        $allintake = Intake::with('universityPrograms')->findOrFail($intake_id);
+        return response()->json($allintake);
     }
 
     public function allintakemonthfilter()
@@ -283,7 +284,7 @@ class AllfiltersItem extends Controller
         return response()->json($allintakes);
     }
 
-  public function intakemonthfilter($month_id)
+    public function intakemonthfilter($month_id)
     {
         // Get all programs
         $programs = UniversityProgram::all();
@@ -317,14 +318,14 @@ class AllfiltersItem extends Controller
 
     public function allprogramtagfilter()
     {
-         $allprogramtag = ProgramTag::get();
+        $allprogramtag = ProgramTag::get();
 
         return response()->json($allprogramtag);
     }
     public function programtagfilter($program_tag_id)
     {
-          $allintake = ProgramTag::with('universityPrograms')->findOrFail($program_tag_id);
-         return response()->json($allintake );
+        $allintake = ProgramTag::with('universityPrograms')->findOrFail($program_tag_id);
+        return response()->json($allintake);
     }
     public function matchPrograms(Request $request)
     {
@@ -383,131 +384,292 @@ class AllfiltersItem extends Controller
             'data' => $programs
         ]);
     }
-// public function matchPrograms(Request $request)
-// {
-//     $query = UniversityProgram::query();
 
-//     if ($request->filled('program_name')) {
-//         $query->where('program_name', 'LIKE', '%' . $request->program_name . '%');
-//     }
+    public function allFilters(Request $request)
+    {
+        $destination = Destination::query();
 
-//     if ($request->filled('program_level')) {
-//         $query->where('program_level', 'LIKE', '%' . $request->program_level . '%');
-//     }
+        // Destination filter (only if submitted)
+        $destination->when($request->filled('destination_id'), function ($q) use ($request) {
+            $q->where('id', $request->destination_id);
+        });
 
-//     if ($request->filled('study_permit_or_visa')) {
-//         $query->where('study_permit_or_visa', 'LIKE', '%' . $request->study_permit_or_visa . '%');
-//     }
+        // University filter (only if submitted)
+        $destination->when($request->filled('university_id'), function ($q) use ($request) {
+            $q->whereHas('universities', function ($uq) use ($request) {
+                $uq->where('id', $request->university_id);
+            });
+        });
 
-//     if ($request->filled('nationality')) {
-//         $query->where('nationality', 'LIKE', '%' . $request->nationality . '%');
-//     }
+        // Program related filters (only if submitted)
+        $destination->when(
+            $request->filled('program_level_id')
+                || $request->filled('field_of_study_id')
+                || $request->filled('intake_id')
+                || $request->filled('program_tag_id'),
+            function ($q) use ($request) {
 
-//     if ($request->filled('education_country')) {
-//         $query->where('education_country', 'LIKE', '%' . $request->education_country . '%');
-//     }
+                $q->whereHas('universities.programs', function ($pq) use ($request) {
 
-//     if ($request->filled('last_level_of_study')) {
-//         $query->where('last_level_of_study', 'LIKE', '%' . $request->last_level_of_study . '%');
-//     }
+                    $pq->when($request->filled('program_level_id'), function ($x) use ($request) {
+                        $x->where('program_level_id', $request->program_level_id);
+                    });
 
-//     if ($request->filled('grading_scheme')) {
-//         $query->where('grading_scheme', 'LIKE', '%' . $request->grading_scheme . '%');
-//     }
+                    $pq->when($request->filled('field_of_study_id'), function ($x) use ($request) {
+                        $x->where('field_of_study_id', $request->field_of_study_id);
+                    });
 
-//     if ($request->filled('ielts_overall')) {
-//         $query->where('ielts_overall', '>=', $request->ielts_overall);
-//     }
+                    $pq->when($request->filled('intake_id'), function ($x) use ($request) {
+                        $x->where('intake_id', $request->intake_id);
+                    });
 
-//     if ($request->filled('ielts_reading')) {
-//         $query->where('ielts_reading', '>=', $request->ielts_reading);
-//     }
+                    $pq->when($request->filled('program_tag_id'), function ($x) use ($request) {
+                        $x->where('program_tag_id', $request->program_tag_id);
+                    });
+                });
+            }
+        );
 
-//     if ($request->filled('ielts_writing')) {
-//         $query->where('ielts_writing', '>=', $request->ielts_writing);
-//     }
+        // Eager loading with same condition (avoid empty data)
+        $destination->with(['universities.programs' => function ($query) use ($request) {
 
-//     if ($request->filled('ielts_listening')) {
-//         $query->where('ielts_listening', '>=', $request->ielts_listening);
-//     }
+            $query->when($request->filled('program_level_id'), function ($q) use ($request) {
+                $q->where('program_level_id', $request->program_level_id);
+            });
 
-//     if ($request->filled('ielts_speaking')) {
-//         $query->where('ielts_speaking', '>=', $request->ielts_speaking);
-//     }
+            $query->when($request->filled('field_of_study_id'), function ($q) use ($request) {
+                $q->where('field_of_study_id', $request->field_of_study_id);
+            });
 
-//     if ($request->filled('toefl_overall')) {
-//         $query->where('toefl_overall', '>=', $request->toefl_overall);
-//     }
+            $query->when($request->filled('intake_id'), function ($q) use ($request) {
+                $q->where('intake_id', $request->intake_id);
+            });
 
-//     if ($request->filled('toefl_reading')) {
-//         $query->where('toefl_reading', '>=', $request->toefl_reading);
-//     }
+            $query->when($request->filled('program_tag_id'), function ($q) use ($request) {
+                $q->where('program_tag_id', $request->program_tag_id);
+            });
+        }]);
 
-//     if ($request->filled('toefl_writing')) {
-//         $query->where('toefl_writing', '>=', $request->toefl_writing);
-//     }
+        return response()->json([
+            'status' => true,
+            'data' => $destination->get()
+        ]);
+    }
+   public function search(Request $request)
+{
+    $search = $request->input('search', '');
 
-//     if ($request->filled('toefl_listening')) {
-//         $query->where('toefl_listening', '>=', $request->toefl_listening);
-//     }
+    if (empty(trim($search))) {
+        return response()->json([
+            'status' => 'Empty_Search',
+            'message' => 'Please provide a search term'
+        ], 400);
+    }
 
-//     if ($request->filled('toefl_speaking')) {
-//         $query->where('toefl_speaking', '>=', $request->toefl_speaking);
-//     }
+    $destinations = Destination::query()
+        ->where(function ($query) use ($search) {
+            $query->where('destinations_name', 'LIKE', "%{$search}%")
+                ->orWhere('created_at', 'LIKE', "%{$search}%")
+                ->orWhere('updated_at', 'LIKE', "%{$search}%");
+        })
+        ->orWhereHas('universities', function ($universityQuery) use ($search) {
+            $universityQuery->where(function ($uq) use ($search) {
+                $uq->where('university_name', 'LIKE', "%{$search}%")
+                    ->orWhere('university_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('address', 'LIKE', "%{$search}%")
+                    ->orWhere('location', 'LIKE', "%{$search}%")
+                    ->orWhere('destinations', 'LIKE', "%{$search}%")
+                    ->orWhere('phone_number', 'LIKE', "%{$search}%")
+                    ->orWhere('founded', 'LIKE', "%{$search}%")
+                    ->orWhere('school_id', 'LIKE', "%{$search}%")
+                    ->orWhere('institution_type', 'LIKE', "%{$search}%")
+                    ->orWhere('dli_number', 'LIKE', "%{$search}%")
+                    ->orWhere('application_fee', 'LIKE', "%{$search}%")
+                    ->orWhere('application_short_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('average_graduate_program', 'LIKE', "%{$search}%")
+                    ->orWhere('average_graduate_program_short_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('average_undergraduate_program', 'LIKE', "%{$search}%")
+                    ->orWhere('average_undergraduate_program_short_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('cost_of_living', 'LIKE', "%{$search}%")
+                    ->orWhere('cost_of_living_short_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('average_gross_tuition', 'LIKE', "%{$search}%")
+                    ->orWhere('average_gross_tuition_short_desc', 'LIKE', "%{$search}%")
+                    ->orWhere('created_at', 'LIKE', "%{$search}%")
+                    ->orWhere('updated_at', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('programs', function ($programQuery) use ($search) {
+                $programQuery->where(function ($pq) use ($search) {
+                    $pq->where('program_name', 'LIKE', "%{$search}%")
+                        ->orWhere('program_description', 'LIKE', "%{$search}%")
+                        ->orWhere('program_level', 'LIKE', "%{$search}%")
+                        ->orWhere('address', 'LIKE', "%{$search}%")
+                        ->orWhere('location', 'LIKE', "%{$search}%")
+                        ->orWhere('phone_number', 'LIKE', "%{$search}%")
+                        ->orWhere('university_name', 'LIKE', "%{$search}%")
+                        ->orWhere('application_fee', 'LIKE', "%{$search}%")
+                        ->orWhere('application_short_desc', 'LIKE', "%{$search}%")
+                        ->orWhere('average_graduate_program', 'LIKE', "%{$search}%")
+                        ->orWhere('average_graduate_program_short_desc', 'LIKE', "%{$search}%")
+                        ->orWhere('average_undergraduate_program', 'LIKE', "%{$search}%")
+                        ->orWhere('average_undergraduate_program_short_desc', 'LIKE', "%{$search}%")
+                        ->orWhere('cost_of_living', 'LIKE', "%{$search}%")
+                        ->orWhere('cost_of_living_short_desc', 'LIKE', "%{$search}%")
+                        ->orWhere('average_gross_tuition', 'LIKE', "%{$search}%")
+                        ->orWhere('average_gross_tuition_short_desc', 'LIKE', "%{$search}%")
+                        ->orWhere('campus_city', 'LIKE', "%{$search}%")
+                        ->orWhere('duration', 'LIKE', "%{$search}%")
+                        ->orWhere('success_chance', 'LIKE', "%{$search}%")
+                        ->orWhere('program_summary', 'LIKE', "%{$search}%")
+                        ->orWhere('no_exam_status', 'LIKE', "%{$search}%")
+                        ->orWhere('created_at', 'LIKE', "%{$search}%")
+                        ->orWhere('updated_at', 'LIKE', "%{$search}%");
+                });
+            });
+        })
+        ->with(['universities.programs'])
+        ->get();
 
-//     if ($request->filled('pte_overall')) {
-//         $query->where('pte_overall', '>=', $request->pte_overall);
-//     }
+    if ($destinations->isEmpty()) {
+        return response()->json([
+            'status' => 'Nothing_Found',
+            'message' => 'No data found for your search'
+        ]);
+    }
 
-//     if ($request->filled('pte_reading')) {
-//         $query->where('pte_reading', '>=', $request->pte_reading);
-//     }
+    return response()->json([
+        'status' => 'Success',
+        'data' => $destinations
+    ]);
+}
 
-//     if ($request->filled('pte_writing')) {
-//         $query->where('pte_writing', '>=', $request->pte_writing);
-//     }
 
-//     if ($request->filled('pte_listening')) {
-//         $query->where('pte_listening', '>=', $request->pte_listening);
-//     }
 
-//     if ($request->filled('pte_speaking')) {
-//         $query->where('pte_speaking', '>=', $request->pte_speaking);
-//     }
 
-//     if ($request->filled('duolingo_total')) {
-//         $query->where('duolingo_total', '>=', $request->duolingo_total);
-//     }
+    // public function matchPrograms(Request $request)
+    // {
+    //     $query = UniversityProgram::query();
 
-//     if ($request->filled('field_of_study_name')) {
-//         $query->where('field_of_study_name', 'LIKE', '%' . $request->field_of_study_name . '%');
-//     }
+    //     if ($request->filled('program_name')) {
+    //         $query->where('program_name', 'LIKE', '%' . $request->program_name . '%');
+    //     }
 
-//     if ($request->filled('program_tag_name')) {
-//         $query->where('program_tag_name', 'LIKE', '%' . $request->program_tag_name . '%');
-//     }
+    //     if ($request->filled('program_level')) {
+    //         $query->where('program_level', 'LIKE', '%' . $request->program_level . '%');
+    //     }
 
-//     if ($request->filled('university_name')) {
-//         $query->where('university_name', 'LIKE', '%' . $request->university_name . '%');
-//     }
+    //     if ($request->filled('study_permit_or_visa')) {
+    //         $query->where('study_permit_or_visa', 'LIKE', '%' . $request->study_permit_or_visa . '%');
+    //     }
 
-//     $programs = $query->get();
+    //     if ($request->filled('nationality')) {
+    //         $query->where('nationality', 'LIKE', '%' . $request->nationality . '%');
+    //     }
 
-//     if ($programs->isEmpty()) {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'No programs found.',
-//             'count' => 0,
-//             'data' => []
-//         ]);
-//     }
+    //     if ($request->filled('education_country')) {
+    //         $query->where('education_country', 'LIKE', '%' . $request->education_country . '%');
+    //     }
 
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Programs found.',
-//         'count' => $programs->count(),
-//         'data' => $programs
-//     ]);
-// }
+    //     if ($request->filled('last_level_of_study')) {
+    //         $query->where('last_level_of_study', 'LIKE', '%' . $request->last_level_of_study . '%');
+    //     }
+
+    //     if ($request->filled('grading_scheme')) {
+    //         $query->where('grading_scheme', 'LIKE', '%' . $request->grading_scheme . '%');
+    //     }
+
+    //     if ($request->filled('ielts_overall')) {
+    //         $query->where('ielts_overall', '>=', $request->ielts_overall);
+    //     }
+
+    //     if ($request->filled('ielts_reading')) {
+    //         $query->where('ielts_reading', '>=', $request->ielts_reading);
+    //     }
+
+    //     if ($request->filled('ielts_writing')) {
+    //         $query->where('ielts_writing', '>=', $request->ielts_writing);
+    //     }
+
+    //     if ($request->filled('ielts_listening')) {
+    //         $query->where('ielts_listening', '>=', $request->ielts_listening);
+    //     }
+
+    //     if ($request->filled('ielts_speaking')) {
+    //         $query->where('ielts_speaking', '>=', $request->ielts_speaking);
+    //     }
+
+    //     if ($request->filled('toefl_overall')) {
+    //         $query->where('toefl_overall', '>=', $request->toefl_overall);
+    //     }
+
+    //     if ($request->filled('toefl_reading')) {
+    //         $query->where('toefl_reading', '>=', $request->toefl_reading);
+    //     }
+
+    //     if ($request->filled('toefl_writing')) {
+    //         $query->where('toefl_writing', '>=', $request->toefl_writing);
+    //     }
+
+    //     if ($request->filled('toefl_listening')) {
+    //         $query->where('toefl_listening', '>=', $request->toefl_listening);
+    //     }
+
+    //     if ($request->filled('toefl_speaking')) {
+    //         $query->where('toefl_speaking', '>=', $request->toefl_speaking);
+    //     }
+
+    //     if ($request->filled('pte_overall')) {
+    //         $query->where('pte_overall', '>=', $request->pte_overall);
+    //     }
+
+    //     if ($request->filled('pte_reading')) {
+    //         $query->where('pte_reading', '>=', $request->pte_reading);
+    //     }
+
+    //     if ($request->filled('pte_writing')) {
+    //         $query->where('pte_writing', '>=', $request->pte_writing);
+    //     }
+
+    //     if ($request->filled('pte_listening')) {
+    //         $query->where('pte_listening', '>=', $request->pte_listening);
+    //     }
+
+    //     if ($request->filled('pte_speaking')) {
+    //         $query->where('pte_speaking', '>=', $request->pte_speaking);
+    //     }
+
+    //     if ($request->filled('duolingo_total')) {
+    //         $query->where('duolingo_total', '>=', $request->duolingo_total);
+    //     }
+
+    //     if ($request->filled('field_of_study_name')) {
+    //         $query->where('field_of_study_name', 'LIKE', '%' . $request->field_of_study_name . '%');
+    //     }
+
+    //     if ($request->filled('program_tag_name')) {
+    //         $query->where('program_tag_name', 'LIKE', '%' . $request->program_tag_name . '%');
+    //     }
+
+    //     if ($request->filled('university_name')) {
+    //         $query->where('university_name', 'LIKE', '%' . $request->university_name . '%');
+    //     }
+
+    //     $programs = $query->get();
+
+    //     if ($programs->isEmpty()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'No programs found.',
+    //             'count' => 0,
+    //             'data' => []
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Programs found.',
+    //         'count' => $programs->count(),
+    //         'data' => $programs
+    //     ]);
+    // }
 
 }
