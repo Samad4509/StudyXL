@@ -126,7 +126,7 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::delete('agent-student/delete/{id}', [AgentStudentController::class, 'destroy'])->name('agent.student.delete');
 
     Route::get('student/info/{student_id}', [ApplicationController::class, 'StudentInfo'])->name('student.info');
-
+    //
     // Route::post('create/applications/{student_id}/{program_id}', [ApplicationController::class, 'createApplications'])->name('create.application');
 });
 
