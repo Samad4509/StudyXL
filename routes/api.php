@@ -121,6 +121,7 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
 
     Route::get('all/agent-student', [AgentStudentController::class, 'index'])->name('agent.student.all');
     Route::post('agent-student/register', [AgentStudentController::class, 'store'])->name('agent.student.create');
+    Route::get('agentByreg', [AgentStudentController::class, 'agentByreg'])->name('agentbyreg');
     Route::get('agent-student/edit/{id}', [AgentStudentController::class, 'edit'])->name('agent.student.edit');
     Route::post('agent-student/update/{id}', [AgentStudentController::class, 'update'])->name('agent.student.update');
     Route::delete('agent-student/delete/{id}', [AgentStudentController::class, 'destroy'])->name('agent.student.delete');

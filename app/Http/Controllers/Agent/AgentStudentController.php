@@ -121,6 +121,7 @@ class AgentStudentController extends Controller
 
     public function edit($id)
     {
+        // return $id;
         $profile = AgentStudent::findOrFail($id);
 
         return response()->json([
@@ -244,4 +245,26 @@ class AgentStudentController extends Controller
             'message' => 'Student profile and related files deleted successfully.'
         ]);
     }
+
+        public function agentByreg()
+    {
+        // logged-in agent
+         $agent = Auth::guard('token')->user();
+
+        if (!$agent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Please login again.'
+            ], 401);
+        }
+
+        $students = AgentStudent::where('agent_id', $agent->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'count' => $students->count(),
+            'students' => $students
+        ]);
+    }
+
 }
