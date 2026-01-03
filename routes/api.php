@@ -12,7 +12,6 @@ use App\Http\Controllers\Admin\UniversityController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
 use App\Http\Controllers\Agent\AgentStudentController;
@@ -24,7 +23,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-
+use App\Http\Controllers\Agent\ApplicationController;
 //  Route::post('/university', [UniversityController::class, 'store']);
 
 // Student  ApI
@@ -87,21 +86,50 @@ Route::middleware(['agent', 'agent.approved'])->prefix('agent')->group(function 
 
 
 // });
-Route::middleware('guest:agent')->group(function () {
-    Route::post('/agents/register', [AgentController::class, 'store']);
-    Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
-    Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
-    Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
-    Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
+// Route::middleware('guest:agent')->group(function () {
+//     Route::post('/agents/register', [AgentController::class, 'store']);
+//     Route::post('agent/login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+//     Route::get('/agent/reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
+//     Route::post('agent/forget_password_submit', [AgentController::class, 'forget_password_submit']);
+//     Route::post('agent/reset_password_submit', [AgentController::class, 'reset_password_submit']);
 
-    Route::get('/agent/profile', [AgentController::class, 'profile'])->name('agent.profile');
+//     Route::get('/agent/profile', [AgentController::class, 'profile'])->name('agent.profile');
+
+//     Route::get('all/agent-student', [AgentStudentController::class, 'index'])->name('agent.student.all');
+//     Route::post('agent-student/register', [AgentStudentController::class, 'store'])->name('agent.student.create');
+//     Route::get('agent-student/edit/{id}', [AgentStudentController::class, 'edit'])->name('agent.student.edit');
+//     Route::post('agent-student/update/{id}', [AgentStudentController::class, 'update'])->name('agent.student.update');
+//     Route::delete('agent-student/delete/{id}', [AgentStudentController::class, 'destroy'])->name('agent.student.delete');
+//     //Applications
+//      Route::get('student/info/{student_id}', [ApplicationController::class, 'StudentInfo'])
+//         ->name('student.info');
+
+//     // Route::post('create/applications/{student_id}/{program_id}', 
+//     //     [ApplicationController::class, 'createApplications']
+//     // )->name('create.application');
+// });
+
+Route::prefix('agent')->middleware('guest:agent')->group(function () {
+    Route::post('register', [AgentController::class, 'store']);
+    Route::post('login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
+
+    Route::get('reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
+    Route::post('forget_password_submit', [AgentController::class, 'forget_password_submit']);
+    Route::post('reset_password_submit', [AgentController::class, 'reset_password_submit']);
+
+    Route::get('profile', [AgentController::class, 'profile'])->name('agent.profile');
 
     Route::get('all/agent-student', [AgentStudentController::class, 'index'])->name('agent.student.all');
     Route::post('agent-student/register', [AgentStudentController::class, 'store'])->name('agent.student.create');
     Route::get('agent-student/edit/{id}', [AgentStudentController::class, 'edit'])->name('agent.student.edit');
     Route::post('agent-student/update/{id}', [AgentStudentController::class, 'update'])->name('agent.student.update');
     Route::delete('agent-student/delete/{id}', [AgentStudentController::class, 'destroy'])->name('agent.student.delete');
+
+    Route::get('student/info/{student_id}', [ApplicationController::class, 'StudentInfo'])->name('student.info');
+
+    // Route::post('create/applications/{student_id}/{program_id}', [ApplicationController::class, 'createApplications'])->name('create.application');
 });
+
 
 //samad2
 // samad
@@ -253,9 +281,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     //Applications
 
-    Route::post('create/applications/{student_id}/{program_id}', [ApplicationController::class, 'createApplications'])->name('create.application');
-    
-    Route::get('student/info/{student_id}', [ApplicationController::class, 'StudentInfo'])->name('student.info');
+  
 
     
 });
