@@ -6,14 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\AgentStudent;
 use App\Models\UniversityProgram;
 use Illuminate\Http\Request;
-
+use App\Models\Application;
 class ApplicationController extends Controller
 {
-    public function StudentInfo( $program_id)
+    public function StudentInfo($student_id, $program_id)
     {
-        
+        // Student and Program
+        $student = AgentStudent::find($student_id);
         $program = UniversityProgram::find($program_id);
 
+        // Safety check
+        if (!$student) {
+            return response()->json(['error' => 'Student not found'], 404);
+        }
 
         if (!$program) {
             return response()->json(['error' => 'Program not found'], 404);
@@ -21,6 +26,10 @@ class ApplicationController extends Controller
 
         // Combine all data into a single variable
         $data = [
+            'student_name'      => $student->name,
+            'student_id'        => $student->id,
+            'agent_name'        =>$student->company_name,
+            'agent_id'          => $student->agent_id,
             'program_name'    => $program->program_name,
             'university_name' => $program->university_name,
             'intake'          => $program->intake_name,
@@ -30,48 +39,31 @@ class ApplicationController extends Controller
         return response()->json($data);
     }
 
-        public function createApplications($student_id, $program_id)
-    {
-        $agent = Auth::guard('agent')->user();
+        public function myApplications(Request $request)
+        {
+            $validated = $request->validate([
+                'student_name'    => 'required|string|max:255',
+                'student_id'      => 'required|integer',
+                'agent_name'      => 'required|string|max:255',
+                'agent_id'        => 'required|string|max:50',
+                'program_name'    => 'required|string|max:255',
+                'university_name' => 'required|string|max:255',
+                'intake'          => 'required|string|max:100',
+            ]);
 
-        if (!$agent) {
+            $validated['status'] = 'Submitted';
+
+            $application = Application::create($validated);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized'
-            ], 401);
+                'success' => true,
+                'message' => 'Application created successfully',
+                'data' => $application
+            ], 201);
         }
 
-        $student = AgentStudent::where('id', $student_id)
-            ->where('agent_id', $agent->id)
-            ->firstOrFail();
-
-        $program = UniversityProgram::findOrFail($program_id);
-
-        // (optional) applications table এ save
-        $application = Application::create([
-            'agent_id'        => $agent->id,
-            'student_id'      => $student->id,
-            'program_id'      => $program->id,
-            'status'          => 'Submitted',
-            'submitted_at'    => now(),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'application_id' => 'APP-' . str_pad($application->id, 3, '0', STR_PAD_LEFT),
-                'student_name'   => $student->name,
-                'student_id'     => $student->id,
-                'agent_name'     => $agent->company_name,
-                'agent_id'       => $agent->id,
-                'program_name'   => $program->program_name,
-                'university_name'=> $program->university_name,
-                'intake'         => $program->intake_name,
-                'status'         => $application->status,
-                'submitted'      => $application->created_at->format('Y-m-d')
-            ]
-        ]);
-    }
-
-
 }
+
+
+
+
