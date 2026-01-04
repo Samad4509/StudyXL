@@ -16,6 +16,7 @@ class Application extends Model
         'student_id',
         'agent_name',
         'agent_id',
+        'program_id',
         'program_name',
         'university_name',
         'intake',

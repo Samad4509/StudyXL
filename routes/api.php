@@ -24,6 +24,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Agent\ApplicationController;
+use App\Models\Application;
+
 //  Route::post('/university', [UniversityController::class, 'store']);
 
 // Student  ApI
@@ -126,9 +128,12 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::post('agent-student/update/{id}', [AgentStudentController::class, 'update'])->name('agent.student.update');
     Route::delete('agent-student/delete/{id}', [AgentStudentController::class, 'destroy'])->name('agent.student.delete');
 
+    // Application
     Route::get('student/info/{student_id}/{program_id}', [ApplicationController::class, 'StudentInfo'])->name('student.info');
-
     Route::post('my-applications', [ApplicationController::class, 'myApplications']);
+    Route::get('applications/{id}', [ApplicationController::class, 'edit']);      // Edit (get single)
+    Route::put('applications/{id}', [ApplicationController::class, 'update']);    // Update
+    Route::delete('applications/{id}', [ApplicationController::class, 'destroy']); // Delete
 
 
 });
