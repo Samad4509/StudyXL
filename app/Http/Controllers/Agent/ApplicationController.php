@@ -8,6 +8,7 @@ use App\Models\AgentStudent;
 use Illuminate\Http\Request;
 use App\Models\UniversityProgram;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Notifications\AgentApplicationConfirmed;
 
 class ApplicationController extends Controller
@@ -42,60 +43,59 @@ class ApplicationController extends Controller
         // Return JSON
         return response()->json($data);
     }
+    public function myApplications(Request $request)
+    {
+        $agent = Auth::guard('token')->user();
 
-     public function myApplications(Request $request)
-{
-    // Step 1: Validate request
-    $validated = $request->validate([
-        'student_name'    => 'required|string|max:255',
-        'student_id'      => 'required|integer',
-        'agent_name'      => 'required|string|max:255',
-        'agent_id'        => 'required|string|max:50',
-        'program_id'      => 'required|string|max:50',
-        'program_name'    => 'required|string|max:255',
-        'university_name' => 'required|string|max:255',
-        'intake'          => 'required|string|max:100',
-    ]);
+        $validated = $request->validate([
+            'student_name'    => 'required|string|max:255',
+            'student_id'      => 'required|integer',
+            'agent_name'      => 'required|string|max:255',
+            'agent_id'        => 'required|string|max:50',
+            'program_id'      => 'required|string|max:50',
+            'program_name'    => 'required|string|max:255',
+            'university_name' => 'required|string|max:255',
+            'intake'          => 'required|string|max:100',
+        ]);
 
-    // Step 2: Check max 5 applications per student
-    $totalApplications = Application::where('student_id', $validated['student_id'])->count();
-    if ($totalApplications >= 5) {
+        // Max 5 applications check
+        $totalApplications = Application::where('student_id', $validated['student_id'])->count();
+        if ($totalApplications >= 5) {
+            return response()->json([
+                'success' => false,
+                'message' => 'A student can apply to a maximum of 5 programs only.'
+            ], 400);
+        }
+
+        // Prevent duplicate program
+        $alreadyApplied = Application::where('student_id', $validated['student_id'])
+            ->where('program_id', $validated['program_id'])
+            ->exists();
+
+        if ($alreadyApplied) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This student has already applied for this program.'
+            ], 400);
+        }
+
+        // Create application
+        $validated['status'] = 'Submitted';
+        $application = Application::create($validated);
+
+        // Notify admins
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $admin->notify(new AgentApplicationConfirmed($application));
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'A student can apply to a maximum of 5 programs only.'
-        ], 400);
+            'success' => true,
+            'message' => 'Application created successfully and Admin notified.',
+            'data' => $application
+        ], 201);
     }
 
-    // Step 3: Prevent duplicate application for same program
-    $alreadyApplied = Application::where('student_id', $validated['student_id'])
-        ->where('program_id', $validated['program_id'])
-        ->exists();
-    if ($alreadyApplied) {
-        return response()->json([
-            'success' => false,
-            'message' => 'This student has already applied for this program.'
-        ], 400);
-    }
-
-    // Step 4: Create Application
-    $validated['status'] = 'Submitted'; // agent confirm status
-    $application = Application::create($validated);
-
-    // Step 5: Notify Admins
-    // Import: use App\Models\Admin;
-    // Import: use App\Notifications\AgentApplicationConfirmed;
-    $admins = Admin::all();
-    foreach ($admins as $admin) {
-        $admin->notify(new AgentApplicationConfirmed($application));
-    }
-
-    // Step 6: Return success response
-    return response()->json([
-        'success' => true,
-        'message' => 'Application created successfully and Admin notified.',
-        'data' => $application
-    ], 201);
-}
 
 
     public function edit($id)
@@ -143,6 +143,39 @@ class ApplicationController extends Controller
             'success' => true,
             'message' => 'Application deleted successfully'
         ]);
+    }
+
+        public function getMyApplications()
+    {
+        // return "OK";
+        // Step 1: Get logged-in agent
+        return $agent = Auth::guard('token')->user(); // Token guard ব্যবহার করে
+
+        if (!$agent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Agent not authenticated.'
+            ], 401);
+        }
+
+        // Step 2: Get all applications submitted by this agent
+        $applications = Application::where('agent_id', $agent->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Step 3: Check if any application exists
+        if ($applications->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No applications found for this agent.'
+            ], 404);
+        }
+
+        // Step 4: Return applications
+        return response()->json([
+            'success' => true,
+            'data' => $applications
+        ], 200);
     }
 
 }

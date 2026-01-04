@@ -131,9 +131,14 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     // Application
     Route::get('student/info/{student_id}/{program_id}', [ApplicationController::class, 'StudentInfo'])->name('student.info');
     Route::post('my-applications', [ApplicationController::class, 'myApplications']);
+
+
     Route::get('applications/{id}', [ApplicationController::class, 'edit']);      // Edit (get single)
     Route::put('applications/{id}', [ApplicationController::class, 'update']);    // Update
     Route::delete('applications/{id}', [ApplicationController::class, 'destroy']); // Delete
+    Route::get('my-applications', [ApplicationController::class, 'getMyApplications']);
+
+
 
 
 });

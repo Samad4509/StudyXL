@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('student_name');
             $table->integer('student_id');
             $table->string('agent_name');
-            $table->string('agent_id');
+            $table->integer('agent_id');
             $table->string('program_id');
             $table->string('program_name');
             $table->string('university_name');
