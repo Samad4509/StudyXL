@@ -149,7 +149,7 @@ class ApplicationController extends Controller
     {
         // return "OK";
         // Step 1: Get logged-in agent
-        return $agent = Auth::guard('token')->user(); // Token guard ব্যবহার করে
+        $agent = Auth::guard('token')->user(); // Token guard ব্যবহার করে
 
         if (!$agent) {
             return response()->json([
