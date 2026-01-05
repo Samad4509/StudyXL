@@ -208,7 +208,7 @@ class AgentController extends Controller
 
     public function profile()
     {
-        $agent = Auth::guard('token')->user();
+        $agent = Auth::guard('agent_token')->user();
 
         return response()->json([
             'status' => true,

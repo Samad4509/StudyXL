@@ -23,13 +23,22 @@ return [
             'provider' => 'admins',
         ],
 
+        
         'agent' => [
             'driver' => 'session',
             'provider' => 'agents',
         ],
-        'token' => [ // ✅ for API requests
+        'agent_token' => [ // ✅ for API requests
             'driver' => 'sanctum',
             'provider' => 'agents',
+        ],
+        'student' => [
+            'driver' => 'session',
+            'provider' => 'students',
+        ],
+        'student_token' => [ // ✅ for API requests
+            'driver' => 'sanctum',
+            'provider' => 'students',
         ],
     ],
 
@@ -47,6 +56,10 @@ return [
         'agents' => [
             'driver' => 'eloquent',
             'model' => App\Models\Agent::class,
+        ],
+        'students' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
         ],
     ],
 

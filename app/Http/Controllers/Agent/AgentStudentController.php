@@ -38,7 +38,7 @@ class AgentStudentController extends Controller
     {
 
         // return "OK";
-        $agent = Auth::guard('token')->user();
+        $agent = Auth::guard('agent_token')->user();
 
         if (!$agent) {
             return response()->json([
@@ -249,7 +249,7 @@ class AgentStudentController extends Controller
         public function agentByreg()
     {
         // logged-in agent
-         $agent = Auth::guard('token')->user();
+         $agent = Auth::guard('agent_token')->user();
 
         if (!$agent) {
             return response()->json([
