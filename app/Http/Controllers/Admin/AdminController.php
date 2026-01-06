@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Agent;
 use App\Mail\Websitemail;
 use App\Models\Application;
+use App\Models\AgentStudent;
 use App\Models\StudentApply;
 use Illuminate\Http\Request;
 use App\Models\StudentProfile;
@@ -337,6 +338,46 @@ class AdminController extends Controller
                 'total' => $applications->total(),
             ]
         ]);
+    }
+
+    public function allagentstudent()
+    {
+        
+    $admin = Auth::guard('admin_token')->user();
+
+    if (!$admin) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Admin not authenticated'
+        ], 401);
+    }
+
+    $agentstudents = AgentStudent::latest()->get();
+
+    $agentstudents->transform(function ($student) {
+        return [
+            'id' => $student->id,
+            'agent_id' => $student->agent_id,
+            'student_name' => $student->student_name,
+            'email' => $student->email,
+            'phone' => $student->phone,
+
+            // JSON decoded fields
+            'academic_qualifications' => json_decode($student->academic_qualifications, true),
+            'test_scores' => json_decode($student->test_scores, true),
+            'work_experiences' => json_decode($student->work_experiences, true),
+            'references' => json_decode($student->references, true),
+
+            'created_at' => $student->created_at,
+        ];
+    });
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Agent students retrieved successfully',
+        'count' => $agentstudents->count(),
+        'data' => $agentstudents
+    ]);
     }
 
 
