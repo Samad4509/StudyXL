@@ -238,6 +238,106 @@ class AdminController extends Controller
          return $students = StudentProfile::all();
     }
   
-   
+//    public function application()
+//    {
+//     $admin = Auth::guard('admin_token')->user();
+
+//     if (!$admin) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Admin not authenticated'
+//         ], 401);
+//     }
+
+//     // Agent applications
+//     $agentApplications = Application::latest()->get()->map(function ($app) {
+//         return [
+//             'id' => $app->id,
+//             'type' => 'agent',
+//             'student_name' => $app->student_name,
+//             'agent_name' => $app->agent_name,
+//             'program_name' => $app->program_name,
+//             'university_name' => $app->university_name,
+//             'status' => $app->status,
+//             'created_at' => $app->created_at,
+//         ];
+//     });
+
+//     // Student applications
+//     $studentApplications = StudentApply::latest()->get()->map(function ($app) {
+//         return [
+//             'id' => $app->id,
+//             'type' => 'student',
+//             'student_name' => $app->student_name,
+//             'agent_name' => null,
+//             'program_name' => $app->program_name,
+//             'university_name' => $app->university_name,
+//             'status' => $app->status,
+//             'created_at' => $app->created_at,
+//         ];
+//     });
+
+//     // Merge & sort
+//     $allApplications = $agentApplications
+//         ->merge($studentApplications)
+//         ->sortByDesc('created_at')
+//         ->values();
+
+//     return response()->json([
+//         'success' => true,
+//         'count' => $allApplications->count(),
+//         'data' => $allApplications
+//     ]);
+//    }
+    public function agentApplications(Request $request)
+    {
+        $admin = Auth::guard('admin_token')->user();
+
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated'
+            ], 401);
+        }
+
+        $applications = Application::latest()->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'type' => 'agent',
+            'data' => $applications->items(),
+            'pagination' => [
+                'current_page' => $applications->currentPage(),
+                'last_page' => $applications->lastPage(),
+                'total' => $applications->total(),
+            ]
+        ]);
+    }
+
+        public function studentApplications(Request $request)
+    {
+        $admin = Auth::guard('admin_token')->user();
+
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated'
+            ], 401);
+        }
+
+        $applications = StudentApply::latest()->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'type' => 'student',
+            'data' => $applications->items(),
+            'pagination' => [
+                'current_page' => $applications->currentPage(),
+                'last_page' => $applications->lastPage(),
+                'total' => $applications->total(),
+            ]
+        ]);
+    }
+
 
 }

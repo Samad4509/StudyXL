@@ -305,7 +305,14 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     Route::get('all/student/profile/', [AdminController::class, 'allstudent']);
 
+
+
     //Applications
+    // Route::get('applications', [AdminController::class, 'application']);
+      Route::get('agent-applications', [AdminController::class, 'agentApplications']);
+
+     // Student Applications
+      Route::get('student-applications', [AdminController::class, 'studentApplications']);
 
   
 
