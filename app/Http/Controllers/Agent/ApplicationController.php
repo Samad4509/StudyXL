@@ -96,61 +96,122 @@ class ApplicationController extends Controller
     //         'data' => $application
     //     ], 201);
     // }
+    // public function myApplications(Request $request)
+    // {
+        
+    //    $agent = Auth::guard('agent_token')->user();
+        
+
+    //     $validated = $request->validate([
+    //         'student_name'    => 'required|string|max:255',
+    //         'student_id'      => 'required|integer',
+    //         'agent_name'      => 'required|string|max:255',
+    //         'agent_id'        => 'required|string|max:50',
+    //         'program_id'      => 'required|string|max:50',
+    //         'program_name'    => 'required|string|max:255',
+    //         'university_name' => 'required|string|max:255',
+    //         'intake'          => 'required|string|max:100',
+    //     ]);
+
+    //     // Max 5 check
+    //     $totalApplications = Application::where('student_id', $validated['student_id'])->count();
+    //     if ($totalApplications >= 5) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'A student can apply to a maximum of 5 programs only.'
+    //         ], 400);
+    //     }
+
+    //     // Duplicate check
+    //     $alreadyApplied = Application::where('student_id', $validated['student_id'])
+    //         ->where('program_id', $validated['program_id'])
+    //         ->exists();
+
+    //     if ($alreadyApplied) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'This student has already applied for this program.'
+    //         ], 400);
+    //     }
+
+    //     // Create application
+    //     $validated['status'] = 'Submitted';
+    //    return $application = Application::create($validated);
+
+    //     // 🔔 Notify Admin (IMPORTANT PART)
+    //     foreach (Admin::all() as $admin) {
+    //         $admin->notify(
+    //             new ApplicationNotification($application->id, 'agent')
+    //         );
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Application created successfully.',
+    //         'data' => $application
+    //     ], 201);
+    // }
+
     public function myApplications(Request $request)
-    {
-        
-       $agent = Auth::guard('agent_token')->user();
-        
+{
+    $agent = Auth::guard('agent_token')->user();
 
-        $validated = $request->validate([
-            'student_name'    => 'required|string|max:255',
-            'student_id'      => 'required|integer',
-            'agent_name'      => 'required|string|max:255',
-            'agent_id'        => 'required|string|max:50',
-            'program_id'      => 'required|string|max:50',
-            'program_name'    => 'required|string|max:255',
-            'university_name' => 'required|string|max:255',
-            'intake'          => 'required|string|max:100',
-        ]);
-
-        // Max 5 check
-        $totalApplications = Application::where('student_id', $validated['student_id'])->count();
-        if ($totalApplications >= 5) {
-            return response()->json([
-                'success' => false,
-                'message' => 'A student can apply to a maximum of 5 programs only.'
-            ], 400);
-        }
-
-        // Duplicate check
-        $alreadyApplied = Application::where('student_id', $validated['student_id'])
-            ->where('program_id', $validated['program_id'])
-            ->exists();
-
-        if ($alreadyApplied) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This student has already applied for this program.'
-            ], 400);
-        }
-
-        // Create application
-        $validated['status'] = 'Submitted';
-       return $application = Application::create($validated);
-
-        // 🔔 Notify Admin (IMPORTANT PART)
-        foreach (Admin::all() as $admin) {
-            $admin->notify(
-                new ApplicationNotification($application->id, 'agent')
-            );
-        }
-
+    if (!$agent) {
         return response()->json([
-            'success' => true,
-            'message' => 'Application created successfully.',
-            'data' => $application
-        ], 201);
+            'success' => false,
+            'message' => 'Agent not authenticated'
+        ], 401);
     }
+
+    $validated = $request->validate([
+        'student_name'    => 'required|string|max:255',
+        'student_id'      => 'required|integer',
+        'agent_name'      => 'required|string|max:255',
+        'agent_id'        => 'required|string|max:50',
+        'program_id'      => 'required|string|max:50',
+        'program_name'    => 'required|string|max:255',
+        'university_name' => 'required|string|max:255',
+        'intake'          => 'required|string|max:100',
+    ]);
+
+    // Max 5 applications per student
+    $totalApplications = Application::where('student_id', $validated['student_id'])->count();
+    if ($totalApplications >= 5) {
+        return response()->json([
+            'success' => false,
+            'message' => 'A student can apply to a maximum of 5 programs only.'
+        ], 400);
+    }
+
+    // Duplicate check
+    $alreadyApplied = Application::where('student_id', $validated['student_id'])
+        ->where('program_id', $validated['program_id'])
+        ->exists();
+
+    if ($alreadyApplied) {
+        return response()->json([
+            'success' => false,
+            'message' => 'This student has already applied for this program.'
+        ], 400);
+    }
+
+    // Create application
+    $validated['status'] = 'Submitted';
+    $application = Application::create($validated);
+
+    // 🔔 Notify ALL Admins (Agent application)
+    foreach (Admin::all() as $admin) {
+        $admin->notify(
+            new ApplicationNotification($application->id, 'agent')
+        );
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Application created successfully.',
+        'data' => $application
+    ], 201);
+}
 
 
     public function edit($id)

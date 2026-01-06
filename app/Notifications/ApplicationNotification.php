@@ -6,6 +6,36 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
+// class ApplicationNotification extends Notification
+// {
+//     use Queueable;
+
+//     public $applicationId;
+//     public $type;
+
+//     public function __construct($applicationId, $type = 'student')
+//     {
+//         $this->applicationId = $applicationId;
+//         $this->type = $type;
+//     }
+
+//     public function via($notifiable)
+//     {
+//         return ['database']; // Only database notification
+//     }
+
+//     public function toDatabase($notifiable)
+//     {
+//         return [
+//             'application_id' => $this->applicationId,
+//             'type' => $this->type,
+//             'message' => $this->type === 'student'
+//                         ? 'New student application submitted.'
+//                         : 'New agent application submitted.',
+//         ];
+//     }
+// }
+
 class ApplicationNotification extends Notification
 {
     use Queueable;
@@ -13,15 +43,15 @@ class ApplicationNotification extends Notification
     public $applicationId;
     public $type;
 
-    public function __construct($applicationId, $type = 'student')
+    public function __construct($applicationId, $type)
     {
         $this->applicationId = $applicationId;
-        $this->type = $type;
+        $this->type = $type; // agent | student
     }
 
     public function via($notifiable)
     {
-        return ['database']; // Only database notification
+        return ['database'];
     }
 
     public function toDatabase($notifiable)
@@ -29,9 +59,9 @@ class ApplicationNotification extends Notification
         return [
             'application_id' => $this->applicationId,
             'type' => $this->type,
-            'message' => $this->type === 'student'
-                        ? 'New student application submitted.'
-                        : 'New agent application submitted.',
+            'message' => $this->type === 'agent'
+                ? 'New application submitted by agent.'
+                : 'New application submitted by student.',
         ];
     }
 }

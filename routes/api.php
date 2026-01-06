@@ -23,6 +23,7 @@ use App\Http\Controllers\Agent\AgentStudentController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Student\StudentProfileController;
+use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -177,7 +178,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/alluniversities', [UniversityController::class, 'alluniversitie'])->name('university.alluniversities');
     // Route::get('/universities/destination', [UniversityController::class, 'destination'])->name('university.destinations'); 
     // check
-    Route::get('notification/{id}/application', [AdminController::class, 'getApplicationFromNotification']);
+    Route::get('notification/{id}/application', [AdminNotificationController::class, 'getApplicationFromNotification']);
+
+    Route::get('notifications', [AdminNotificationController::class, 'index']);
+    Route::get('notifications/unread', [AdminNotificationController::class, 'unread']);
+    Route::get('notifications/{id}', [AdminNotificationController::class, 'show']);
 
 });
 

@@ -238,67 +238,6 @@ class AdminController extends Controller
          return $students = StudentProfile::all();
     }
   
-    public function getApplicationFromNotification(Request $request, $notificationId)
-    {
-        // ১. লগড ইন admin
-        $admin = Auth::guard('admin_token')->user();
-        if (!$admin) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Admin not authenticated.'
-            ], 401);
-        }
-
-        // ২. Notification খুঁজো
-        $notification = $admin->notifications()->find($notificationId);
-
-        if (!$notification) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Notification not found.'
-            ], 404);
-        }
-
-        // ৩. Notification থেকে data বের করা
-        $data = $notification->data;
-        $applicationId = $data['application_id'] ?? null;
-        $type = $data['type'] ?? null;
-
-        if (!$applicationId || !$type) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid notification data.'
-            ], 400);
-        }
-
-        // ৪. Type অনুযায়ী application fetch করা
-        if ($type === 'agent') {
-            $application = Application::find($applicationId);
-        } elseif ($type === 'student') {
-            $application = StudentApply::find($applicationId);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unknown application type.'
-            ], 400);
-        }
-
-        if (!$application) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Application not found.'
-            ], 404);
-        }
-
-        // ৫. Optional: Notification read mark করা
-        $notification->markAsRead();
-
-        // ৬. Response পাঠানো
-        return response()->json([
-            'success' => true,
-            'type' => $type,
-            'data' => $application
-        ]);
-    }
+   
 
 }
