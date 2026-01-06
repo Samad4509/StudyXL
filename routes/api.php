@@ -70,6 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
     Route::post('/student/applications', [StudentApplication::class, 'application']);
+    Route::get('/student/my-applications', [StudentApplication::class, 'myApplications']);
+    
+
 
 });
 
@@ -227,6 +230,8 @@ Route::post('/agent-student/matched-programs', [AllfiltersItem::class, 'matchPro
 Route::get('/university-programs', [UniversityProgramController::class, 'index'])->name('admin.university-programs.index');
 Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
 Route::get('/university-programs/details/{id}', [UniversityProgramController::class, 'programdetails'])->name('university.programs.details');
+Route::get('/university/{university_id}/programs',[UniversityProgramController::class, 'getByUniversity']);
+
 // ✅ Protected admin routes with Sanctum middleware & admin_token guard
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -315,7 +320,6 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
       Route::get('student-applications', [AdminController::class, 'studentApplications']);
       Route::get('admin/all/agent-student', [AdminController::class, 'allagentstudent']);
 
-  
 
     
 });

@@ -598,4 +598,32 @@ class UniversityProgramController extends Controller
     {
        return $programdetails = UniversityProgram::find($id);
     }
+
+        public function getByUniversity($university_id)
+    {
+        // University exists check (optional but recommended)
+        $university = University::find($university_id);
+
+        if (!$university) {
+            return response()->json([
+                'success' => false,
+                'message' => 'University not found'
+            ], 404);
+        }
+
+        $programs = UniversityProgram::where('university_id', $university_id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'university' => [
+                'id' => $university->id,
+                'name' => $university->university_name,
+            ],
+            'count' => $programs->count(),
+            'programs' => $programs
+        ]);
+    }
+
 }

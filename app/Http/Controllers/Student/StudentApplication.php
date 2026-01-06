@@ -75,5 +75,29 @@ class StudentApplication extends Controller
         ], 201);
     }
 
+    public function myApplications()
+{
+    // return "OK";
+    $student = Auth::guard('student_token')->user();
+
+    if (!$student) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Student not authenticated'
+        ], 401);
+    }
+
+    $applications = StudentApply::where('student_id', $student->id)
+        ->latest()
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'total' => $applications->count(),
+        'data' => $applications
+    ]);
+}
+
+
     
 }
