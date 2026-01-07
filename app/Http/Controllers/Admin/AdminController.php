@@ -340,9 +340,48 @@ class AdminController extends Controller
         ]);
     }
 
-    public function allagentstudent()
-    {
+    // public function allagentstudent()
+    // {
         
+    // $admin = Auth::guard('admin_token')->user();
+
+    // if (!$admin) {
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'Admin not authenticated'
+    //     ], 401);
+    // }
+
+    // $agentstudents = AgentStudent::latest()->get();
+
+    // $agentstudents->transform(function ($student) {
+    //     return [
+    //         'id' => $student->id,
+    //         'agent_id' => $student->agent_id,
+    //         'student_name' => $student->student_name,
+    //         'email' => $student->email,
+    //         'phone' => $student->phone,
+
+    //         // JSON decoded fields
+    //         'academic_qualifications' => json_decode($student->academic_qualifications, true),
+    //         'test_scores' => json_decode($student->test_scores, true),
+    //         'work_experiences' => json_decode($student->work_experiences, true),
+    //         'references' => json_decode($student->references, true),
+
+    //         'created_at' => $student->created_at,
+    //     ];
+    // });
+
+    // return response()->json([
+    //     'success' => true,
+    //     'message' => 'Agent students retrieved successfully',
+    //     'count' => $agentstudents->count(),
+    //     'data' => $agentstudents
+    // ]);
+    // }
+
+    public function studentApplicationDetail($id)
+{
     $admin = Auth::guard('admin_token')->user();
 
     if (!$admin) {
@@ -352,33 +391,48 @@ class AdminController extends Controller
         ], 401);
     }
 
-    $agentstudents = AgentStudent::latest()->get();
+    $application = StudentApply::with('program')->find($id);
 
-    $agentstudents->transform(function ($student) {
-        return [
-            'id' => $student->id,
-            'agent_id' => $student->agent_id,
-            'student_name' => $student->student_name,
-            'email' => $student->email,
-            'phone' => $student->phone,
-
-            // JSON decoded fields
-            'academic_qualifications' => json_decode($student->academic_qualifications, true),
-            'test_scores' => json_decode($student->test_scores, true),
-            'work_experiences' => json_decode($student->work_experiences, true),
-            'references' => json_decode($student->references, true),
-
-            'created_at' => $student->created_at,
-        ];
-    });
+    if (!$application) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Student application not found'
+        ], 404);
+    }
 
     return response()->json([
         'success' => true,
-        'message' => 'Agent students retrieved successfully',
-        'count' => $agentstudents->count(),
-        'data' => $agentstudents
-    ]);
+        'type' => 'student',
+        'data' => $application
+    ], 200);
+}
+
+public function agentApplicationDetail($id)
+{
+    $admin = Auth::guard('admin_token')->user();
+
+    if (!$admin) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Admin not authenticated'
+        ], 401);
     }
+
+    $application = Application::with('program')->find($id);
+
+    if (!$application) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Agent application not found'
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'type' => 'agent',
+        'data' => $application
+    ], 200);
+}
 
 
 }

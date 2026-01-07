@@ -15,7 +15,7 @@ class StudentApplication extends Controller
     public function application(Request $request)
     {
         // ✅ Get logged-in student via sanctum token
-       return $student = Auth::guard('student_token')->user();
+        $student = Auth::guard('student_token')->user();
 
         if (!$student) {
             return response()->json([

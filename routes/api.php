@@ -319,10 +319,17 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     //Applications
     // Route::get('applications', [AdminController::class, 'application']);
       Route::get('agent-applications', [AdminController::class, 'agentApplications']);
+      Route::get('agent-applications/{id}',[AdminController::class, 'agentApplicationDetail']);
 
      // Student Applications
       Route::get('student-applications', [AdminController::class, 'studentApplications']);
-      Route::get('admin/all/agent-student', [AdminController::class, 'allagentstudent']);
+    //   Route::get('admin/all/agent-student', [AdminController::class, 'allagentstudent']);
+
+      Route::get('student-applications/{id}',[AdminController::class, 'studentApplicationDetail']);
+
+      
+
+
 
 
     

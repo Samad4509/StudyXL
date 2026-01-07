@@ -22,4 +22,9 @@ class Application extends Model
         'intake',
         'status',
     ];
+
+     public function program()
+    {
+        return $this->belongsTo(UniversityProgram::class, 'program_id');
+    }
 }
