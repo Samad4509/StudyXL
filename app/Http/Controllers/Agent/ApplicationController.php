@@ -294,7 +294,40 @@ class ApplicationController extends Controller
         ], 200);
     }
 
-    public function applicationDetail($id)
+// public function applicationDetail($id)
+// {
+//     $agent = Auth::guard('agent_token')->user();
+
+//     if (!$agent) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Unauthorized'
+//         ], 401);
+//     }
+
+    
+//     $application = Application::where('id', $id)
+//         ->where('agent_id', $agent->id)
+//         ->with('program') 
+//         ->first();
+
+//     if (!$application) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Application not found'
+//         ], 404);
+//     }
+
+    
+//     return response()->json([
+//         'success' => true,
+//         'data' => [
+//             'application' => $application 
+//         ]
+//     ]);
+// }
+
+public function applicationDetail($id)
 {
     $agent = Auth::guard('agent_token')->user();
 
@@ -305,9 +338,10 @@ class ApplicationController extends Controller
         ], 401);
     }
 
-    $application = Application::with('program')
-        ->where('id', $id)
+    // Fetch application with program
+    $application = Application::where('id', $id)
         ->where('agent_id', $agent->id)
+        ->with('program')
         ->first();
 
     if (!$application) {
@@ -317,14 +351,27 @@ class ApplicationController extends Controller
         ], 404);
     }
 
+    // Fetch student profile (only personal data, no relation to program)
+    $studentProfile = AgentStudent::where('agent_id', $agent->id)->first();
+
+    // Decode JSON fields if you want (optional)
+    if($studentProfile){
+        $studentProfile->academic_qualifications = json_decode($studentProfile->academic_qualifications, true);
+        $studentProfile->test_scores = json_decode($studentProfile->test_scores, true);
+        $studentProfile->work_experiences = json_decode($studentProfile->work_experiences, true);
+        $studentProfile->references = json_decode($studentProfile->references, true);
+    }
+
     return response()->json([
         'success' => true,
         'data' => [
-            'application' => $application,
-            'program'     => $application->program
+            'application'     => $application,
+            // 'program'         => $application->program,
+            'student_profile' => $studentProfile
         ]
     ]);
 }
+
 
 
 }
