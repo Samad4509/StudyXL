@@ -150,7 +150,8 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::get('applications/{id}', [ApplicationController::class, 'edit']);      // Edit (get single)
     Route::put('applications/{id}', [ApplicationController::class, 'update']);    // Update
     Route::delete('applications/{id}', [ApplicationController::class, 'destroy']); // Delete
-    Route::get('my-applications', [ApplicationController::class, 'getMyApplications']);
+    Route::get('my-applications', [ApplicationController::class, 'getMyApplications']);//all aplication
+    Route::get('applications/{id}/detail', [ApplicationController::class, 'applicationDetail']);
 
 
 

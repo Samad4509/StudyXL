@@ -294,6 +294,39 @@ class ApplicationController extends Controller
         ], 200);
     }
 
+    public function applicationDetail($id)
+{
+    $agent = Auth::guard('agent_token')->user();
+
+    if (!$agent) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    $application = Application::with('program')
+        ->where('id', $id)
+        ->where('agent_id', $agent->id)
+        ->first();
+
+    if (!$application) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Application not found'
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'application' => $application,
+            'program'     => $application->program
+        ]
+    ]);
+}
+
+
 }
 
 
