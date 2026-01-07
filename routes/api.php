@@ -69,8 +69,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::get('/student/profile/edit', [StudentProfileController::class, 'edit']);
     Route::post('/student/profile/update', [StudentProfileController::class, 'update']);
+    // std application
     Route::post('/student/applications', [StudentApplication::class, 'application']);
     Route::get('/student/my-applications', [StudentApplication::class, 'myApplications']);
+    
+    Route::get('/student/application/{id}', [StudentApplication::class, 'show']);
+
     
 
 

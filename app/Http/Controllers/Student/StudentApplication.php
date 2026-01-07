@@ -15,7 +15,7 @@ class StudentApplication extends Controller
     public function application(Request $request)
     {
         // ✅ Get logged-in student via sanctum token
-        $student = Auth::guard('student_token')->user();
+       return $student = Auth::guard('student_token')->user();
 
         if (!$student) {
             return response()->json([
@@ -75,28 +75,61 @@ class StudentApplication extends Controller
         ], 201);
     }
 
-    public function myApplications()
-{
-    // return "OK";
-    $student = Auth::guard('student_token')->user();
+        public function myApplications()
+    {
+        // return "OK";
+        $student = Auth::guard('student_token')->user();
 
-    if (!$student) {
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not authenticated'
+            ], 401);
+        }
+
+        $applications = StudentApply::where('student_id', $student->id)
+            ->latest()
+            ->get();
+
         return response()->json([
-            'success' => false,
-            'message' => 'Student not authenticated'
-        ], 401);
+            'success' => true,
+            'total' => $applications->count(),
+            'data' => $applications
+        ]);
     }
 
-    $applications = StudentApply::where('student_id', $student->id)
-        ->latest()
-        ->get();
+    public function show($id)
+    {
+        $student = Auth::guard('student_token')->user();
 
-    return response()->json([
-        'success' => true,
-        'total' => $applications->count(),
-        'data' => $applications
-    ]);
-}
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not authenticated'
+            ], 401);
+        }
+
+        $application = StudentApply::with('program')
+            ->where('id', $id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        if (!$application) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Application not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'application' => $application
+        ]);
+    }
+
+
+
+
 
 
     
