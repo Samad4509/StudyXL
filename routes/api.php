@@ -190,6 +190,7 @@ Route::prefix('admin')->group(function () {
     Route::get('notifications', [AdminNotificationController::class, 'index']);
     Route::get('notifications/unread', [AdminNotificationController::class, 'unread']);
     Route::get('notifications/{id}', [AdminNotificationController::class, 'show']);
+    //update
 
 });
 
