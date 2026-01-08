@@ -173,5 +173,14 @@ class UniversityProgram extends Model
     {
         return $this->belongsTo(Intake::class);
     }
+
+     public function intake_months()
+    {
+        return $this->hasMany(
+            IntakeMonth::class,   // related model
+            'intake_id',          // foreign key in intake_months table
+            'intake_id'           // local key in university_programs table
+        );
+    }
    
 }

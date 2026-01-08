@@ -152,6 +152,7 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::delete('applications/{id}', [ApplicationController::class, 'destroy']); // Delete
     Route::get('my-applications', [ApplicationController::class, 'getMyApplications']);//all aplication
     Route::get('applications/{id}/detail', [ApplicationController::class, 'applicationDetail']);
+    Route::post('/applications/{id}', [ApplicationController::class, 'applicationUpdate']);
 
 
 
@@ -192,6 +193,10 @@ Route::prefix('admin')->group(function () {
     Route::get('notifications/unread', [AdminNotificationController::class, 'unread']);
     Route::get('notifications/{id}', [AdminNotificationController::class, 'show']);
     //update
+
+    // New mark as read routes notifications
+    Route::post('notifications/{id}/mark-read', [AdminNotificationController::class, 'markAsRead']);
+    Route::post('notifications/mark-all-read', [AdminNotificationController::class, 'markAllAsRead']);
 
 });
 
@@ -322,6 +327,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // Route::get('applications', [AdminController::class, 'application']);
       Route::get('agent-applications', [AdminController::class, 'agentApplications']);
       Route::get('agent-applications/{id}',[AdminController::class, 'agentApplicationDetail']);
+      Route::post('/agent-applications/update/{id}', [AdminController::class, 'agentApplicationUpdate']);
 
      // Student Applications
       Route::get('student-applications', [AdminController::class, 'studentApplications']);

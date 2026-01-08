@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('applications', function (Blueprint $table) {
-             $table->id();
+        Schema::create('applications', function (Blueprint $table) {
+
+            $table->id();
 
             // ===============================
             // Application Info
@@ -126,6 +127,19 @@ return new class extends Migration
             $table->string('english_test')->nullable();
             $table->string('photo')->nullable();
 
+            $table->enum('language_test_status', [
+                'proof_after_acceptance',
+                'exemption_eligible',
+                'not_taken_not_planning'
+            ])->nullable();
+
+            $table->boolean('open_to_language_course')->default(false);
+            $table->boolean('has_gre_score')->default(false);
+            $table->boolean('has_gmat_score')->default(false);
+
+            // Name difference (passport vs documents)
+            $table->boolean('has_name_difference')->nullable();
+
             // ===============================
             // Arrays (JSON)
             // ===============================
@@ -143,6 +157,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('applications');
+        Schema::table('applications', function (Blueprint $table) {
+            Schema::dropIfExists('applications');
+        });
     }
+
 };

@@ -125,4 +125,61 @@ class AdminNotificationController extends Controller
             'data' => $admin->unreadNotifications
         ]);
     }
+
+      public function markAsRead($id)
+    {
+        $admin = Auth::guard('admin_token')->user();
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated.'
+            ], 401);
+        }
+
+        $notification = $admin->notifications()->find($id);
+
+        if (!$notification) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Notification not found.'
+            ], 404);
+        }
+
+        // Mark as read
+        $notification->markAsRead();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification marked as read.',
+            'notification' => [
+                'id' => $notification->id,
+                'is_read' => true,
+                'read_at' => $notification->read_at,
+            ]
+        ]);
+    }
+
+    //  * Mark all notifications as read
+    
+    public function markAllAsRead()
+    {
+        $admin = Auth::guard('admin_token')->user();
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated.'
+            ], 401);
+        }
+
+        // Mark all unread notifications as read
+        $admin->unreadNotifications->markAsRead();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All notifications marked as read.',
+            'unread_count' => 0
+        ]);
+    }
+
+    
 }

@@ -11,6 +11,7 @@ use App\Models\AgentStudent;
 use App\Models\StudentApply;
 use Illuminate\Http\Request;
 use App\Models\StudentProfile;
+use App\Models\UniversityProgram;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -380,59 +381,154 @@ class AdminController extends Controller
     // ]);
     // }
 
-    public function studentApplicationDetail($id)
-{
-    $admin = Auth::guard('admin_token')->user();
+        public function studentApplicationDetail($id)
+    {
+        $admin = Auth::guard('admin_token')->user();
 
-    if (!$admin) {
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated'
+            ], 401);
+        }
+
+        $application = StudentApply::with('program')->find($id);
+
+        if (!$application) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student application not found'
+            ], 404);
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'Admin not authenticated'
-        ], 401);
+            'success' => true,
+            'type' => 'student',
+            'data' => $application
+        ], 200);
     }
 
-    $application = StudentApply::with('program')->find($id);
+    public function agentApplicationDetail($id)
+    {
+        $admin = Auth::guard('admin_token')->user();
 
-    if (!$application) {
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not authenticated'
+            ], 401);
+        }
+
+        $application = Application::with('program')->find($id);
+
+        if (!$application) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Agent application not found'
+            ], 404);
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'Student application not found'
-        ], 404);
+            'success' => true,
+            'type' => 'agent',
+            'data' => $application
+        ], 200);
     }
 
-    return response()->json([
-        'success' => true,
-        'type' => 'student',
-        'data' => $application
-    ], 200);
-}
+    public function agentApplicationUpdate($id)
+    {
+        // 1️⃣ Authenticate Admin
+        $admin = Auth::guard('admin_token')->user();
 
-public function agentApplicationDetail($id)
-{
-    $admin = Auth::guard('admin_token')->user();
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
 
-    if (!$admin) {
+        // 2️⃣ Find the Application
+         $application = Application::find($id);
+
+        if (!$application) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Application not found'
+            ], 404);
+        }
+
+        // 3️⃣ Load Program & Student
+        $program = UniversityProgram::with('intake_months')->find($application->program_id);
+        $student = AgentStudent::where('agent_id', $application->agent_id)->first();
+
+        // 4️⃣ Merge Program + Student Data
+        $data = [
+            'program_level_id' => $program->program_level_id ?? null,
+            'program_description' => $program->program_description ?? null,
+            'program_level' => $program->program_level ?? null,
+            'program_open_date' => $program->open_date ?? null,
+            'program_submission_deadline' => $program->submission_deadline ?? null,
+            'intake_name' => $program->intake_name ?? null,
+            'field_of_study_id' => $program->field_of_study_id ?? null,
+            'field_of_study_name' => $program->field_of_study_name ?? null,
+            'study_permit_or_visa' => $program->study_permit_or_visa ?? null,
+            'program_nationality' => $program->nationality ?? null,
+            'education_country' => $program->education_country ?? null,
+            'last_level_of_study' => $program->last_level_of_study ?? null,
+            'grading_scheme' => $program->grading_scheme ?? null,
+
+            'company_name' => $student->company_name ?? null,
+            'email' => $student->email ?? null,
+            'destination' => $student->destination ?? null,
+            'study_level' => $student->study_level ?? null,
+            'subject' => $student->subject ?? null,
+            'student_profile_nationality' => $student->nationality ?? null,
+            'passport' => $student->passport ?? null,
+            'dob' => $student->dob ?? null,
+            'address' => $student->address ?? null,
+            'phone' => $student->phone ?? null,
+            'gender' => $student->gender ?? null,
+            'passport_expiry' => $student->passport_expiry ?? null,
+            'country_of_residence' => $student->country_of_residence ?? null,
+            'specialization' => $student->specialization ?? null,
+
+            'academic_qualifications' => $student->academic_qualifications ?? [],
+            'test_scores' => $student->test_scores ?? [],
+            'work_experiences' => $student->work_experiences ?? [],
+            'references' => $student->references ?? [],
+        ];
+
+        // 5️⃣ Admin can manually update status
+        if (request()->has('status')) {
+            $newStatus = request('status');
+            $allowedStatuses = ['Pending','Reviewed','Accepted','Rejected','Completed'];
+            if (in_array($newStatus, $allowedStatuses)) {
+                $data['status'] = $newStatus;
+            }
+        }
+
+        // 6️⃣ Admin can also update other fields (optional)
+        $fillableFields = [
+            'company_name', 'email', 'destination', 'study_level', 'subject'
+        ];
+
+        foreach ($fillableFields as $field) {
+            if (request()->has($field)) {
+                $data[$field] = request($field);
+            }
+        }
+
+        // 7️⃣ Update Application
+        $application->update($data);
+
+        // 8️⃣ Response
         return response()->json([
-            'success' => false,
-            'message' => 'Admin not authenticated'
-        ], 401);
+            'success' => true,
+            'message' => 'Application updated by admin successfully',
+            'data' => $application->fresh()
+        ]);
     }
 
-    $application = Application::with('program')->find($id);
-
-    if (!$application) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Agent application not found'
-        ], 404);
-    }
-
-    return response()->json([
-        'success' => true,
-        'type' => 'agent',
-        'data' => $application
-    ], 200);
-}
 
 
 }

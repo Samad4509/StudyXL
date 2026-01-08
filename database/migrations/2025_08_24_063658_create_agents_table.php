@@ -69,7 +69,8 @@ class CreateAgentsTable extends Migration
             $table->string('referee_website')->nullable();
 
             $table->text('is_approved')->default(false);
-            $table->string('status')->default('inactive');
+            // $table->string('status')->default('inactive');
+            $table->enum('status', ['active', 'inactive'])->default('inactive'); 
             $table->string('token')->nullable(); 
             $table->timestamps(); // created_at & updated_at
         });
