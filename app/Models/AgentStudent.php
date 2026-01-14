@@ -26,6 +26,11 @@ class AgentStudent extends Model
         'passport_expiry' => 'date:Y-m-d',
     ];
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'student_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -42,4 +47,5 @@ class AgentStudent extends Model
             }
         });
     }
+
 }

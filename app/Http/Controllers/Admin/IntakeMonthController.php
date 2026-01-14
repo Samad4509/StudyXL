@@ -11,7 +11,7 @@ class IntakeMonthController extends Controller
 {
     public function AllIntakesMonth()
     {
-          return  $allintakes = IntakeMonth::get();
+            $allintakes = IntakeMonth::get();
     }
     public function CreateIntakeMonth(Request $request, $intakeid)
     {

@@ -2,18 +2,19 @@
 
 use App\Models\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\AdminController;
+
 use App\Http\Controllers\Agent\AgentController;
 
 use App\Http\Controllers\Admin\IntakeController;
-
 use App\Http\Controllers\Filters\AllfiltersItem;
-use App\Http\Controllers\Auth\PasswordController;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Admin\ProgramTagController;
 use App\Http\Controllers\Admin\UniversityController;
-use App\Http\Controllers\Auth\NewPasswordController;
 
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Student\StudentApplication;
 use App\Http\Controllers\Admin\DestinationController;
@@ -336,7 +337,21 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
       Route::get('student-applications/{id}',[AdminController::class, 'studentApplicationDetail']);
       
       
+    //   Task
 
+        Route::get('/tasks', [TaskController::class, 'index']);       // List tasks
+        Route::get('/agent/{agent_id}/all-aplication', [TaskController::class, 'agentByapplication']);       // List tasks
+        Route::get('/agent/{student_id}/aplication', [TaskController::class, 'agentStudentapplication']);
+        // যদি student_id না লাগে, শুধু program_id দিয়ে filter
+        Route::get('/program/{program_id}/applications', [TaskController::class, 'programApplications']);
+
+        Route::post('/tasks', [TaskController::class, 'store']);      // Create task
+        Route::get('/tasks/{task}', [TaskController::class, 'show']); // View task
+        Route::put('/tasks/{task}', [TaskController::class, 'update']); // Edit task
+        Route::delete('/tasks/{task}', [TaskController::class, 'destroy']); // Delete task
+
+        // Optional: update status only
+        Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
 
 
 

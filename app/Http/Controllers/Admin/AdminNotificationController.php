@@ -76,7 +76,7 @@ class AdminNotificationController extends Controller
         public function index()
     {
         // return "OK";
-       return $admin = Auth::guard('admin_token')->user();
+        $admin = Auth::guard('admin_token')->user();
 
         $notifications = $admin->notifications()
             ->latest()
