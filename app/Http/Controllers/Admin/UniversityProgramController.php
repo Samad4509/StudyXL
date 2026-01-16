@@ -23,7 +23,7 @@ class UniversityProgramController extends Controller
     public function store(Request $request, $university_id, $program_level_id, $field_of_studies_id, $intake_id, $intake_month_id, $program_tag_id)
     {
 
-        // return $program_tag_id;
+        // return $request;
         $program_tag = ProgramTag::findOrFail($program_tag_id);
         $intake_month = IntakeMonth::findOrFail($intake_month_id);
         $intake = Intake::with('months')->findOrFail($intake_id);

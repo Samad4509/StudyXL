@@ -11,90 +11,177 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('university_programs', function (Blueprint $table) {
-            $table->id();
-            $table->string('program_level_id');
-            $table->string('university_name');
-            $table->string('address')->nullable();
-            $table->string('location')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->json('images')->nullable();
-            $table->unsignedBigInteger('university_id');
-            $table->string('program_name');
-            $table->text('program_description');
-            $table->string('program_level')->nullable();  
-            $table->date('open_date')->nullable();
-            $table->dateTime('submission_deadline')->nullable();
+    //    Schema::create('university_programs', function (Blueprint $table) {
+    //         $table->id();
+    //         $table->string('program_level_id');
+    //         $table->string('university_name');
+    //         $table->string('address')->nullable();
+    //         $table->string('location')->nullable();
+    //         $table->string('phone_number')->nullable();
+    //         $table->json('images')->nullable();
+    //         $table->unsignedBigInteger('university_id');
+    //         $table->string('program_name');
+    //         $table->text('program_description');
+    //         $table->string('program_level')->nullable();  
+    //         $table->date('open_date')->nullable();
+    //         $table->dateTime('submission_deadline')->nullable();
 
-            // Intake
-            $table->string('intake_name');
-            $table->string('intake_id');
-            //study of field
-            $table->string('field_of_study_name');
-            $table->string('field_of_study_id');
-            // Student Requirements
-            $table->string('study_permit_or_visa')->nullable();
-            $table->string('nationality')->nullable();
-            $table->string('education_country')->nullable();
-            $table->string('last_level_of_study')->nullable();
-            $table->string('grading_scheme')->nullable();
+    //         // Intake
+    //         $table->string('intake_name');
+    //         $table->string('intake_id');
+    //         //study of field
+    //         $table->string('field_of_study_name');
+    //         $table->string('field_of_study_id');
+    //         // Student Requirements
+    //         $table->string('study_permit_or_visa')->nullable();
+    //         $table->string('nationality')->nullable();
+    //         $table->string('education_country')->nullable();
+    //         $table->string('last_level_of_study')->nullable();
+    //         $table->string('grading_scheme')->nullable();
 
-            // IELTS
-            $table->boolean('ielts_required')->default(false);
-            $table->float('ielts_reading')->nullable();
-            $table->float('ielts_writing')->nullable();
-            $table->float('ielts_listening')->nullable();
-            $table->float('ielts_speaking')->nullable();
-            $table->float('ielts_overall')->nullable();
+    //         // IELTS
+    //         $table->boolean('ielts_required')->default(false);
+    //         $table->float('ielts_reading')->nullable();
+    //         $table->float('ielts_writing')->nullable();
+    //         $table->float('ielts_listening')->nullable();
+    //         $table->float('ielts_speaking')->nullable();
+    //         $table->float('ielts_overall')->nullable();
 
-            // TOEFL
-            $table->boolean('toefl_required')->default(false);
-            $table->integer('toefl_reading')->nullable();
-            $table->integer('toefl_writing')->nullable();
-            $table->integer('toefl_listening')->nullable();
-            $table->integer('toefl_speaking')->nullable();
-            $table->integer('toefl_overall')->nullable();
+    //         // TOEFL
+    //         $table->boolean('toefl_required')->default(false);
+    //         $table->integer('toefl_reading')->nullable();
+    //         $table->integer('toefl_writing')->nullable();
+    //         $table->integer('toefl_listening')->nullable();
+    //         $table->integer('toefl_speaking')->nullable();
+    //         $table->integer('toefl_overall')->nullable();
 
-            // Duolingo
-            $table->boolean('duolingo_required')->default(false);
-            $table->integer('duolingo_total')->nullable();
+    //         // Duolingo
+    //         $table->boolean('duolingo_required')->default(false);
+    //         $table->integer('duolingo_total')->nullable();
 
-            // PTE
-            $table->boolean('pte_required')->default(false);
-            $table->integer('pte_reading')->nullable();
-            $table->integer('pte_writing')->nullable();
-            $table->integer('pte_listening')->nullable();
-            $table->integer('pte_speaking')->nullable();
-            $table->integer('pte_overall')->nullable();
+    //         // PTE
+    //         $table->boolean('pte_required')->default(false);
+    //         $table->integer('pte_reading')->nullable();
+    //         $table->integer('pte_writing')->nullable();
+    //         $table->integer('pte_listening')->nullable();
+    //         $table->integer('pte_speaking')->nullable();
+    //         $table->integer('pte_overall')->nullable();
 
-            $table->json('intake_months')->nullable();
-            $table->string('program_tag_id')->nullable();
-            $table->string('program_tag_name')->nullable();
-            // No Exam
-            $table->string('no_exam_status')->nullable();
+    //         $table->json('intake_months')->nullable();
+    //         $table->string('program_tag_id')->nullable();
+    //         $table->string('program_tag_name')->nullable();
+    //         // No Exam
+    //         $table->string('no_exam_status')->nullable();
 
-            $table->timestamps();
+    //         $table->timestamps();
 
-            $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
-            $table->string('application_fee')->nullable();
-            $table->string('application_short_desc')->nullable();
+    //         $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
+    //         $table->string('application_fee')->nullable();
+    //         $table->string('application_short_desc')->nullable();
 
-            $table->string('average_graduate_program')->nullable();
-            $table->string('average_graduate_program_short_desc')->nullable();
+    //         $table->string('average_graduate_program')->nullable();
+    //         $table->string('average_graduate_program_short_desc')->nullable();
 
-            $table->string('average_undergraduate_program')->nullable();
-            $table->string('average_undergraduate_program_short_desc')->nullable();
+    //         $table->string('average_undergraduate_program')->nullable();
+    //         $table->string('average_undergraduate_program_short_desc')->nullable();
 
-            $table->string('cost_of_living')->nullable();
-            $table->string('cost_of_living_short_desc')->nullable();
+    //         $table->string('cost_of_living')->nullable();
+    //         $table->string('cost_of_living_short_desc')->nullable();
 
-            $table->string('average_gross_tuition')->nullable();
-            $table->string('average_gross_tuition_short_desc')->nullable();
-            $table->string('campus_city')->nullable();
-            $table->string('duration')->nullable();
-            $table->longText('success_chance')->nullable();
-            $table->string('program_summary')->nullable();
-        });
+    //         $table->string('average_gross_tuition')->nullable();
+    //         $table->string('average_gross_tuition_short_desc')->nullable();
+    //         $table->string('campus_city')->nullable();
+    //         $table->string('duration')->nullable();
+    //         $table->longText('success_chance')->nullable();
+    //         $table->string('program_summary')->nullable();
+    //     });
+
+        if (!Schema::hasTable('university_programs')) {
+                Schema::create('university_programs', function (Blueprint $table) {
+                $table->id();
+                $table->string('program_level_id');
+                $table->string('university_name');
+                $table->string('address')->nullable();
+                $table->string('location')->nullable();
+                $table->string('phone_number')->nullable();
+                $table->json('images')->nullable();
+                $table->unsignedBigInteger('university_id');
+                $table->string('program_name');
+                $table->text('program_description');
+                $table->string('program_level')->nullable();  
+                $table->date('open_date')->nullable();
+                $table->dateTime('submission_deadline')->nullable();
+
+                // Intake
+                $table->string('intake_name');
+                $table->string('intake_id');
+                //study of field
+                $table->string('field_of_study_name');
+                $table->string('field_of_study_id');
+                // Student Requirements
+                $table->string('study_permit_or_visa')->nullable();
+                $table->string('nationality')->nullable();
+                $table->string('education_country')->nullable();
+                $table->string('last_level_of_study')->nullable();
+                $table->string('grading_scheme')->nullable();
+
+                // IELTS
+                $table->boolean('ielts_required')->default(false);
+                $table->float('ielts_reading')->nullable();
+                $table->float('ielts_writing')->nullable();
+                $table->float('ielts_listening')->nullable();
+                $table->float('ielts_speaking')->nullable();
+                $table->float('ielts_overall')->nullable();
+
+                // TOEFL
+                $table->boolean('toefl_required')->default(false);
+                $table->integer('toefl_reading')->nullable();
+                $table->integer('toefl_writing')->nullable();
+                $table->integer('toefl_listening')->nullable();
+                $table->integer('toefl_speaking')->nullable();
+                $table->integer('toefl_overall')->nullable();
+
+                // Duolingo
+                $table->boolean('duolingo_required')->default(false);
+                $table->integer('duolingo_total')->nullable();
+
+                // PTE
+                $table->boolean('pte_required')->default(false);
+                $table->integer('pte_reading')->nullable();
+                $table->integer('pte_writing')->nullable();
+                $table->integer('pte_listening')->nullable();
+                $table->integer('pte_speaking')->nullable();
+                $table->integer('pte_overall')->nullable();
+
+                $table->json('intake_months')->nullable();
+                $table->string('program_tag_id')->nullable();
+                $table->string('program_tag_name')->nullable();
+                // No Exam
+                $table->string('no_exam_status')->nullable();
+
+                $table->timestamps();
+
+                $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
+                $table->string('application_fee')->nullable();
+                $table->string('application_short_desc')->nullable();
+
+                $table->string('average_graduate_program')->nullable();
+                $table->string('average_graduate_program_short_desc')->nullable();
+
+                $table->string('average_undergraduate_program')->nullable();
+                $table->string('average_undergraduate_program_short_desc')->nullable();
+
+                $table->string('cost_of_living')->nullable();
+                $table->string('cost_of_living_short_desc')->nullable();
+
+                $table->string('average_gross_tuition')->nullable();
+                $table->string('average_gross_tuition_short_desc')->nullable();
+                $table->string('campus_city')->nullable();
+                $table->string('duration')->nullable();
+                $table->longText('success_chance')->nullable();
+                $table->string('program_summary')->nullable();
+            });
+        }
 
     }
 

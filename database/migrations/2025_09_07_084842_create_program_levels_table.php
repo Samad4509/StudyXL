@@ -11,12 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_levels', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        // Schema::create('program_levels', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->timestamps();
 
-        });
+        // });
+        if (!Schema::hasTable('program_levels')) {
+                Schema::create('program_levels', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamps();
+
+            });
+        }
     }
 
     /**

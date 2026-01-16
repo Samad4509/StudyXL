@@ -11,7 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        // Schema::create('admins', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->timestamp('email_verified_at')->nullable();
+        //     $table->string('password');
+        //     $table->string('token')->nullable();
+        //     $table->timestamps();
+        // });
+        if (!Schema::hasTable('admins')) {
+            Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -20,6 +30,7 @@ return new class extends Migration
             $table->string('token')->nullable();
             $table->timestamps();
         });
+        }
     }
 
     /**

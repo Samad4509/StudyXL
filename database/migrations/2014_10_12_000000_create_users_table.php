@@ -11,20 +11,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-           $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('destination');
-            $table->string('study_level');
-            $table->string('subject');
-            $table->string('nationality');
-            $table->string('elp')->nullable();
-            $table->string('passport')->nullable();
-             $table->string('token')->nullable(); 
-            $table->timestamps();
-        });
+        // Schema::create('users', function (Blueprint $table) {
+        //    $table->id();
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->string('password');
+        //     $table->string('destination');
+        //     $table->string('study_level');
+        //     $table->string('subject');
+        //     $table->string('nationality');
+        //     $table->string('elp')->nullable();
+        //     $table->string('passport')->nullable();
+        //      $table->string('token')->nullable(); 
+        //     $table->timestamps();
+        // });
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+               $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->string('destination');
+                $table->string('study_level');
+                $table->string('subject');
+                $table->string('nationality');
+                $table->string('elp')->nullable();
+                $table->string('passport')->nullable();
+                $table->string('token')->nullable(); 
+                $table->timestamps();
+            });
+        }
     }
 
     /**

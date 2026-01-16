@@ -9,7 +9,7 @@ class Task extends Model
 {
     use HasFactory;
 
-   protected $fillable = [
+protected $fillable = [
         'title',
         'status',
         'due_date',
@@ -22,10 +22,11 @@ class Task extends Model
         'program_id',
         'program_name',
         'documents',
+        'updated_by',
     ];
 
     protected $casts = [
-        'documents' => 'array',
+        'documents' => 'array',  // JSON array cast
     ];
 
      public function student()

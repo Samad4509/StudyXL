@@ -11,12 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('intakes', function (Blueprint $table) {
-                $table->id();
-                $table->string('name'); // e.g. "Aug - Nov 2025"
-                $table->timestamps();
+        // Schema::create('intakes', function (Blueprint $table) {
+        //         $table->id();
+        //         $table->string('name'); // e.g. "Aug - Nov 2025"
+        //         $table->timestamps();
 
-        });
+        // });
+
+        if (!Schema::hasTable('intakes')) {
+                Schema::create('intakes', function (Blueprint $table) {
+                    $table->id();
+                    $table->string('name'); // e.g. "Aug - Nov 2025"
+                    $table->timestamps();
+
+            });
+        }
     }
 
     /**

@@ -11,8 +11,14 @@ class IntakeMonthController extends Controller
 {
     public function AllIntakesMonth()
     {
-            $allintakes = IntakeMonth::get();
+        $allintakes = IntakeMonth::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $allintakes
+        ], 200);
     }
+
     public function CreateIntakeMonth(Request $request, $intakeid)
     {
 

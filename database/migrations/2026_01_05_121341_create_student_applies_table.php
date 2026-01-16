@@ -11,17 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_applies', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->string('student_name');
-            $table->string('program_id');
-            $table->string('program_name');
-            $table->string('university_name');
-            $table->string('intake');
-            $table->enum('status', ['Submitted', 'Pending', 'Accepted', 'Rejected'])->default('Submitted');
-            $table->timestamps();
-        });
+        // Schema::create('student_applies', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('student_id');
+        //     $table->string('student_name');
+        //     $table->string('program_id');
+        //     $table->string('program_name');
+        //     $table->string('university_name');
+        //     $table->string('intake');
+        //     $table->enum('status', ['Submitted', 'Pending', 'Accepted', 'Rejected'])->default('Submitted');
+        //     $table->timestamps();
+        // });
+
+         if (!Schema::hasTable('student_applies')) {
+                Schema::create('student_applies', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('student_id');
+                $table->string('student_name');
+                $table->string('program_id');
+                $table->string('program_name');
+                $table->string('university_name');
+                $table->string('intake');
+                $table->enum('status', ['Submitted', 'Pending', 'Accepted', 'Rejected'])->default('Submitted');
+                $table->timestamps();
+            });
+         }
     }
 
     /**

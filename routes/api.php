@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -340,18 +341,32 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     //   Task
 
         Route::get('/tasks', [TaskController::class, 'index']);       // List tasks
-        Route::get('/agent/{agent_id}/all-aplication', [TaskController::class, 'agentByapplication']);       // List tasks
-        Route::get('/agent/{student_id}/aplication', [TaskController::class, 'agentStudentapplication']);
-        // যদি student_id না লাগে, শুধু program_id দিয়ে filter
-        Route::get('/program/{program_id}/applications', [TaskController::class, 'programApplications']);
+        Route::get('/agent/{agent_id}/all-aplication', [TaskController::class, 'agentByapplication']);       // 2 
+        Route::get('/agent/{student_id}/aplication', [TaskController::class, 'agentStudentapplication']);//3
+        
 
-        Route::post('/tasks', [TaskController::class, 'store']);      // Create task
-        Route::get('/tasks/{task}', [TaskController::class, 'show']); // View task
-        Route::put('/tasks/{task}', [TaskController::class, 'update']); // Edit task
+        Route::get('/program/{program_id}/applications', [TaskController::class, 'programApplications']);//4
+
+        Route::post('/tasks', [TaskController::class, 'store']);      //5 Create task
+        Route::get('/tasks/{task}/edit', [TaskController::class, 'edit']);
+        Route::post('/tasks/{task}/update', [TaskController::class, 'update']);
         Route::delete('/tasks/{task}', [TaskController::class, 'destroy']); // Delete task
 
-        // Optional: update status only
-        Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
+        
+
+        //Commiitions
+
+         Route::get('/transactions', [TransactionController::class, 'index']);
+        // Show single transaction
+        Route::get('/transactions/{id}', [TransactionController::class, 'show']);
+        // Create new transaction
+        Route::post('/transactions', [TransactionController::class, 'store']);
+        // Update a transaction
+        Route::put('/transactions/{id}', [TransactionController::class, 'update']);
+        // Delete a transaction
+        Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
+
+
 
 
 

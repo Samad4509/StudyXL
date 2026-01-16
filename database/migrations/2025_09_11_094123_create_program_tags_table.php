@@ -11,11 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_tags', function (Blueprint $table) {
-            $table->id();
-            $table->string('program_tag');
-            $table->timestamps();
-        });
+        // Schema::create('program_tags', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('program_tag');
+        //     $table->timestamps();
+        // });
+
+        if (!Schema::hasTable('program_tags')) {
+                Schema::create('program_tags', function (Blueprint $table) {
+                $table->id();
+                $table->string('program_tag');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

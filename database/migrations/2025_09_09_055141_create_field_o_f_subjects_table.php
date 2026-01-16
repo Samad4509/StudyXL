@@ -11,18 +11,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('field_o_f_subjects', function (Blueprint $table) {
-            $table->id();
+        // Schema::create('field_o_f_subjects', function (Blueprint $table) {
+        //     $table->id();
             
-            // Proper foreign key to field_of_studies
-            $table->foreignId('field_of_study_id')
-                ->constrained()
-                ->onDelete('cascade');
-            $table->string('study_field_name');
-            $table->string('subject_name'); // e.g., Physics
-            $table->timestamps();
+        //     // Proper foreign key to field_of_studies
+        //     $table->foreignId('field_of_study_id')
+        //         ->constrained()
+        //         ->onDelete('cascade');
+        //     $table->string('study_field_name');
+        //     $table->string('subject_name'); // e.g., Physics
+        //     $table->timestamps();
 
-        });
+        // });
+
+        if (!Schema::hasTable('field_o_f_subjects')) {
+                Schema::create('field_o_f_subjects', function (Blueprint $table) {
+                $table->id();
+                
+                // Proper foreign key to field_of_studies
+                $table->foreignId('field_of_study_id')
+                    ->constrained()
+                    ->onDelete('cascade');
+                $table->string('study_field_name');
+                $table->string('subject_name'); // e.g., Physics
+                $table->timestamps();
+
+            });
+
+        }
     }
 
     /**

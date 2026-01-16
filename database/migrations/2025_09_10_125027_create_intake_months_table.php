@@ -11,15 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('intake_months', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('intake_id')->constrained()->onDelete('cascade');
-            $table->string('month'); // e.g. "September 2025"
-            $table->date('open_date')->nullable();
-            $table->date('submission_deadline')->nullable();
-            $table->string('status')->default('likely_open');
-            $table->timestamps();
-        });
+        // Schema::create('intake_months', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('intake_id')->constrained()->onDelete('cascade');
+        //     $table->string('month'); // e.g. "September 2025"
+        //     $table->date('open_date')->nullable();
+        //     $table->date('submission_deadline')->nullable();
+        //     $table->string('status')->default('likely_open');
+        //     $table->timestamps();
+        // });
+
+        if (!Schema::hasTable('intake_months')) {
+                Schema::create('intake_months', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('intake_id')->constrained()->onDelete('cascade');
+                $table->string('month'); // e.g. "September 2025"
+                $table->date('open_date')->nullable();
+                $table->date('submission_deadline')->nullable();
+                $table->string('status')->default('likely_open');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
