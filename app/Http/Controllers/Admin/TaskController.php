@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Task;
+use App\Models\Admin;
+use App\Models\Agent;
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\Notifications\TaskUpdated;
 use App\Http\Controllers\Controller;
-use App\Models\Agent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -284,4 +286,101 @@ class TaskController extends Controller
             'applications' => $applications
         ]);
     }
+
+        public function agentTasks(Request $request)
+    {
+        // 1️⃣ Get authenticated agent
+        $agent = Auth::guard('agent_token')->user();
+
+        if (!$agent) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        // 2️⃣ Fetch tasks assigned to this agent
+        $tasks = Task::where('agent_id', $agent->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'agent_id' => $agent->id,
+            'total_tasks' => $tasks->count(),
+            'tasks' => $tasks
+        ], 200);
+    }
+
+        public function agentUpdateTask(Request $request, Task $task)
+    {
+        // 1️⃣ Get authenticated agent
+        $agent = Auth::guard('agent_token')->user();
+        if (!$agent) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        // 2️⃣ Ensure agent owns this task
+        if ((int)$task->agent_id !== (int)$agent->id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You are not allowed to update this task'
+            ], 403);
+        }
+
+        // 3️⃣ Validation (only allowed fields)
+        $validator = Validator::make($request->all(), [
+            'status' => 'sometimes|required|in:Pending,In Progress,Completed',
+            'remarks' => 'nullable|string|max:500',
+            'documents' => 'nullable',
+            'documents.*' => 'file|mimes:pdf,doc,docx,jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        // 4️⃣ Handle document upload (append new files)
+        $documentPaths = $task->documents ?? [];
+        if ($request->hasFile('documents')) {
+            foreach ((array)$request->file('documents') as $file) {
+                $safeName = preg_replace('/\s+/', '_', $file->getClientOriginalName());
+                $fileName = 'doc_' . time() . '_' . uniqid() . '_' . $safeName;
+                $file->move(public_path('uploads/documents'), $fileName);
+                $documentPaths[] = 'uploads/documents/' . $fileName;
+            }
+        }
+        $data['documents'] = $documentPaths;
+        $data['updated_by_agent'] = $agent->id;
+
+        // 5️⃣ Update existing task
+        $task->update($data);
+        $task->refresh();
+
+        // 6️⃣ Notify Admin who created the task
+      if ($task->updated_at) {
+            $admin = Admin::find($task->updated_at);
+            if ($admin) {
+                $admin->notify(new TaskUpdated($task));
+            }
+        }
+
+        // 7️⃣ Response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task updated successfully',
+            'task' => $task,
+            'documents' => $documentPaths
+        ], 200);
+    }
+
+
 }

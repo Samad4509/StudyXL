@@ -156,6 +156,13 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::get('applications/{id}/detail', [ApplicationController::class, 'applicationDetail']);
     Route::post('/applications/{id}', [ApplicationController::class, 'applicationUpdate']);
 
+    // Task
+    Route::get('tasks', [TaskController::class, 'agentTasks']);
+    Route::post('tasks/{task}/update', [TaskController::class, 'agentUpdateTask']);
+
+    // Commitions
+     Route::get('transactions', [TransactionController::class, 'myTransactions']);
+
 
 
 

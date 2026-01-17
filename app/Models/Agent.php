@@ -67,4 +67,11 @@ class Agent extends Authenticatable implements MustVerifyEmail
     {
         return $this->status === 'active';
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'agent_id');
+    }
+
+    
 }

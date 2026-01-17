@@ -76,7 +76,7 @@ class TransactionController extends Controller
     public function update(Request $request, $id)
     {
         $admin = Auth::guard('admin_token')->user();
-        $transaction = Transaction::findOrFail($id);
+        $transaction =Transaction::findOrFail($id);
 
         $data = $request->validate([
             'agent_name' => 'sometimes|required|string',
@@ -122,7 +122,7 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         $admin = Auth::guard('admin_token')->user();
-        $transaction = Transaction::findOrFail($id);
+        $transaction =Transaction::findOrFail($id);
         $transaction->delete();
 
         return response()->json([
@@ -130,4 +130,17 @@ class TransactionController extends Controller
             'message' => 'Transaction deleted successfully'
         ]);
     }
+
+      public function myTransactions()
+    {
+        $agent = Auth::guard('agent_token')->user();
+
+        $transactions = Transaction::where('agent_id', $agent->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $transactions
+        ]);
+    }
+
 }
