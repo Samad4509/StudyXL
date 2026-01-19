@@ -639,7 +639,7 @@ class UniversityProgramController extends Controller
             ], 404);
         }
 
-        // 2️⃣ Get related programs (same university)
+        // 2️⃣ Get related programs (same university)//
         $relatedPrograms = UniversityProgram::where('university_id', $program->university_id)
             ->where('id', '!=', $program->id) // exclude current program
             ->latest()
