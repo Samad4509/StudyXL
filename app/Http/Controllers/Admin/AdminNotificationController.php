@@ -73,12 +73,15 @@ class AdminNotificationController extends Controller
         ]);
     }
 
-        public function index()
+    public function index(Request $request)
     {
-        // return "OK";
         $admin = Auth::guard('admin_token')->user();
 
+        // Frontend থেকে পাঠানো removed notification IDs
+        $removedIds = $request->input('removed_ids', []);
+
         $notifications = $admin->notifications()
+            ->whereNotIn('id', $removedIds) // removed ones ফিল্টার
             ->latest()
             ->paginate(10);
 
@@ -88,7 +91,6 @@ class AdminNotificationController extends Controller
             $applicationId = $notification->data['application_id'] ?? null;
 
             $application = null;
-
             if ($type === 'agent') {
                 $application = Application::find($applicationId);
             } elseif ($type === 'student') {
@@ -99,6 +101,9 @@ class AdminNotificationController extends Controller
                 'id' => $notification->id,
                 'type' => $type,
                 'is_read' => $notification->read_at ? true : false,
+                'title' => $notification->data['title'] ?? 'No Title',
+                'message' => $notification->data['message'] ?? '',
+                'status' => $notification->data['status'] ?? null,
                 'created_at' => $notification->created_at,
                 'application' => $application,
             ];
@@ -114,6 +119,7 @@ class AdminNotificationController extends Controller
             ]
         ]);
     }
+
 
         public function unread()
     {
@@ -178,6 +184,46 @@ class AdminNotificationController extends Controller
             'success' => true,
             'message' => 'All notifications marked as read.',
             'unread_count' => 0
+        ]);
+    }
+
+    // NotificationController.php
+    public function latest()
+    {
+        // return "OK";
+        $admin = Auth::guard('admin_token')->user();
+
+        // শুধুমাত্র unread বা recent notification fetch
+        $notifications = $admin->notifications()
+            ->whereNull('read_at')
+            ->latest()
+            ->get();
+
+        $data = $notifications->map(function ($notification) {
+            $type = $notification->data['type'] ?? null;
+            $applicationId = $notification->data['application_id'] ?? null;
+
+            $application = null;
+            if ($type === 'agent') {
+                $application = Application::find($applicationId);
+            } elseif ($type === 'student') {
+                $application = StudentApply::find($applicationId);
+            }
+
+            return [
+                'id' => $notification->id,
+                'type' => $type,
+                'is_read' => $notification->read_at ? true : false,
+                'title' => $notification->data['title'] ?? 'No Title',
+                'message' => $notification->data['message'] ?? '',
+                'created_at' => $notification->created_at,
+                'application' => $application,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'notifications' => $data,
         ]);
     }
 

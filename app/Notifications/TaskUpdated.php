@@ -4,45 +4,34 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
-use App\Models\Task;
 
 class TaskUpdated extends Notification
 {
     use Queueable;
 
     protected $task;
+    protected $agent;
 
-    public function __construct(Task $task)
+    public function __construct($task, $agent)
     {
         $this->task = $task;
+        $this->agent = $agent;
     }
 
+    // Delivery channels: database only (mail optional)
     public function via($notifiable)
     {
-        return ['database', 'mail'];
+        return ['database']; // mail রাখতে চাইলে এখানে add করবেন
     }
 
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-            ->subject('Task Updated by Agent')
-            ->greeting('Hello ' . $notifiable->name)
-            ->line('The task "' . $this->task->title . '" has been updated by the assigned agent.')
-            ->line('Status: ' . $this->task->status)
-            ->action('View Task', url('/tasks/' . $this->task->id))
-            ->line('Thank you!');
-    }
-
+    // Database notification content
     public function toDatabase($notifiable)
     {
         return [
             'task_id' => $this->task->id,
-            'title' => $this->task->title,
+            'title' => 'Task Updated: ' . $this->task->title,  // এখানে title
+            'message' => 'Task updated by agent: ' . $this->agent->name,
             'status' => $this->task->status,
-            'updated_by_agent_id' => $this->task->updated_by_agent ?? null,
-            'message' => 'The task has been updated by the agent.',
-            'updated_at' => $this->task->updated_at,
         ];
     }
 }

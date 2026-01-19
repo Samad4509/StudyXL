@@ -33,6 +33,8 @@ return new class extends Migration
                     Schema::create('tasks', function (Blueprint $table) {
                         $table->id();
                         $table->string('title');
+                        $table->string('subject')->nullable();
+                        $table->string('description')->nullable();
                         $table->enum('status', ['Pending', 'In Progress', 'Completed'])->default('Pending');
                         $table->date('due_date');
                         $table->unsignedBigInteger('student_id')->nullable();

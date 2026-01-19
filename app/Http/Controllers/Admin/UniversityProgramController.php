@@ -601,8 +601,9 @@ class UniversityProgramController extends Controller
 
         public function getByUniversity($university_id)
     {
+        
         // University exists check (optional but recommended)
-        $university = University::find($university_id);
+         $university = University::find($university_id);
 
         if (!$university) {
             return response()->json([
@@ -625,5 +626,34 @@ class UniversityProgramController extends Controller
             'programs' => $programs
         ]);
     }
+
+   public function showWithRelated($program_id)
+    {
+        // 1️⃣ Get single program
+        $program = UniversityProgram::find($program_id);
+
+        if (!$program) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Program not found'
+            ], 404);
+        }
+
+        // 2️⃣ Get related programs (same university)
+        $relatedPrograms = UniversityProgram::where('university_id', $program->university_id)
+            ->where('id', '!=', $program->id) // exclude current program
+            ->latest()
+            ->get();
+
+        // 3️⃣ Response
+        return response()->json([
+            'success' => true,
+            'program' => $program,
+            'related_programs' => $relatedPrograms,
+            'related_count' => $relatedPrograms->count()
+        ]);
+    }
+
+
 
 }

@@ -200,7 +200,9 @@ Route::prefix('admin')->group(function () {
 
     Route::get('notifications', [AdminNotificationController::class, 'index']);
     Route::get('notifications/unread', [AdminNotificationController::class, 'unread']);
-    Route::get('notifications/{id}', [AdminNotificationController::class, 'show']);
+    // routes/api.php
+    Route::get('/notifications/latest', [AdminNotificationController::class, 'latest']);
+
     //update
 
     // New mark as read routes notifications
@@ -251,6 +253,8 @@ Route::get('/university-programs', [UniversityProgramController::class, 'index']
 Route::get('/universities/details/{id}', [UniversityController::class, 'universitydetails'])->name('university.details'); // delete
 Route::get('/university-programs/details/{id}', [UniversityProgramController::class, 'programdetails'])->name('university.programs.details');
 Route::get('/university/{university_id}/programs',[UniversityProgramController::class, 'getByUniversity']);
+Route::get('/university/{program_id}/related',[UniversityProgramController::class, 'showWithRelated']);
+
 
 // ✅ Protected admin routes with Sanctum middleware & admin_token guard
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
