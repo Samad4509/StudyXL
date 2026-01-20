@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Validator;
 class UniversityController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'permission:university.create'])->only('store');
+        $this->middleware(['auth:sanctum', 'permission:university.edit'])->only('update');
+        $this->middleware(['auth:sanctum', 'permission:university.delete'])->only('destroy');
+    }
     public function universitydestination()
     {
         $alldestination = Destination::all();

@@ -11,21 +11,23 @@ use App\Http\Controllers\Admin\IntakeController;
 use App\Http\Controllers\Filters\AllfiltersItem;
 // use App\Http\Controllers\Agent\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\ProgramTagController;
-use App\Http\Controllers\Admin\UniversityController;
 
+use App\Http\Controllers\Admin\UniversityController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Student\StudentApplication;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\IntakeMonthController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Agent\ApplicationController;
+use App\Http\Controllers\Agent\AgentEmployeController;
 use App\Http\Controllers\Agent\AgentStudentController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Admin\AdminNotificationController;
-use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UniversityProgramController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -131,6 +133,12 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::post('register', [AgentController::class, 'store']);
     Route::post('login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
 
+     Route::post('employee/create', [AgentEmployeController::class, 'createEmployee']);
+    Route::get('employees', [AgentEmployeController::class, 'allEmployees']);
+
+    // Employee login (different model)
+    Route::post('employee/login', [AgentEmployeController::class, 'login']);
+
     Route::get('reset_password/{token}/{email}', [AgentController::class, 'reset_password'])->name('agent.reset_password');
     Route::post('forget_password_submit', [AgentController::class, 'forget_password_submit']);
     Route::post('reset_password_submit', [AgentController::class, 'reset_password_submit']);
@@ -208,6 +216,11 @@ Route::prefix('admin')->group(function () {
     // New mark as read routes notifications
     Route::post('notifications/{id}/mark-read', [AdminNotificationController::class, 'markAsRead']);
     Route::post('notifications/mark-all-read', [AdminNotificationController::class, 'markAllAsRead']);
+
+    // Admin User
+    Route::post('/admin-user/login', [AdminUserController::class, 'login']);
+    // Protected: Sub-User create
+    Route::middleware('auth:sanctum')->post('/admin-user', [AdminUserController::class, 'createSubUser']);
 
 });
 

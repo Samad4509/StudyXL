@@ -2,27 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class Admin extends Authenticatable
+class AgentEmployee extends Model
 {
+    use HasFactory;
     use HasApiTokens, Notifiable, HasRoles;
 
-    // ✨ এটা খুব জরুরি Spatie এর জন্য
-    protected $guard_name = 'admin';
+    protected $guard = 'agent';
 
     protected $fillable = [
+        'agent_id',
         'name',
         'email',
         'password',
-        'token', // optional
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+     public function agent()
+    {
+        return $this->belongsTo(Agent::class, 'agent_id', 'id');
+    }
 }

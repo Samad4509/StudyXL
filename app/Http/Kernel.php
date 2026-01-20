@@ -2,7 +2,12 @@
 
 namespace App\Http;
 
+use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
+
+
 
 class Kernel extends HttpKernel
 {
@@ -56,6 +61,10 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin' => \App\Http\Middleware\Admin::class,
         'agent' => \App\Http\Middleware\Agent::class,
+        'role' => RoleMiddleware::class,
+        'permission' => PermissionMiddleware::class,
+        'role_or_permission' => RoleOrPermissionMiddleware::class,
+        'employee.approved' => \App\Http\Middleware\EmployeeApproved::class,
         'agent.approved' => \App\Http\Middleware\CheckAgentApproval::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
