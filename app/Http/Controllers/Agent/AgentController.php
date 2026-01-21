@@ -107,22 +107,6 @@ class AgentController extends Controller
         'status' => $data['status'] ?? 'inactive'
     ]);
 
-    // ✅ Create default permissions for this agent
-    $defaultPermissions = [
-        'application.create',
-        'application.view',
-        'task.update',
-        'task.assign',
-    ];
-
-    foreach ($defaultPermissions as $perm) {
-        \Spatie\Permission\Models\Permission::firstOrCreate([
-            'name' => $perm,
-            'guard_name' => 'agent',
-            'agent_id' => $agent->id
-        ]);
-    }
-
     // ✅ Success response
     return response()->json([
         'status' => true,

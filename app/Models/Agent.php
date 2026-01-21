@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Models\Permission;
 
 class Agent extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable ,HasRoles;
 
     protected $guard = 'agent';
 
@@ -60,23 +61,6 @@ class Agent extends Authenticatable implements MustVerifyEmail
             }
         });
 
-        // 🔹 Create default permissions for the agent after creation
-        static::created(function ($agent) {
-            $defaultPermissions = [
-                'application.create',
-                'application.view',
-                'task.update',
-                'task.assign',
-            ];
-
-            foreach ($defaultPermissions as $perm) {
-                Permission::firstOrCreate([
-                    'name' => $perm,
-                    'guard_name' => 'agent', // Agent guard
-                    'agent_id' => $agent->id  // dynamically link to this agent
-                ]);
-            }
-        });
     }
 
     // 🔹 Custom helper methods

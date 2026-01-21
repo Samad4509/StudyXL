@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Admin;
+
 use App\Models\Agent;
 use App\Mail\Websitemail;
 use App\Models\Application;
@@ -232,7 +233,14 @@ class AdminController extends Controller
 
     public function alluser()
     {
-        return $agent = Agent::All();
+         $agents = Agent::all();
+
+        // JSON response
+        return response()->json([
+            'status' => true,
+            'total_agents' => $agents->count(),
+            'agents' => $agents
+        ], 200);
     }
 
     public function allstudent()
@@ -529,6 +537,41 @@ class AdminController extends Controller
         ]);
     }
 
+    // Get logged-in Admin's permissions
+    public function getAllPermissions()
+    {
+        // logged-in admin using admin_token guard
+        $admin = Auth::guard('admin_token')->user();
 
+        return response()->json([
+            'status' => true,
+            'admin_id' => $admin->id,
+            'name' => $admin->name,
+            'email' => $admin->email,
+            'permissions' => $admin->getAllPermissions()->pluck('name')
+        ], 200);
+    }
+
+    // Assign individual permissions to an agent
+    public function assignAgentPermissions(Request $request, $agent_id)
+    {
+       // Validate input
+        $request->validate([
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,name'
+        ]);
+
+        $agent = Agent::findOrFail($agent_id);
+
+        // Assign individual permissions (replace old permissions)
+        $agent->syncPermissions($request->permissions);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Permissions assigned successfully',
+            'agent_id' => $agent->id,
+            'permissions' => $agent->getAllPermissions()->pluck('name') // Show assigned permissions
+        ]);
+    }
 
 }

@@ -15,7 +15,8 @@ class AgentEmployee extends Model
     use HasFactory;
     use HasApiTokens, Notifiable, HasRoles;
 
-    protected $guard = 'agent';
+    // protected $guard = 'agent';
+    protected $guard_name = 'agent';
 
     protected $fillable = [
         'agent_id',

@@ -135,6 +135,9 @@ Route::prefix('agent')->middleware('guest:agent')->group(function () {
     Route::post('login', [App\Http\Controllers\Agent\AuthenticatedSessionController::class, 'store']);
 
      Route::post('employee/create', [AgentEmployeController::class, 'createEmployee']);
+     // Employee login route
+    // Route::post('employee/login', [AgentEmployeController::class, 'employeeLogin']);
+
     Route::get('employees', [AgentEmployeController::class, 'allEmployees']);
 
     // Employee login (different model)
@@ -499,6 +502,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
         ->middleware('permission:student.view');
 
     // ----------------- Task -----------------
+    Route::get('/alltask', [TaskController::class, 'allTasks']);
     Route::get('/tasks', [TaskController::class, 'index'])->middleware('permission:task.view');
     Route::get('/agent/{agent_id}/all-aplication', [TaskController::class, 'agentByapplication'])->middleware('permission:task.view.agent');
     Route::get('/agent/{student_id}/aplication', [TaskController::class, 'agentStudentapplication'])->middleware('permission:task.view.student');
@@ -515,4 +519,6 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::put('/transactions/{id}', [TransactionController::class, 'update'])->middleware('permission:transaction.update');
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->middleware('permission:transaction.delete');
 
+    Route::get('/my-permissions', [AdminController::class, 'getAllPermissions']);
+    Route::post('/agent/{id}/permissions', [AdminController::class, 'assignAgentPermissions']);
 });

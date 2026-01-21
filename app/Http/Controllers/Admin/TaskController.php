@@ -35,6 +35,17 @@ class TaskController extends Controller
             'tasks' => $tasks
         ]);
     }
+
+        public function allTasks()
+    {
+        $tasks = Task::all();
+
+        return response()->json([
+            'status' => true,
+            'total' => $tasks->count(),
+            'tasks' => $tasks
+        ], 200);
+    }
          public function agentByapplication($agent_id)
     {
         
