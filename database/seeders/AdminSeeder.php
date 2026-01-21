@@ -27,20 +27,21 @@ class AdminSeeder extends Seeder
         }
 
         // ---------------- Permissions ----------------
-        $permissions = [
-            'university.create',
-            'university.edit',
-            'university.delete',
-            'program.create',
-            'program.edit',
-            'program.delete',
-            'application.view',
-            'application.edit',
-            'task.create',
-            'task.assign',
-            'agent.employee.manage'
+      $permissions = [
+            'university.create','university.edit','university.update','university.delete',
+            'program.create','program.edit','program.update','program.delete',
+            'destination.view','destination.create','destination.edit','destination.update','destination.delete',
+            'program-level.view','program-level.create','program-level.edit','program-level.update','program-level.delete',
+            'field-of-study.view','field-of-study.create','field-of-study.edit','field-of-study.update','field-of-study.delete',
+            'subject.view','subject.create','subject.edit','subject.update','subject.delete',
+            'intake.view','intake.create','intake.edit','intake.update','intake.delete',
+            'intake-month.view','intake-month.create','intake-month.edit','intake-month.update','intake-month.delete',
+            'program-tag.view','program-tag.create','program-tag.edit','program-tag.update','program-tag.delete',
+            'student.view','student.update','agent.view','agent.update',
+            'task.view','task.view.agent','task.view.student','task.create','task.edit','task.update','task.delete','task.assign',
+            'transaction.view','transaction.create','transaction.update','transaction.delete',
+            'application.view','application.edit','agent.employee.manage'
         ];
-
         foreach ($permissions as $perm) {
             Permission::firstOrCreate([
                 'name' => $perm,

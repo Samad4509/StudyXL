@@ -29,6 +29,7 @@ class UniversityController extends Controller
 
     public function alluniversitie()
     {
+       
         $alluniversities = University::all();
 
         return response()->json([

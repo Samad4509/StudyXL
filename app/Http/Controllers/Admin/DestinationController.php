@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DestinationController extends Controller
 {
@@ -31,6 +32,7 @@ class DestinationController extends Controller
     {
         $validated = $request->validate([
             'destinations_name' => 'required|string|max:255',
+            
         ]);
 
         $destination = Destination::create([
@@ -68,6 +70,9 @@ class DestinationController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // return $request;
+        
+
         $validated = $request->validate([
         'destinations_name' => 'required|string|max:255',
         ]);
