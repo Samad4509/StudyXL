@@ -385,8 +385,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // ----------------- University -----------------
     Route::get('/university-destination', [UniversityController::class, 'universitydestination'])
         ->name('university.destination')->middleware('permission:university.view');
-    Route::get('/alluniversities', [UniversityController::class, 'alluniversitie'])
-        ->name('university.alluniversities')->middleware('permission:university.view');
+    // Route::get('/alluniversities', [UniversityController::class, 'alluniversitie'])
+    //     ->name('university.alluniversities')->middleware('permission:university.view');
     Route::post('/universities/create/{destination_id}', [UniversityController::class, 'store'])
         ->name('university.store')->middleware('permission:university.create');
     Route::get('/universities/edit/{id}', [UniversityController::class, 'edit'])
@@ -501,6 +501,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('student-applications/{id}', [AdminController::class, 'studentApplicationDetail'])
         ->middleware('permission:student.view');
 
+        //Samad
     // ----------------- Task -----------------
     Route::get('/alltask', [TaskController::class, 'allTasks']);
     Route::get('/tasks', [TaskController::class, 'index'])->middleware('permission:task.view');
